@@ -8,8 +8,8 @@
 - Challenge 2: Generating multimodal embeddings
 - Challenge 3: Semantic search with BigQuery
 - Challenge 4: Introduction to RAG
-- Challenge 5: Structured outputs
-- Challenge 6: Code interpreter
+- Challenge 5: Function calling with LLMs
+
 
 ## Challenge 1: Loading the data
 
@@ -105,7 +105,7 @@ In order to get the top result there are two methods, first one uses `top_k` par
 
 ```sql
 SELECT
-  base.uri,
+  base.uri AS uri,
   distance
 FROM
   VECTOR_SEARCH( 
@@ -115,7 +115,7 @@ FROM
       SELECT ml_generate_embedding_result AS query
       FROM ML.GENERATE_EMBEDDING( 
         MODEL embeddings.multimodal_embedding_model,
-        (SELECT "weather in South Africa next week" AS content) 
+        (SELECT ? AS content) 
       )
     ),
     top_k => 1
@@ -126,7 +126,7 @@ FROM
 
 ```sql
 SELECT
-  base.uri,
+  base.uri AS uri,
   distance
 FROM
   VECTOR_SEARCH( 
@@ -136,7 +136,7 @@ FROM
       SELECT ml_generate_embedding_result AS query
       FROM ML.GENERATE_EMBEDDING( 
         MODEL embeddings.multimodal_embedding_model,
-        (SELECT "weather in South Africa next week" AS content) 
+        (SELECT ? AS content) 
       )
     ),
   )
@@ -144,3 +144,39 @@ ORDER BY distance
 LIMIT 1
 ```
 
+## Challenge 4: Introduction to RAG
+
+### Notes & Guidance
+
+```python
+system_instruction = """
+You are a reliable weather forecast reporter, don't response to anything else than weather information 
+and if you don't have the requested information response back with NO DATA.
+"""
+model = GenerativeModel(MODEL_NAME, system_instruction=system_instruction)
+parts = ["Given the following video:", Part.from_uri(relevant_video_uri, mime_type="video/mp4"), question]
+```
+
+## Challenge 5: Function calling with LLMs
+
+### Notes & Guidance
+
+```python
+function_decl = FunctionDeclaration(
+    name=function_name,
+    description="Returns the weather information for a city and a date in YYYY-MM-DD format",
+    parameters={
+        "type": "object",
+        "properties": {  
+            "city": {
+                "type": "string",
+                "description": "The name of the city to get weather information for"
+            },
+            "date": {
+                "type": "string",
+                "description": "The date for which the weather information is requested, in YYYY-MM-DD format"
+            }
+        }
+    }
+)
+```

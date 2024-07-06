@@ -19,7 +19,7 @@ import requests
 import vertexai
 
 from google.cloud import bigquery
-from vertexai.generative_models import GenerativeModel, Part
+from vertexai.generative_models import Content, GenerativeModel, FunctionDeclaration, Part, Tool
 
 
 PROJECT_ID = os.getenv("GCP_PROJECT_ID")
@@ -30,8 +30,8 @@ vertexai.init(project=PROJECT_ID, location=REGION)
 MODEL_NAME="gemini-1.5-flash-001"
 
 
-# TODO Challenge 3: Edit the following SQL to return the top result for a question and use ? as the placeholder for 
-# the question parameter, see https://cloud.google.com/bigquery/docs/parameterized-queries#python
+# TODO Challenge 3: Edit the following SQL to return the top result for a question. Make sure to use ? as the 
+# placeholder for the `question` parameter, see https://cloud.google.com/bigquery/docs/parameterized-queries#python
 SQL = """
 """
 
@@ -61,15 +61,17 @@ def get_relevant_video(question: str) -> str:
     return row.get("uri") if row else ""
 
 
-def get_forecast_with_rag(question: str, relevant_video_uri: str) -> str:
+def get_weather_with_rag(question: str, relevant_video_uri: str) -> str:
     """Returns weather information using the provided video uri as the context for RAG.
 
     Args:
-        question: a natural language question about the weather, 
+        question: a natural language question about the weather, e.g. what was the max temparature in London on Monday
+    
+    Returns:
+        a string indicating the weather information, or `NO DATA` if the question cannot be answered
     """
-    model = GenerativeModel(MODEL_NAME)
-    relevant_video = Part.from_uri(mime_type="video/mp4", uri=relevant_video_uri)
     # TODO Challenge 4: Provide the video as context for RAG and configure system instructions
+    model = GenerativeModel(MODEL_NAME)
     parts = []
     if parts:
         response = model.generate_content(parts)
@@ -96,7 +98,7 @@ def _city_name_to_lat_long(city: str) -> tuple[float, float]:
         ValueError if the city is not a valid city
     """
     model = GenerativeModel(MODEL_NAME)
-    prompt = f"What is the latitude and longitude of {city}? Output in JSON."
+    prompt = f"What is the latitude and longitude of {city}? Output in JSON. Do not format."
     response = model.generate_content(prompt)
     parsed = json.loads(response.text)
     if "error" in parsed:
@@ -108,12 +110,12 @@ def _city_name_to_lat_long(city: str) -> tuple[float, float]:
 def _historical_weather(lat:float, lng: float, date: str) -> dict:
     """Uses an external service (Open-Meteo) to return weather information (min and max temp in Celsius for now).
 
-    DO NOT EDIT
+    DO NOT EDIT.
     
     Args:
-        lat: the latitude for the weather information
-        lng: the longitude for the weather information
-        date: the date for which the weather information should be looked up
+        lat: a float representing the latitude for the weather information
+        lng: a float the longitude for the weather information
+        date: a string representing the date for which the weather information should be looked up, in YYYY-MM-DD format
     
     Returns:
         min and max temperature in JSON format
@@ -130,23 +132,45 @@ def _historical_weather(lat:float, lng: float, date: str) -> dict:
     return response.json()
 
 
-def get_forecast_with_api(question: str) -> str:
-    """
+def get_weather_with_api(question: str) -> str:
+    """Returns weather information using an external API. This method parses the natural language question and extracts
+    the parameters to be used when calling the external service.
+
+    Args:
+        question: a natural language question about the weather, e.g. what was the max temparature in London on Monday
+
+    Returns:
+        a string indicating the weather information
     """
     model = GenerativeModel(MODEL_NAME)
 
-    # TODO Challenge 5: Foo bar
-    weather_tool = None
-    response = model.generate_content(question, tools=[weather_tool] if weather_tool else [])
-
+    # TODO Challenge 5: Complete the implementation of the FunctionDeclaration for weather tool
+    function_name = "get_weather_info"
+    function_decl = FunctionDeclaration(
+        name=function_name,
+        description="",  # add a description
+        parameters={
+            "type": "object",
+            "properties": {  # add city & date
+            }
+        }
+    )
+    # Step 1: extract city & date information from the question and call the external service with that information
+    weather_tool = Tool(function_declarations=[function_decl])
+    response = model.generate_content(question, tools=[weather_tool])
     function_call = response.candidates[0].function_calls[0]
     city = function_call.args["city"]
     date = function_call.args["date"]
     lat, lng = _city_name_to_lat_long(city)
     api_response = _historical_weather(lat, lng, date)
 
-    function_response = Part.from_function_response(name="get_weather_info", response={"content": api_response})
-    response = model.generate_content([question, function_response])
+    # Step 2: given the original question and the results from the API, answer the question
+    response = model.generate_content([
+        Content(role="user", parts=[Part.from_text(question)]),  # original question
+        response.candidates[0].content,  # original response
+        Content(parts=[Part.from_function_response(name=function_name, response={"content": api_response})]) # API resp
+    ])
+
     return response.text
 
 
@@ -154,7 +178,7 @@ def get_forecast_with_api(question: str) -> str:
 def on_post(request):
     """Triggered when an http request is made
 
-    DO NOT EDIT.
+    DO NOT EDIT until Challenge 5.
 
     Args:
         request: the http request
@@ -169,12 +193,13 @@ def on_post(request):
     relevant_video_uri = get_relevant_video(question)
     print("Relevant Video URI:", relevant_video_uri)
 
-    forecast = get_forecast_with_rag(question, relevant_video_uri)
-    print("Forecast with RAG:", forecast)
+    weather_info = get_weather_with_rag(question, relevant_video_uri)
+    print("Weather info with RAG:", weather_info)
 
-    if forecast == "NO DATA":
-        forecast = get_forecast_with_api(question)
-        print("Forecast with API:", forecast)
+    # TODO Challenge 5: Uncommment the following 3 lines
+    # if "NO DATA" in weather_info:
+    #     weather_info = get_weather_with_api(question)
+    #     print("Weather info with API:", weather_info)
     
-    return forecast
+    return weather_info
         
