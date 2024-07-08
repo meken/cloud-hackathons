@@ -35,7 +35,7 @@ bq mk --location=$REGION -d $BQ_DATASET
 Create a connection and give permission to access buckets
 
 ```shell
-CONN_ID=conn
+CONN_ID=biglake
 bq mk --connection --location=$REGION --connection_type=CLOUD_RESOURCE $CONN_ID
 
 SA_CONN=`bq show --connection --format=json $REGION.$CONN_ID | jq -r .cloudResource.serviceAccountId`
@@ -59,9 +59,14 @@ OPTIONS(
 
 ### Notes & Guidance
 
-First, give permissions to create/access the model
+In principle the same connection can be used to access Vertex AI models (as long as it has the correct permissions), but for the sake of clarity we'll create another one with the specific permissions.
 
 ```shell
+CONN_ID=vertex
+bq mk --connection --location=$REGION --connection_type=CLOUD_RESOURCE $CONN_ID
+
+SA_CONN=`bq show --connection --format=json $REGION.$CONN_ID | jq -r .cloudResource.serviceAccountId`
+
 gcloud projects add-iam-policy-binding $GOOGLE_CLOUD_PROJECT --member="serviceAccount:$SA_CONN" \
     --role="roles/aiplatform.user" --condition=None
 ```
