@@ -132,6 +132,20 @@ def _historical_weather(lat:float, lng: float, date: str) -> dict:
     return response.json()
 
 
+def _contains_api_call_params(response: str) -> bool:
+    """Returns a boolean indicating whether the model has been able to parse the correct parameters
+
+    Args:
+        response: result of model.generate_content
+
+    Returns:
+        a boolean indicating whether the `city` and `date` information is included in the response
+    """
+    return len(response.candidates) > 0 and len(response.candidates[0].function_calls) > 0 and \
+        "city" in response.candidates[0].function_calls[0].args and \
+        "date" in response.candidates[0].function_calls[0].args
+
+
 def get_weather_with_api(question: str) -> str:
     """Returns weather information using an external API. This method parses the natural language question and extracts
     the parameters to be used when calling the external service.
@@ -158,6 +172,8 @@ def get_weather_with_api(question: str) -> str:
     # Step 1: extract city & date information from the question and call the external service with that information
     weather_tool = Tool(function_declarations=[function_decl])
     response = model.generate_content(question, tools=[weather_tool])
+    if not _contains_api_call_params(response):
+        return "NO DATA"
     function_call = response.candidates[0].function_calls[0]
     city = function_call.args["city"]
     date = function_call.args["date"]

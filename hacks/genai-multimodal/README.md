@@ -94,7 +94,7 @@ Ggo ahead and design a SQL query that retrieves the **top result** from the embe
 
 ### Success Criteria
 
-- The function `get_relevant_video` returns`3-za-en.mp4` for the question _maximum temperature for Mooi River_. You can verify that by checking the logs and looking up _Relevant Video URI_ entry.
+- The function `get_relevant_video` returns`3-za-en.mp4` for the question _snow forecast for Eastern Cape_. You can verify that by checking the logs and looking up _Relevant Video URI_ entry.
 
 ### Learning Resources
 
@@ -161,7 +161,7 @@ Uncomment the relevant lines in the `on_post` function to call the `get_weather_
   | Question | Cloud Function response |
   | ---      | ---                     |
   | Maximum temperature for Palermo on Tuesday 10th of April 2024 | _Any sentence indicating 17.9 degrees Celsius_ |
-  | What was the minimum temperature for Istanbul on 23rd of April 2024 | _Any sentence indicating 13.6 degrees Celsius_ |
+  | What was the minimum temperature on 23rd of April 2024 in Istanbul? | _Any sentence indicating 13.6 degrees Celsius_ |
 
 ### Learning Resources
 

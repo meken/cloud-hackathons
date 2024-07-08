@@ -19,7 +19,7 @@ instruction:
   type: md
   uri: instructions/en.md
 duration: 480
-max_duration: 600
+max_duration: 480
 credits: 0
 level: fundamental
 tags:

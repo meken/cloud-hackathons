@@ -18,6 +18,8 @@ Teams are not left on their own to solve the challenges. Coaches work with each 
 
 - [Introduction to GenAI](./hacks/genai-intro/README.md)
   > **UPDATED FOR GEMINI** We will build a system to catalog scientific papers. Whenever new papers are uploaded to Cloud Storage a Cloud Function will be triggered and use Vertex AI Foundation Model LLM to extract the title and summarize the paper. We'll store this data in BigQuery and use an LLM directly from BigQuery to classify the papers into distinct categories and then implement semantic search using text embeddings and finally we'll use Vector Search as a scalable solution.
+- [Multimodal GenAI with RAG](./hacks/genai-multimodal/README.md)
+  > Multimodal GenAI with RAG will help you understand how to use multimodal embeddings for semantic search and how to apply concepts such as _RAG_, _Function Calling_ to mitigate hallucinations and use up-to-date information to provide more reliable answers.
 - [MLOps on GCP](./hacks/mlops-on-gcp/README.md)
   > We will be implementing the full lifecycle of an ML project. We'll provide you with a sample code base and you'll work on automating continuous integration (CI), continuous delivery (CD), and continuous training (CT) for a machine learning (ML) system.
 - [Formula E: Crash data analysis with Gemini](./hacks/genai-fe/README.md)
