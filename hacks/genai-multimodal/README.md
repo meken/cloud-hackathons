@@ -6,7 +6,7 @@ Multimodal GenAI with RAG will help you understand how to use multimodal embeddi
 
 ![Architecture of the system](./images/genai-multimodal-arch.png)
 
-During this hack we'll build a weather service that will extract information from recorded weather forecast videos by using Retrieval Augmented Generation (RAG). In order to do that we'll generate multimodal embeddings for the videos, and through semantic search find the relevant video and use that as the context for the LLM to answer questions about the weather. In case we have no recorded video about the question, we'll use _Function calling_ capabilities to access an external service. 
+During this hack we'll build a weather service that will extract information from recorded weather forecast videos by using Retrieval Augmented Generation (RAG). In order to do that we'll generate multimodal embeddings for the videos, find the relevant video through semantic search and use that as the context for the LLM to answer questions about the weather. In case we have no recorded video about the question, we'll use _Function calling_ capabilities to access an external service. 
 
 ## Learning Objectives
 
@@ -46,7 +46,7 @@ This first step is all about getting started with the source data, which is a co
 
 For our system we need some sample video files. Create a new bucket, and download/copy the sample videos to the newly created bucket.
 
-Once the data is in the bucket, create an Object table in BigQuery on that data in a new BigQuery dataset.
+Once the data is in the bucket, create an _Object table_ in BigQuery on that data in a new BigQuery dataset.
 
 ### Success Criteria
 
@@ -63,7 +63,7 @@ Once the data is in the bucket, create an Object table in BigQuery on that data 
 
 ### Introduction 
 
-Embeddings are high-dimensional numerical vectors representing entities like text, video or audio for machine learning models to encode semantics. These vectors help us to measure distances and find *semantically* similar items. If we want to be able to search within our videos (to find the most relevant one for a given question), we need to generate embeddings as a first step.
+Embeddings are high-dimensional numerical vectors representing entities like text, video or audio for machine learning models to encode semantics. These vectors help us to measure distances and find *semantically* similar items. If we want to be able to search within our videos, to find the most relevant one for a given question, we need to generate embeddings as a first step.
 
 ### Description
 
@@ -82,19 +82,19 @@ Now the source data is available in BigQuery, use BigQuery ML capabilities to ge
 
 ### Introduction 
 
-In order to find semantically similar items we need to measure the distance between vectors in the embedding space. We could implement that ourselves by calculating the distance between each embedding ourselves but BigQuery already provides a function, _VECTOR_SEARCH_, that simplifies this process.
+In order to find semantically similar items we need to measure the distance between vectors in the embedding space. We could implement that ourselves by calculating the distance between each embedding ourselves but BigQuery already provides a function, `VECTOR_SEARCH`, that simplifies this process.
 
 ### Description
 
-We've already provided you an incomplete Cloud Function, `weather-service`, that can be triggered through http(s). This Cloud Function has a method `get_relevant_video`, that can return the GCS uri of a relevant video for a question about the weather. Find that function and go through the code to understand how it works. 
+We've already provided an incomplete Cloud Function, `weather-service`, that can be triggered through http(s). This Cloud Function has a function `get_relevant_video`, that can return the GCS uri of a relevant video for a question about the weather. Find that function and go through the code to understand how it works. 
 
-Ggo ahead and design a SQL query that retrieves the **top result** from the embeddings table given a natural language question and put that query in the Cloud Function.
+Go ahead and design a SQL query that retrieves the **top result** from the embeddings table given a natural language question and put that SQL query in the Cloud Function.
 
 > **Warning**  Beware of some of the quirks of Cloud Function source editor UI! When you click on _Save and redeploy_ button, the editor will show the code for the previous version of the function, which looks like your changes were lost. But that's only temporay, when the function is redeployed, the changes will be shown again. If there were any syntax errors though, the changes will be lost, so make a copy of your changes before you save and redeploy the code. Also, before editing the function make sure that you have the latest version of the code. If you're editing a previous version, the editor won't warn you about that.
 
 ### Success Criteria
 
-- The function `get_relevant_video` returns`3-za-en.mp4` for the question _snow forecast for Eastern Cape_. You can verify that by checking the logs and looking up _Relevant Video URI_ entry.
+- The function `get_relevant_video` returns`3-za-en.mp4` for the following question _"snow forecast for Eastern Cape"_. You can verify that by checking the logs and looking up _Relevant Video URI_ entry.
 
 ### Learning Resources
 
@@ -102,7 +102,7 @@ Ggo ahead and design a SQL query that retrieves the **top result** from the embe
 
 ### Tips
 
-- You can design the SQL in BigQuery Studio, before you put it in the Cloud Function.
+- You can design the SQL in BigQuery Studio before you put it in the Cloud Function.
 - You can edit and redeploy the Cloud Function from the Console.
 - You can use the _Testing_ tab from the Cloud Function UI to test the Cloud Function.
 - Note that the code expects the SQL query to return the uri as `uri` column.
@@ -111,13 +111,13 @@ Ggo ahead and design a SQL query that retrieves the **top result** from the embe
 
 ### Introduction 
 
-Retrieval augmented generation (RAG) is a popular approach for enabling LLMs to access external data and provides a mechanism to mitigate against hallucinations. The main idea is to provide the LLM more context to get reliable answers. This is typically done by looking up relevant information from a (vector database) and adding that information to the prompt of the LLM.
+Retrieval augmented generation (RAG) is a popular approach for enabling LLMs to access external data and provides a mechanism to mitigate against hallucinations. The main idea is to provide the LLM more context to get reliable answers. This is typically done by looking up relevant information from a (vector) database and adding that information to the prompt of the LLM.
 
 ### Description
 
-The provide Cloud Function has a method `get_weather_with_rag`. You need to complete the implementation of this method by looking up the relevant video (using the method from the previous challenge) and adding that information to the prompt to minimize hallucinations.
+The provided Cloud Function has a function `get_weather_with_rag`. You need to complete the implementation of this function by looking up the relevant video (using the function from the previous challenge) and adding that information to the prompt to minimize hallucinations.
 
-Make sure that the model returns `NO DATA` if it cannot reliably answer the question, using _system instructions_.
+Use _system instructions_ to ensure that the model returns `NO DATA` if it cannot reliably answer the question.
 
 ### Success Criteria
 
