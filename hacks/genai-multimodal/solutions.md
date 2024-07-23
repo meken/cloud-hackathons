@@ -15,10 +15,10 @@
 
 ### Notes & Guidance
 
-Create a GCS bucket and copy sample files to that bucket.
+Create a GCS bucket and copy sample files to that bucket. Although, we're using CLI here, students will probably use the Console. Make sure that if students choose a region that they stick to that for other challenges too. Keep in mind that some services might not be available in all regions.
 
 ```shell
-REGION=...
+REGION=... 
 BUCKET="gs://$GOOGLE_CLOUD_PROJECT-videos"
 
 gsutil mb -l $REGION $BUCKET
@@ -35,7 +35,7 @@ bq mk --location=$REGION -d $BQ_DATASET
 Create a connection and give permission to access buckets
 
 ```shell
-CONN_ID=biglake
+CONN_ID=conn
 bq mk --connection --location=$REGION --connection_type=CLOUD_RESOURCE $CONN_ID
 
 SA_CONN=`bq show --connection --format=json $REGION.$CONN_ID | jq -r .cloudResource.serviceAccountId`
@@ -59,14 +59,9 @@ OPTIONS(
 
 ### Notes & Guidance
 
-In principle the same connection can be used to access Vertex AI models (as long as it has the correct permissions), but for the sake of clarity we'll create another one with the specific permissions.
+In principle the same connection can be used to access Vertex AI models as long as it has the correct permissions, so we're now adding the additional permissions.
 
 ```shell
-CONN_ID=vertex
-bq mk --connection --location=$REGION --connection_type=CLOUD_RESOURCE $CONN_ID
-
-SA_CONN=`bq show --connection --format=json $REGION.$CONN_ID | jq -r .cloudResource.serviceAccountId`
-
 gcloud projects add-iam-policy-binding $GOOGLE_CLOUD_PROJECT --member="serviceAccount:$SA_CONN" \
     --role="roles/aiplatform.user" --condition=None
 ```
@@ -143,7 +138,7 @@ FROM
         MODEL embeddings.multimodal_embedding_model,
         (SELECT ? AS content) 
       )
-    ),
+    )
   )
 ORDER BY distance
 LIMIT 1

@@ -117,6 +117,19 @@ resource "google_project_iam_member" "functions_default_iam" {
   ]
 }
 
+resource "google_project_iam_member" "vertex_default_iam" {
+  project = var.gcp_project_id
+  for_each = toset([
+    "roles/storage.admin"
+  ])
+  role   = each.key
+  member = "serviceAccount:${google_project_service_identity.vertex_default_sa.email}"
+  depends_on = [
+    google_project_service.vertex_api,
+    google_project_service.iam_api
+  ]
+}
+
 resource "time_sleep" "wait_until_functions_sa_ready" {
   create_duration = "90s"
   depends_on = [
