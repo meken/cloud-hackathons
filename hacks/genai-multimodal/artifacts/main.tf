@@ -93,7 +93,7 @@ resource "google_project_service_identity" "functions_default_sa" {
   ]
 }
 
-resource "google_project_service_identity" "functions_default_sa" {
+resource "google_project_service_identity" "vertex_default_sa" {
   provider = google-beta
 
   project = data.google_project.project.project_id
