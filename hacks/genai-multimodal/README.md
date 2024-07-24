@@ -146,6 +146,7 @@ Use _system instructions_ to ensure that the model returns `NO DATA` if it canno
 
 ### Learning Resources
 
+- [What is RAG?](https://cloud.google.com/use-cases/retrieval-augmented-generation)
 - [Using multimodal prompts in Gemini](https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/video-understanding)
 - [System instructions](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/prompts/system-instructions)
 
