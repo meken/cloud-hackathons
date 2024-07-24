@@ -8,6 +8,9 @@ Multimodal GenAI with RAG will help you understand how to use multimodal embeddi
 
 During this hack we'll build a weather service that will extract information from recorded weather forecast videos by using Retrieval Augmented Generation (RAG). In order to do that we'll generate multimodal embeddings for the videos, find the relevant video through semantic search and use that as the context for the LLM to answer questions about the weather. In case we have no recorded video about the question, we'll use _Function calling_ capabilities to access an external service. 
 
+> **Note**  
+> Although many libraries provide RAG functionality nowadays as part of their API out of the box, we'll build it ourselves to illustrate the concepts.
+
 ## Learning Objectives
 
 This hack will help you explore the following tasks:
@@ -46,6 +49,9 @@ This first step is all about getting started with the source data, which is a co
 
 For our system we need some sample video files. Create a new bucket, and download/copy the sample videos to the newly created bucket.
 
+> **Note**  
+> You can navigate to the uploaded files in Cloud Storage Bucket UI and preview their contents to understand what they contain.
+
 Once the data is in the bucket, create an _Object table_ in BigQuery on that data in a new BigQuery dataset.
 
 ### Success Criteria
@@ -69,9 +75,12 @@ Embeddings are high-dimensional numerical vectors representing entities like tex
 
 Now the source data is available in BigQuery, use BigQuery ML capabilities to generate multimodal embeddings and store those embeddings in a new BigQuery table.
 
+> **Note**  
+> In order to generate the embeddings, BQML will split each video into _segments_. As a consequence, you'll end up with multiple embeddings per video, each one representing a part of the video, with a begin and an end offset. This is done automatically for you and you don't need to change the default configuration.
+
 ### Success Criteria
 
-- There is a new BigQuery table with multimodal embeddings for the sample video files.
+- There is a new BigQuery table with 60 rows of multimodal embeddings for the sample video files.
 - No code was modified.
 
 ### Learning Resources
@@ -88,17 +97,23 @@ In order to find semantically similar items we need to measure the distance betw
 
 We've already provided an incomplete Cloud Function, `weather-service`, that can be triggered through http(s). This Cloud Function has a function `get_relevant_video`, that can return the GCS uri of a relevant video for a question about the weather. Find that function and go through the code to understand how it works. 
 
-Go ahead and design a SQL query that retrieves the **top result** from the embeddings table given a natural language question and put that SQL query in the Cloud Function.
+Go ahead and design a SQL query that retrieves the **top result** from the embeddings table given a natural language question and put that SQL query in the Cloud Function. Verify that the Logs for the Cloud Function contain `3-za-en.mp4` when the function is called with the question _"snow forecast for Eastern Cape"_.
 
-> **Warning**  Beware of some of the quirks of Cloud Function source editor UI! When you click on _Save and redeploy_ button, the editor will show the code for the previous version of the function, which looks like your changes were lost. But that's only temporay, when the function is redeployed, the changes will be shown again. If there were any syntax errors though, the changes will be lost, so make a copy of your changes before you save and redeploy the code. Also, before editing the function make sure that you have the latest version of the code. If you're editing a previous version, the editor won't warn you about that.
+> **Note**  
+> Only edit the parts where there's a **TODO** in the code and leave the parts with **DO NOT EDIT** untouched.
+
+> **Warning**  
+> Beware of some of the quirks of Cloud Function source editor UI! When you click on _Save and redeploy_ button, the editor will show the code for the previous version of the function, which looks like your changes were lost. But that's only temporay, when the function is redeployed, the changes will be shown again. If there were any syntax errors though, the changes will be lost, so make a copy of your changes before you save and redeploy the code. Also, before editing the function make sure that you have the latest version of the code. If you're editing a previous version, the editor won't warn you about that.
 
 ### Success Criteria
 
-- The function `get_relevant_video` returns`3-za-en.mp4` for the following question _"snow forecast for Eastern Cape"_. You can verify that by checking the logs and looking up _Relevant Video URI_ entry.
+- The function `get_relevant_video` returns `3-za-en.mp4` when you call the Cloud Function with the following question _"snow forecast for Eastern Cape"_. You can verify that by checking the logs and looking up _Relevant Video URI_ entry.
 
 ### Learning Resources
 
-- [Generate multimodal embeddings](https://cloud.google.com/bigquery/docs/generate-multimodal-embeddings)
+- [Generate and search multimodal embeddings](https://cloud.google.com/bigquery/docs/generate-multimodal-embeddings)
+- [Deploying Cloud Functions from the Console](https://cloud.google.com/functions/docs/deploy#from-inline-editor)
+
 
 ### Tips
 
