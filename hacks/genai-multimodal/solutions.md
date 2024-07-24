@@ -99,9 +99,9 @@ FROM
 
 ### Notes & Guidance
 
-In order to get the top result there are two methods, first one uses `top_k` parameter, and the second one uses `ORDER BY` with `LIMIT`.
+In order to get the top result there are two methods, first one uses `top_k` parameter, and the second one uses `ORDER BY` with `LIMIT`. Students could choose **either** one. This query should be put in the Cloud Function where originally an empty SQL string is set. Note the `?` placeholder, BigQuery supports query parameters to help prevent SQL injection when queries are constructed using user input, hence the use of the placeholder. See the [docs](https://cloud.google.com/bigquery/docs/parameterized-queries) for more info.
 
-#### Using `top_k`
+#### Option 1 - Using `top_k`
 
 ```sql
 SELECT
@@ -122,7 +122,7 @@ FROM
   )
 ```
 
-#### Using `ORDER BY` and `LIMIT`
+#### Option 2 - Using `ORDER BY` and `LIMIT`
 
 ```sql
 SELECT
@@ -148,10 +148,12 @@ LIMIT 1
 
 ### Notes & Guidance
 
+This challenge is mainly about prompt engineering and making sure that the multimodal prompt contains textual data as well as the video content as the context.
+
 ```python
 system_instruction = """
-You are a reliable weather forecast reporter, don't response to anything else than weather information 
-and if you don't have the requested information response back with NO DATA.
+You are a reliable weather forecast reporter, don't respond to anything else than weather information 
+and if you don't have the requested information respond back with NO DATA.
 """
 model = GenerativeModel(MODEL_NAME, system_instruction=system_instruction)
 parts = ["Given the following video:", Part.from_uri(relevant_video_uri, mime_type="video/mp4"), question]
@@ -160,6 +162,8 @@ parts = ["Given the following video:", Part.from_uri(relevant_video_uri, mime_ty
 ## Challenge 5: Function calling with LLMs
 
 ### Notes & Guidance
+
+In this challenge the students are supposed to come up with the descriptions for the function and parameters so that the LLM can extract that information in the right format.
 
 ```python
 function_decl = FunctionDeclaration(
