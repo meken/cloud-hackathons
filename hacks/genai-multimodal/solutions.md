@@ -144,6 +144,9 @@ ORDER BY distance
 LIMIT 1
 ```
 
+> **Note**  
+> Make sure the students are aware of what happens, they're doing an embeddings search in English and getting results for videos in a different language!
+
 ## Challenge 4: Introduction to RAG
 
 ### Notes & Guidance

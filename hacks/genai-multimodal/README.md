@@ -97,7 +97,7 @@ In order to find semantically similar items we need to measure the distance betw
 
 We've already provided an incomplete Cloud Function, `weather-service`, that can be triggered through http(s). This Cloud Function has a function `get_relevant_video`, that can return the GCS uri of a relevant video for a question about the weather. Find that function and go through the code to understand how it works. 
 
-Go ahead and design a SQL query that retrieves the **top result** from the embeddings table given a natural language question and put that SQL query in the Cloud Function. Verify that the Logs for the Cloud Function contain `3-za-af.mp4` when the function is called with the question _"snow forecast for Eastern Cape"_.
+Go ahead and design a SQL query that retrieves the **top result** from the embeddings table given a natural language question and put that SQL query in the Cloud Function. Verify that the Logs for the Cloud Function contain `3-za-af.mp4` when the function is called with the question _"snow forecast for Eastern Cape"_. Note that the video is in _Afrikaans_ while the question is in _English_.
 
 > **Note**  
 > Only edit the parts where there's a **TODO** in the code and leave the parts with **DO NOT EDIT** untouched.
