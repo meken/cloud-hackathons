@@ -50,7 +50,7 @@ This first step is all about getting started with the source data, which is a co
 For our system we need some sample video files. Create a new bucket, and download/copy the sample videos to the newly created bucket.
 
 > **Note**  
-> You can navigate to the uploaded files in Cloud Storage Bucket UI and preview their contents to understand what they contain.
+> You should navigate to your Cloud Storage bucket and preview the weather forecast videos to familiarize yourself with the content.
 
 Once the data is in the bucket, create an _Object table_ in BigQuery on that data in a new BigQuery dataset.
 
@@ -97,7 +97,7 @@ In order to find semantically similar items we need to measure the distance betw
 
 We've already provided an incomplete Cloud Function, `weather-service`, that can be triggered through http(s). This Cloud Function has a function `get_relevant_video`, that can return the GCS uri of a relevant video for a question about the weather. Find that function and go through the code to understand how it works. 
 
-Go ahead and design a SQL query that retrieves the **top result** from the embeddings table given a natural language question and put that SQL query in the Cloud Function. Verify that the Logs for the Cloud Function contain `3-za-en.mp4` when the function is called with the question _"snow forecast for Eastern Cape"_.
+Go ahead and design a SQL query that retrieves the **top result** from the embeddings table given a natural language question and put that SQL query in the Cloud Function. Verify that the Logs for the Cloud Function contain `3-za-af.mp4` when the function is called with the question _"snow forecast for Eastern Cape"_.
 
 > **Note**  
 > Only edit the parts where there's a **TODO** in the code and leave the parts with **DO NOT EDIT** untouched.
@@ -107,7 +107,7 @@ Go ahead and design a SQL query that retrieves the **top result** from the embed
 
 ### Success Criteria
 
-- The function `get_relevant_video` returns `3-za-en.mp4` when you call the Cloud Function with the following question _"snow forecast for Eastern Cape"_. You can verify that by checking the logs and looking up _Relevant Video URI_ entry.
+- The function `get_relevant_video` returns `3-za-af.mp4` when you call the Cloud Function with the following question _"snow forecast for Eastern Cape"_. You can verify that by checking the logs and looking up _Relevant Video URI_ entry.
 
 ### Learning Resources
 
