@@ -132,7 +132,7 @@ Retrieval augmented generation (RAG) is a popular approach for enabling LLMs to 
 
 The provided Cloud Function has a function `get_weather_with_rag`. You need to complete the implementation of this function by looking up the relevant video (using the function from the previous challenge) and adding that information to the prompt to minimize hallucinations.
 
-Use _system instructions_ to ensure that the model returns `NO DATA` if it cannot reliably answer the question.
+Use ***system instructions*** to ensure that the model returns `NO DATA` if it cannot reliably answer the question.
 
 ### Success Criteria
 
@@ -166,7 +166,7 @@ In this challenge we'll use _Function calling_ to get the appropriate parameters
 
 ### Description
 
-Our system can provide weather information based on the sample videos, but we only have a few of those. We're going to improve our system to make a call to an API to get information in case our sample videos are not sufficient.
+Our system can provide weather information based on the sample videos, but we only have a few of those. We're going to improve our system to make a call to an API to get information in case our sample videos are not sufficient or do not contain the information we need.
 
 Uncomment the relevant lines in the `on_post` function to call the `get_weather_with_api` function when the previous attempts have yielded `NO DATA`. Complete the implementation of the `get_weather_with_api` function.by filling in the details for the `FunctionDeclaration`.
 
