@@ -91,13 +91,13 @@ Now the source data is available in BigQuery, use BigQuery ML capabilities to ge
 
 ### Introduction 
 
-In order to find semantically similar items we need to measure the distance between vectors in the embedding space. We could implement that ourselves by calculating the distance between each embedding ourselves but BigQuery already provides a function, `VECTOR_SEARCH`, that simplifies this process.
+In order to find semantically similar items we need to measure the distance between vectors in the embedding space. We could implement that ourselves by calculating the distance between each embedding but BigQuery already provides a function, `VECTOR_SEARCH`, that simplifies this process.
 
 ### Description
 
 We've already provided an incomplete Cloud Function, `weather-service`, that can be triggered through http(s). This Cloud Function has a function `get_relevant_video`, that can return the GCS uri of a relevant video for a question about the weather. Find that function and go through the code to understand how it works. 
 
-Go ahead and design a SQL query that retrieves the **top result** from the embeddings table given a natural language question and put that SQL query in the Cloud Function. Verify that the Logs for the Cloud Function contain `3-za-af.mp4` when the function is called with the question _"snow forecast for Eastern Cape"_. Note that the video is in _Afrikaans_ while the question is in _English_.
+Go ahead and design a SQL query that retrieves the **top result** from the embeddings table given a natural language question and put that SQL query in the Cloud Function. Verify that the Logs for the Cloud Function contain `3-za-af.mp4` when the function is called with the question _"snow forecast for Eastern Cape"_.
 
 > **Note**  
 > Only edit the parts where there's a **TODO** in the code and leave the parts with **DO NOT EDIT** untouched.
@@ -107,7 +107,7 @@ Go ahead and design a SQL query that retrieves the **top result** from the embed
 
 ### Success Criteria
 
-- The function `get_relevant_video` returns `3-za-af.mp4` when you call the Cloud Function with the following question _"snow forecast for Eastern Cape"_. You can verify that by checking the logs and looking up _Relevant Video URI_ entry.
+- The function `get_relevant_video` returns `3-za-af.mp4` when you call the Cloud Function with the following question _"snow forecast for Eastern Cape"_. Verify that this is the correct answer by watching the video (with the sound on) and looking up _Relevant Video URI_ entry in the Cloud Function Logs.
 
 ### Learning Resources
 
@@ -168,7 +168,7 @@ In this challenge we'll use _Function calling_ to get the appropriate parameters
 
 Our system can provide weather information based on the sample videos, but we only have a few of those. We're going to improve our system to make a call to an API to get information in case our sample videos are not sufficient or do not contain the information we need.
 
-Uncomment the relevant lines in the `on_post` function to call the `get_weather_with_api` function when the previous attempts have yielded `NO DATA`. Complete the implementation of the `get_weather_with_api` function.by filling in the details for the `FunctionDeclaration`.
+Uncomment the relevant lines in the `on_post` function to call the `get_weather_with_api` function when the previous attempts have yielded `NO DATA`. Complete the implementation of the `get_weather_with_api` function by filling in the details for the `FunctionDeclaration`.
 
 ### Success Criteria
 
