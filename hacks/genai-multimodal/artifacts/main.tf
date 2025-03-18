@@ -36,6 +36,11 @@ resource "google_project_service" "build_api" {
   disable_on_destroy = false
 }
 
+resource "google_project_service" "eventarc_api" {
+  service            = "eventarc.googleapis.com"
+  disable_on_destroy = false
+}
+
 resource "google_project_service" "artifacts_api" {
   service            = "artifactregistry.googleapis.com"
   disable_on_destroy = false
@@ -43,6 +48,11 @@ resource "google_project_service" "artifacts_api" {
 
 resource "google_project_service" "functions_api" {
   service            = "cloudfunctions.googleapis.com"
+  disable_on_destroy = false
+}
+
+resource "google_project_service" "run_api" {
+  service            = "run.googleapis.com"
   disable_on_destroy = false
 }
 
@@ -86,11 +96,7 @@ resource "google_project_service_identity" "functions_default_sa" {
   provider = google-beta
 
   project = data.google_project.project.project_id
-  service = "cloudfunctions.googleapis.com"
-
-  depends_on = [
-    google_project_service.functions_api
-  ]
+  service = google_project_service.run_api.service
 }
 
 resource "google_project_service_identity" "vertex_default_sa" {
@@ -99,20 +105,23 @@ resource "google_project_service_identity" "vertex_default_sa" {
   project = data.google_project.project.project_id
   service = "aiplatform.googleapis.com"
 
-  depends_on = [ 
-    google_project_service.vertex_api 
+  depends_on = [
+    google_project_service.vertex_api
   ]
 }
 
 resource "google_project_iam_member" "functions_default_iam" {
   project = var.gcp_project_id
   for_each = toset([
-    "roles/cloudfunctions.serviceAgent"
+    "roles/run.serviceAgent"
   ])
   role   = each.key
   member = "serviceAccount:${google_project_service_identity.functions_default_sa.email}"
   depends_on = [
+    google_project_service.build_api,
+    google_project_service.artifacts_api,
     google_project_service.functions_api,
+    google_project_service.run_api,
     google_project_service.iam_api
   ]
 }
@@ -142,10 +151,12 @@ resource "google_project_iam_member" "gce_default_iam" {
   for_each = toset([
     "roles/aiplatform.user",
     "roles/artifactregistry.writer",
+    "roles/cloudbuild.builds.builder",
     "roles/bigquery.connectionUser",
     "roles/bigquery.dataEditor",
     "roles/bigquery.user",
     "roles/logging.logWriter",
+    "roles/run.invoker",
     "roles/storage.objectAdmin"
   ])
   role   = each.key
@@ -177,28 +188,34 @@ resource "google_storage_bucket_object" "zip" {
   bucket = google_storage_bucket.bucket.name
 }
 
-resource "google_cloudfunctions_function" "function" {
-  name    = "weather-service"
-  runtime = "python311"
+resource "google_cloudfunctions2_function" "function" {
+  name     = "weather-service"
+  location = var.gcp_region
 
-  entry_point           = "on_post"
-  available_memory_mb   = "512"
-  timeout               = "300"
-  source_archive_bucket = google_storage_bucket.bucket.name
-  source_archive_object = google_storage_bucket_object.zip.name
-  ingress_settings      = "ALLOW_INTERNAL_AND_GCLB"
-  max_instances         = 4
-
-  service_account_email = data.google_compute_default_service_account.gce_default.email
-
-  environment_variables = {
-    GCP_REGION     = var.gcp_region
-    GCP_PROJECT_ID = var.gcp_project_id
+  build_config {
+    runtime     = "python312"
+    entry_point = "on_post"
+    source {
+      storage_source {
+        bucket = google_storage_bucket.bucket.name
+        object = google_storage_bucket_object.zip.name
+      }
+    }
   }
+  service_config {
+    available_memory   = "512M"
+    timeout_seconds    = 300
+    ingress_settings   = "ALLOW_INTERNAL_AND_GCLB"
+    max_instance_count = 4
 
-  trigger_http                 = true
-  https_trigger_security_level = "SECURE_ALWAYS"
+    service_account_email = data.google_compute_default_service_account.gce_default.email
 
+    environment_variables = {
+      GCP_REGION     = var.gcp_region
+      GCP_PROJECT_ID = var.gcp_project_id
+    }
+  }
+  
   depends_on = [
     time_sleep.wait_until_functions_sa_ready
   ]

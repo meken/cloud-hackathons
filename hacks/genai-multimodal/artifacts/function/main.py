@@ -27,7 +27,7 @@ REGION = os.getenv("GCP_REGION")
 
 vertexai.init(project=PROJECT_ID, location=REGION)
 
-MODEL_NAME="gemini-1.5-flash-001"
+MODEL_NAME="gemini-1.5-flash"
 
 
 # TODO Challenge 3: Edit the following SQL to return the top result for a question. Make sure to use ? as the 
