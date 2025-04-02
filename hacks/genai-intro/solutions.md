@@ -26,22 +26,29 @@ gsutil mb -l $REGION $BUCKET
 gsutil mb -l $REGION $STAGING
 ```
 
-The following command enables the required notifications from the bucket to the Pub/Sub topic. Note that this can only be configured from the CLI, there's no option to do this via the Console.
+Although most users will use the Console to configure the trigger, see below for the CLI version.
 
 ```shell
-TOPIC=documents
-gcloud storage buckets notifications create --event-types=OBJECT_FINALIZE --topic=$TOPIC $BUCKET
+CE_DEFAULT_SA=`gcloud compute project-info describe --format="value(defaultServiceAccount)"`
+gcloud eventarc triggers create storage-trigger  \
+    --location=$REGION \
+    --destination-run-service="process-document"  \
+    --destination-run-region=$REGION \
+    --event-filters="type=google.cloud.storage.object.v1.finalized" \
+    --event-filters="bucket=`basename $BUCKET`" \
+    --service-account="$CE_DEFAULT_SA"
 ```
 
-Since the topic already exists, this command will emit a warning, indicating that the topic is already there, you can safely ignore it.
+This should be straight-forward but it's important to use the `google.cloud.storage.object.v1.finalized` event type when they configure the trigger, as that's used when a file is uploaded or overwritten.
 
-If the participants miss the `OBJECT_FINALIZE` event type when they configure the notifications, things will fail when files are deleted from the bucket. Also, it's possible to have multiple triggers, so if they've made a mistake, the best course for action would be to delete all notification configurations and recreate it properly (as indicated above).
+In order to prevent multiple invocations of the function for the same document (due to Function running longer than the Pub/Sub default ack deadline), you'll need to update the `ack-deadline` of the subscription that's created automatically.
 
 ```shell
-gcloud storage buckets notifications delete $BUCKET  # delete all notification configurations
+PUBSUB_SUB=`gcloud pubsub subscriptions list --format="value(NAME)"`
+gcloud pubsub subscriptions update $PUBSUB_SUB  --ack-deadline=300
 ```
 
-> **Warning** Cloud Run Functions nowadays also support Cloud Storage triggers directly (through Eventarc), however there's a few issues with that at the moment (related to lack of control of retries and acknowledgment deadlines of the underlying assets, from the Cloud Run Functions UI), so we're sticking to Pub/Sub triggers for now. Make sure that the participants don't edit the configuration of the Cloud Run Function to use Cloud Storage triggers (instead of the already defined Pub/Sub trigger).
+> **Note** Previously we were using Cloud Storage Notifications through Pub/Sub, however we've simplified the challenge when we transitioned to Cloud Run Functions. No notification configuration needs to be done at the Cloud Storage Bucket level for this challenge.
 
 ## Challenge 2: First steps into the LLM realm
 
@@ -60,10 +67,10 @@ def get_prompt_for_title_extraction() -> str:
     """
 ```
 
-And make sure to truncate the text (assuming that on average 1 token is 3-4 characters, 5000 characters should be less than 2500 tokens):
+And make sure to truncate the text (assuming that on average 1 token is 3-4 characters, 2500 characters will be less than 2500 tokens):
 
 ```python
-prompt = prompt_template.format(text=text[:5000])
+prompt = prompt_template.format(text=text[:2500])
 ```
 
 > **Note**  If participants mention that they could have used models with large context windows to prevent the token limit issue, remind them that longer windows mean more tokens and become more expensive. The title is typically at the beginning of the article, so even when using those models it would make sense to truncate the text.

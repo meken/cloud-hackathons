@@ -48,8 +48,6 @@ Create two Cloud Storage Buckets, one for uploading documents and another one fo
 
 We'll trigger the summary generation automatically when a document is uploaded to the first Cloud Storage Bucket. We've already provided you with a(n incomplete) Cloud Run Function, `process-document`, make sure that this function is triggered whenever a new document is uploaded to the Cloud Storage Bucket.
 
-> **Note** The provided Cloud Run Function is configured to be triggered when a message is sent to an already existing Pub/Sub topic. You'll need to configure the correct Cloud Storage Bucket to send a message to that topic whenever a new document is added.
-
 ### Success Criteria
 
 - There are two Cloud Storage Buckets, one for uploading the documents and another one for staging with the required name.
@@ -59,11 +57,10 @@ We'll trigger the summary generation automatically when a document is uploaded t
 ### Learning Resources
 
 - [Creating new Cloud Storage Buckets](https://cloud.google.com/storage/docs/creating-buckets)
-- [Pub/Sub notifications for Cloud Storage](https://cloud.google.com/storage/docs/reporting-changes)
+- [Cloud Run Function triggers](https://cloud.google.com/functions/docs/calling)
 
 ### Tips
 
-- Check the provided Cloud Run Function's configuration to see the details on how it's being triggered (name of the Pub/Sub topic)
 - You can test things by uploading a [PDF file](https://arxiv.org/pdf/2301.02230.pdf) to the first Cloud Storage Bucket and watching the logs of the Cloud Run Function
 
 ## Challenge 2: First steps into the LLM realm

@@ -107,12 +107,33 @@ data "google_storage_project_service_account" "gcs_default" {
 
 }
 
+resource "google_project_service_identity" "pubsub_default_sa" {
+  provider = google-beta
+
+  project = data.google_project.project.project_id
+  service = google_project_service.pubsub_api.service
+}
+
 resource "google_project_service_identity" "functions_default_sa" {
   provider = google-beta
 
   project = data.google_project.project.project_id
-  service = "run.googleapis.com"
+  service = google_project_service.run_api.service
 }
+
+resource "google_project_iam_member" "pubsub_default_iam" {
+  project = var.gcp_project_id
+  for_each = toset([
+    "roles/pubsub.serviceAgent",
+    "roles/iam.serviceAccountTokenCreator"
+  ])
+  role   = each.key
+  member = "serviceAccount:${google_project_service_identity.pubsub_default_sa.email}"
+  depends_on = [
+    google_project_service.pubsub_api,
+    google_project_service.iam_api
+  ]
+}  
 
 resource "google_project_iam_member" "functions_default_iam" {
   project = var.gcp_project_id
@@ -137,14 +158,6 @@ resource "time_sleep" "wait_until_functions_sa_ready" {
   ]
 }
 
-resource "google_pubsub_topic" "pubsub_topic" {
-  name = "documents"
-
-  depends_on = [
-    google_project_service.pubsub_api
-  ]
-}
-
 resource "google_project_iam_member" "gce_default_iam" {
   project = var.gcp_project_id
   for_each = toset([
@@ -153,6 +166,7 @@ resource "google_project_iam_member" "gce_default_iam" {
     "roles/bigquery.dataEditor",
     "roles/bigquery.user",
     "roles/cloudbuild.builds.builder",
+    "roles/eventarc.eventReceiver",
     "roles/logging.logWriter",
     "roles/run.invoker",
     "roles/storage.objectAdmin",
@@ -160,6 +174,18 @@ resource "google_project_iam_member" "gce_default_iam" {
   ])
   role   = each.key
   member = "serviceAccount:${data.google_compute_default_service_account.gce_default.email}"
+  depends_on = [
+    google_project_service.iam_api
+  ]
+}
+
+resource "google_project_iam_member" "gcs_default_iam" {
+  project = var.gcp_project_id
+  for_each = toset([
+    "roles/pubsub.publisher"
+  ])
+  role   = each.key
+  member = "serviceAccount:${data.google_storage_project_service_account.gcs_default.email_address}"
   depends_on = [
     google_project_service.iam_api
   ]
@@ -212,11 +238,6 @@ resource "google_cloudfunctions2_function" "function" {
       GCP_PROJECT_ID = var.gcp_project_id
     }
     service_account_email = data.google_compute_default_service_account.gce_default.email
-  }
-
-  event_trigger {
-    event_type   = "google.cloud.pubsub.topic.v1.messagePublished"
-    pubsub_topic = google_pubsub_topic.pubsub_topic.id
   }
 
   depends_on = [

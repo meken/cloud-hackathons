@@ -236,7 +236,7 @@ def store_results_in_bq(dataset: str, table: str, columns: dict[str, str]) -> bo
 
 @functions_framework.cloud_event
 def on_document_added(event):
-    """Triggered from a message on a Cloud Pub/Sub topic.
+    """Triggered through Storage Bucket events.
 
     Do not edit until Challenge 4.
 
@@ -244,12 +244,11 @@ def on_document_added(event):
         event: event payload
         context: metadata for the event.
     """
-    pubsub_message = json.loads(base64.b64decode(event.data["message"]["data"]).decode("utf-8"))
-    src_bucket = pubsub_message["bucket"]
-    src_fname = pubsub_message["name"]
+    src_bucket = event.data["bucket"]
+    src_fname = event.data["name"]
     print(f"Processing file: {src_fname}")
 
-    if pubsub_message["contentType"] != "application/pdf":
+    if event.data["contentType"] != "application/pdf":
         raise ValueError("Only PDF files are supported, aborting")
 
     dst_bucket = STAGING_BUCKET
