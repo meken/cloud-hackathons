@@ -66,7 +66,8 @@ This hack will help you explore the following tasks:
 - Basic knowledge of Python
 - Access to a GCP environment
 
-> [!NOTE] In principle you could do the challenges in any environment, but we recommend Cloud Shell as it comes with all the required tooling.
+> [!NOTE]  
+> In principle you could do the challenges in any environment, but we recommend Cloud Shell as it comes with all the required tooling.
 
 ## Contributors
 
@@ -78,7 +79,8 @@ This hack will help you explore the following tasks:
 
 We’re taking baby steps, let’s get started with our development environment. This challenge is all about getting the quintessential Agent to work so that we can start building it further.
 
-> [!NOTE] You could run this (and the remaining challenges) from any VM, but we recommend you to use Cloud Shell as it comes with all the prerequisites pre-installed.
+> [!NOTE]  
+> You could run this (and the remaining challenges) from any VM, but we recommend you to use Cloud Shell as it comes with all the prerequisites pre-installed.
 
 ### Description
 
