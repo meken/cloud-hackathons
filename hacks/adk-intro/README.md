@@ -1,0 +1,244 @@
+# Introduction to Agents with ADK
+
+## Introduction
+
+Welcome to Luminaverse! In this universe we have a new generation of super-heroes and they're a bit overwhelmed by the amount of information they need to go through to help the citizens of the world. The information flood comes from different intelligence organizations, news reports, social media chatter, and direct alerts from allies. It's impossible for a human, or even a super-hero, to monitor everything 24/7. They need a system that can not only spot a crisis but also understand its context to avoid sending the wrong hero to the  (or any hero at all) to a false alarm.
+
+So our objective is to build an intelligent filter for global alerts, helping our super heroes to decide whom to send for which threats and we'll use AI Agents for this purpose.
+
+![Overview of Agents and Tools](./images/agents-and-tools.png)
+
+In this hack we’ll use the Agent Development Kit (ADK) framework to develop a basic agentic AI solution. ADK provides a comprehensive framework and set of tools designed to streamline the creation, deployment, and management of intelligent agents.
+
+But let's first start with some background information about our super-heroes.
+
+### Luminaverse Heroes
+
+In our universe the heroes are more international than ever, see below for an overview of who we've got.
+
+#### 晴香 (Dr. Haruka)
+
+Our first super hero 晴香 is the visionary strategist, the primary tech provider, and reluctant (but effective) field leader. Provides computational power and ingenuity. She's got a quantum-forged exosuit: a dynamic, self-assembling, and self-repairing exoskeleton powered by a stabilized miniature Aethel-core. Can configure (stealth, heavy armor), deploy energy weapons, projected shields, or limited hard-light constructs.
+
+#### سارة (Goddess Sara)
+
+Next, we've got a demi-goddess, سارة, she's the heavy hitter, and has superhuman strength, durability, and virtually limitless stamina. Their unique physiology allows them to absorb and redirect vast amounts of energy.
+
+#### Αλκμήνη (Alkmini)
+
+Αλκμήνη is the mystic specialist of the group, she's the scout for hidden realities, and the one who understands the most esoteric threats. She has Aethel-Weaving (reality bending) capabilities and she can manipulate the raw 'Aethel' energy underlying reality (shifting gravity, manipulating light/sound, force fields, energy blasts).
+
+#### Ծովինար (Captain Tsovinar)
+
+The leader of the group, Ծովինար, is the moral beacon, a master tactician and a close-combat powerhouse. She has enhanced strength, speed, stamina, and healing factor far beyond peak human levels. Acute senses and a mind designed for tactical warfare and leadership makes her the ultimate leader.
+
+#### Кассиопея (Kassiopeya)
+
+Кассиопея is the infiltrator, the intelligence gatherer, the close-quarters combat expert, and the grounded, human perspective of the team. She has peak human conditioning & artificial adaptability as the result of years of rigorous training granting her superhuman agility, reflexes, strength, and endurance. She's also the master of dozens of martial arts and weapon proficiencies.
+
+#### თამარი (Giant Tamar)
+
+Our last super hero თამარი is the overwhelming force, the blunt instrument, and a constant ethical dilemma for the team concerning her destructive power. Due to her mutation she can transform into a towering, massively muscled creature of immense raw power under extreme stress or threat. In her transformed state, she's nearly invincible, she possesses incredible durability, shrugging off most conventional attacks, and has an accelerated healing factor.
+
+## Learning Objectives
+
+This hack will help you explore the following tasks:
+
+- Using LLM Agents to analyze unstructured data
+- Augmenting Agents with Tools to expand their capabilities
+- Using multiple agents for collaboration
+- A bit of prompt engineering
+- Model Context Protocol (MCP) as the abstraction layer for 3rd party tools
+- Agent2Agent (A2A) Protocol for using 3rd party remote agents
+
+## Challenges
+
+- Challenge 1: First Contact
+- Challenge 2: The Hero Toolkit
+- Challenge 3: Agent's Logbook
+- Challenge 4: Teamwork
+- Challenge 5: MCP as the Matchmaker
+- Challenge 6: A2A: Signal Received
+
+## Prerequisites
+
+- Basic knowledge of GCP
+- Basic knowledge of Python
+- Access to a GCP environment
+
+> [!NOTE] In principle you could do the challenges in any environment, but we recommend Cloud Shell as it comes with all the required tooling.
+
+## Contributors
+
+- Murat Eken
+
+## Challenge 1: First Contact
+
+### Introduction
+
+We’re taking baby steps, let’s get started with our development environment. This challenge is all about getting the quintessential Agent to work so that we can start building it further.
+
+> [!NOTE] You could run this (and the remaining challenges) from any VM, but we recommend you to use Cloud Shell as it comes with all the prerequisites pre-installed.
+
+### Description
+
+We’ve already prepared a code base for you and put it in a Git repository (your coach will provide you the link), Clone that on Cloud Shell, create a virtual environment and install the requirements.
+
+Once everything is set up, run `adk web` and make sure that the agent responds back.
+
+### Success Criteria
+
+- The Git repository has been cloned to Cloud Shell.
+- You get no errors when you greet the agent from the `adk web` UI.
+- No code was modified.
+
+### Learning Resources
+
+TODO
+
+### Tips
+
+- TODO Cloud Shell Editor
+- TODO Setting up authentication for ADK
+
+## Challenge 2: The Hero Toolkit
+
+### Introduction
+
+We have our first agent, if you'd now ask which super hero to pick for an alert, the LLM would gladly make some suggestions, but since it doesn't know about our Luminaverse, it would probably take the well known heroes, or fabricate imaginary ones. This is because LLMs lack real-time and specific information (think about your internal documents/databases/processes/rules, LLMs have no access to that information).
+
+This is where *Tools* come into the picture: they provide a way for LLMs/agents to access external systems, databases, or APIs, thereby augmenting the LLM's knowledge base and enabling it to perform more complex, data-dependent operations. Although in this challenge we'll use a tool to gather additional information, tools can also be used to execute actions.
+
+### Description
+
+We’ve already provided a *Tool* that can look up our Luminaverse heroes (and their availability) in `tools.py`. Update the `hero_picker_agent` to use that tool. Once everything works as expected, push the changes to the repository.
+
+> [!NOTE] Typically we’d use a proper database or an external API to do the lookup, but for the sake of simplicity, the lookup tool for this challenge will be using a mock database in memory.
+
+### Success Criteria
+
+- The Agent has been configured to use the `available_agents` tool.
+- The Agent suggests an available hero from the Luminaverse for the following alert:
+
+  ```text
+  TODO
+  ```
+
+- The changes have been pushed to the remote Git repository.
+
+### Learning Resources
+
+TODO
+
+### Tips
+
+TODO
+
+## Challenge 3: Agent's Logbook
+
+### Introduction
+
+Meaningful, multi-turn conversations require agents to understand context. Just like humans, they need to recall the conversation history: what's been said and done to maintain continuity and avoid repetition. The Agent Development Kit (ADK) provides structured ways to manage this context through *Session*, *State*, and *(Long Term) Memory*.
+
+In this challenge we'll focus on the session state. Within each `Session` (our conversation thread), the `state` attribute acts like the agent's dedicated scratchpad for that specific interaction. While session.events holds the full history, session state is where the agent stores and updates dynamic details needed during the conversation.
+
+### Description
+
+Update the `hero_picker_agent` and make sure that the list of available agents is stored in the session state as `available_agents` after the agent runs.
+
+### Success Criteria
+
+- The Agent has been configured to store the list of available agents in the session state.
+- The changes have been pushed to the remote Git repository.
+
+### Learning Resources
+
+TODO
+
+### Tips
+
+- You can use `adk web` UI to inspect the session state (and to verify that everything works as expected).
+- TODO
+
+## Challenge 4: Teamwork
+
+### Introduction
+
+Breaking down complex problems into smaller, manageable sub-problems is a well-established strategy in software development. Multi-agent systems apply this principle to AI, allowing specialized agents to handle specific aspects of a larger task.
+
+In this challenge we'll introduce the concept of sub-agents and workflow agents which are specialized agents that control the execution flow of its sub-agents.
+
+### Description
+
+Create two new agents, a `threat_analysis_agent` which, given the alert message, classifies the alert into one of `MYSTICAL`, `TECHNOLOGICAL`, `CRIMINAL` threat types, and stores that into the session store as `threat_type`. And a new sequential agent `dispatcher_agent` that calls the `hero_picker_agent` and the `threat_analysis_agent` in sequence. Once you have created the new agents, update the `root_agent` to be the `dispatcher_agent`.
+
+### Success Criteria
+
+- The Agent runs both `hero_picker_agent` and `threat_analysis_agent` in sequence and updates the session store.
+- The changes have been pushed to the remote Git repository.
+
+### Learning Resources
+
+TODO
+
+### Tips
+
+- You can use `adk web` UI to view the agents involved and inspect the session state (to verify that everything works as expected).
+- TODO
+
+## Challenge 5: MCP as the Matchmaker
+
+### Introduction
+
+We have built and referenced our own tool in the second challenge, but what about using 3rd party tools? This is where the Model Context Protocol (MCP) plays a role; it offers a standardized method for agents to comprehend and engage with the functionalities of external, third-party tools and services. This is vital as it empowers agents to expand their capabilities by using other pre-packaged tools.
+
+### Description
+
+We have already provided an `mcp-server` on Cloud Run. It's basically responsible to do a semantic search to match which hero should be assigned given the threat type.
+
+Create a new agent `hero_matcher_agent`, configure it to use the tool from that server, passing the `available_agents` and `threat_type` as arguments. Update the `dispatcher_agent` to call this agent as the last one in the sequence.
+
+### Success Criteria
+
+- The Agent runs `hero_picker_agent`, `thret_analysis_agent`, `hero_matcher_agent` in sequence and returns the most appropriate hero.
+- For example for the following alert message we expect hero TODO to be picked:
+
+  ```text
+  TODO
+  ```
+
+- The changes have been pushed to the remote Git repository.
+
+### Learning Resources
+
+TODO
+
+### Tips
+
+- TODO proxy Cloud Run service
+
+## Challenge 6: A2A: Signal Received
+
+### Introduction
+
+In the previous challenge we've learned that we can use 3rd party tools, but how about 3rd party agents. This is where Agent2Agent comes in, it provides a standard way for discovering and utilizing agents developed by others.
+
+### Description
+
+We have already provided an `a2a-server` on Cloud Run. It has a single agent deployed that can signal the hero using whatever method they prefer (lights, smoke, carrier pigeon, etc).
+
+Create a new agent `signal_hero_agent` using A2A protocol and add it to the `dispatcher_agent` sequence as the last one.
+
+### Success Criteria
+
+- The Agent runs all the agents in sequence and signals the chosen hero.
+- The changes have been pushed to the remote Git repository.
+
+### Learning Resources
+
+TODO
+
+### Tips
+
+- You can use `adk web` UI to view the agents involved and inspect the session state (to verify that everything works as expected).
+- TODO proxy Cloud Run service
