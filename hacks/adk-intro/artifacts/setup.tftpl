@@ -1,0 +1,47 @@
+#!/bin/bash
+
+export PROJECT_ID=${gcp_project_id}
+export REGION=${gcp_region}
+export SOURCE_REPO=${source_repo}
+
+# Suppressing some warnings
+echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+
+# Installing the OS dependencies
+apt-get install -y git
+
+# Initialize the repo
+echo "Retrieving the source code..."
+git clone https://github.com/meken/gcp-adk-intro-agent.git adk-agent
+
+echo "Configuring the repo credentials..."
+gcloud init && git config credential.helper gcloud.sh
+
+echo "Pushing the cloned repo to the new remote..."
+cd ghacks-adk-intro
+git remote add google https://source.developers.google.com/p/$PROJECT_ID/r/$SOURCE_REPO
+git push --all google
+
+# Set up the Cloud Run instances
+echo "Retrieving the source code for Cloud Run instances..."
+git clone git clone https://github.com/meken/gcp-adk-intro-setup.git adk-setup
+
+echo "Deploying a2a server..."
+gcloud run deploy a2a-server \
+    --no-allow-unauthenticated \
+    --region=$REGION \
+    --set-env-vars=GOOGLE_CLOUD_PROJECT=$PROJECT_ID \
+    --set-env-vars=GOOGLE_CLOUD_LOCATION=$REGION \
+    --set-env-vars=GOOGLE_GENAI_USE_VERTEXAI=True \
+    --source adk-setup/a2a-server
+
+echo "Deploying mcp server..."
+gcloud run deploy mcp-server \
+    --no-allow-unauthenticated \
+    --region=$REGION \
+    --set-env-vars=GOOGLE_CLOUD_PROJECT=$PROJECT_ID \
+    --set-env-vars=GOOGLE_CLOUD_LOCATION=$REGION \
+    --set-env-vars=GOOGLE_GENAI_USE_VERTEXAI=True \
+    --source adk-setup/mcp-server
+
+echo "All done!"
