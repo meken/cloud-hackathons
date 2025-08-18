@@ -17,6 +17,7 @@ Welcome to the coach's guide for Introduction to Agents with ADK gHack. Here you
 - Challenge 4: Teamwork  
 - Challenge 5: MCP as the Matchmaker  
 - Challenge 6: A2A: Signal Received
+- Challenge 7: Acting Agent
 
 ## Challenge 1: First Contact
 
@@ -39,5 +40,9 @@ Welcome to the coach's guide for Introduction to Agents with ADK gHack. Here you
 ### Notes & Guidance
 
 ## Challenge 6: A2A: Signal Received
+
+### Notes & Guidance
+
+## Challenge 7: Acting Agent
 
 ### Notes & Guidance

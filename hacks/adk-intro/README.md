@@ -34,7 +34,7 @@ The leader of the group, Ծովինար, is the moral beacon, a master tactician
 
 #### Кассиопея (Kassiopeya)
 
-Кассиопея is the infiltrator, the intelligence gatherer, the close-quarters combat expert, and the grounded, human perspective of the team. She has peak human conditioning & artificial adaptability as the result of years of rigorous training granting her superhuman agility, reflexes, strength, and endurance. She's also the master of dozens of martial arts and weapon proficiencies.
+Кассиопея is the infiltrator, the intelligence gatherer, the close-quarters combat expert, and the grounded human perspective of the team. She has peak human conditioning & artificial adaptability as the result of years of rigorous training granting her superhuman agility, reflexes, strength, and endurance. She's also the master of dozens of martial arts and weapon proficiencies.
 
 #### თამარი (Giant Tamar)
 
@@ -59,6 +59,9 @@ This hack will help you explore the following tasks:
 - Challenge 4: Teamwork
 - Challenge 5: MCP as the Matchmaker
 - Challenge 6: A2A: Signal Received
+- Challenge 7: Acting Agents
+
+## Resources
 
 ## Prerequisites
 
@@ -77,14 +80,14 @@ This hack will help you explore the following tasks:
 
 ### Introduction
 
-We’re taking baby steps, let’s get started with our development environment. This challenge is all about getting the quintessential Agent to work so that we can start building it further.
+We’re taking baby steps, let’s get started with our development environment. This challenge is all about getting the quintessential *Agent* to work so that we can start building it further.
 
 > [!NOTE]  
 > You could run this (and the remaining challenges) from any VM, but we recommend you to use Cloud Shell as it comes with all the prerequisites pre-installed.
 
 ### Description
 
-We’ve already prepared a code base for you and put it in a Git repository (your coach will provide you the link), Clone that on Cloud Shell, create a virtual environment and install the requirements.
+We’ve already prepared a code base for you and put it in a Git repository (your coach will provide you the link). Clone that on Cloud Shell, create a virtual environment and install the requirements.
 
 Once everything is set up, run `adk web` and make sure that the agent responds back.
 
@@ -107,19 +110,20 @@ TODO
 
 ### Introduction
 
-We have our first agent, if you'd now ask which super hero to pick for an alert, the LLM would gladly make some suggestions, but since it doesn't know about our Luminaverse, it would probably take the well known heroes, or fabricate imaginary ones. This is because LLMs lack real-time and specific information (think about your internal documents/databases/processes/rules, LLMs have no access to that information).
+We have our first agent, and if you'd now ask which super hero to pick for an alert, the LLM would gladly make some suggestions. But since it doesn't know about our Luminaverse, it would probably take the well known heroes, or fabricate imaginary ones. This is because LLMs lack real-time and specific information (think about your internal documents/databases/processes/rules, LLMs have no access to that information).
 
-This is where *Tools* come into the picture: they provide a way for LLMs/agents to access external systems, databases, or APIs, thereby augmenting the LLM's knowledge base and enabling it to perform more complex, data-dependent operations. Although in this challenge we'll use a tool to gather additional information, tools can also be used to execute actions.
+This is where *Tools* come into the picture: they provide a way for LLMs/agents to access external systems, databases, or APIs, thereby augmenting the LLM's knowledge base and enabling it to perform more complex, data-dependent operations. Although in this challenge we'll use a tool to gather additional information, tools can also be used to execute actions (which we'll cover in the last challenge).
 
 ### Description
 
-We’ve already provided a *Tool* that can look up our Luminaverse heroes (and their availability) in `tools.py`. Update the `hero_picker_agent` to use that tool. Once everything works as expected, push the changes to the repository.
+The provided code base already has a function that can look up our Luminaverse heroes (and their availability) in `tools.py`. Update the `hero_picker_agent` to use that function as a tool. Once everything works as expected, push the changes to the repository.
 
-> [!NOTE] Typically we’d use a proper database or an external API to do the lookup, but for the sake of simplicity, the lookup tool for this challenge will be using a mock database in memory.
+> [!NOTE]  
+> Typically we’d use a proper database or an external API to do the lookup, but for the sake of simplicity, the lookup tool for this challenge will be using a simple `sqlite` database.
 
 ### Success Criteria
 
-- The Agent has been configured to use the `available_agents` tool.
+- The Agent has been configured to use the `available_agents` function as a tool.
 - The Agent suggests an available hero from the Luminaverse for the following alert:
 
   ```text
@@ -134,7 +138,7 @@ TODO
 
 ### Tips
 
-TODO
+- Cloud Shell has a CLI client for `sqlite3` databases, which you can use to explore the contents of the provided `sqlite` database.
 
 ## Challenge 3: Agent's Logbook
 
@@ -142,7 +146,7 @@ TODO
 
 Meaningful, multi-turn conversations require agents to understand context. Just like humans, they need to recall the conversation history: what's been said and done to maintain continuity and avoid repetition. The Agent Development Kit (ADK) provides structured ways to manage this context through *Session*, *State*, and *(Long Term) Memory*.
 
-In this challenge we'll focus on the session state. Within each `Session` (our conversation thread), the `state` attribute acts like the agent's dedicated scratchpad for that specific interaction. While session.events holds the full history, session state is where the agent stores and updates dynamic details needed during the conversation.
+In this challenge we'll focus on the session state. Within each `Session` (our conversation thread), the `state` attribute acts like the agent's dedicated scratchpad for that specific interaction. While session events holds the full history, session state is where the agent stores and updates dynamic details needed during the conversation.
 
 ### Description
 
@@ -192,7 +196,7 @@ TODO
 
 ### Introduction
 
-We have built and referenced our own tool in the second challenge, but what about using 3rd party tools? This is where the Model Context Protocol (MCP) plays a role; it offers a standardized method for agents to comprehend and engage with the functionalities of external, third-party tools and services. This is vital as it empowers agents to expand their capabilities by using other pre-packaged tools.
+We have built and referenced our own tool in the second challenge, but what about using tools developed by others? This is where the Model Context Protocol (MCP) plays a role; it offers a standardized method for agents to comprehend and engage with the functionalities of external tools and services developed by others. This is vital as it empowers agents to expand their capabilities by using other pre-packaged tools.
 
 ### Description
 
@@ -223,11 +227,11 @@ TODO
 
 ### Introduction
 
-In the previous challenge we've learned that we can use 3rd party tools, but how about 3rd party agents. This is where Agent2Agent comes in, it provides a standard way for discovering and utilizing agents developed by others.
+In the previous challenge we've learned that we can use tools developed by others, but how about agents? This is where Agent2Agent comes in, it provides a standard way for discovering and utilizing agents developed by others.
 
 ### Description
 
-We have already provided an `a2a-server` on Cloud Run. It has a single agent deployed that can signal the hero using whatever method they prefer (lights, smoke, carrier pigeon, etc).
+We have already provided an `a2a-server` on Cloud Run. It has a single agent deployed that can signal the hero using whatever method they prefer (lights, smoke, fax, email, carrier pigeon etc).
 
 Create a new agent `signal_hero_agent` using A2A protocol and add it to the `dispatcher_agent` sequence as the last one.
 
@@ -244,3 +248,26 @@ TODO
 
 - You can use `adk web` UI to view the agents involved and inspect the session state (to verify that everything works as expected).
 - TODO proxy Cloud Run service
+
+## Challenge 7: Acting Agents
+
+### Introduction
+
+The agent's abilities have so far been mostly limited to data retrieval and analysis; there's no transaction, no update, no ACTion. Agents in general will take action, beyond *retrieving data from other systems* to provide much better value to the user. You should think of agents that *do things* such as sending emails, updating CRMs, placing work orders, approving requests, and so on. Although in the previous challenge we've already dealt with an agent that does something (sending a signal), we're going to create a more concrete example in this challenge.
+
+### Description
+
+Create a new agent `update_availability_agent` that uses a tool to update the availability information of the chosen hero in the database and add it to the `dispatcher_agent` sequence as the last one.
+
+### Success Criteria
+
+- The Agent runs all the agents in sequence and updates the availability of the chosen hero as the last step.
+- The changes have been pushed to the remote Git repository.
+
+### Learning Resources
+
+TODO
+
+### Tips
+
+- Cloud Shell has a CLI client for `sqlite3` databases, which you can use to verify that everything works as expected.
