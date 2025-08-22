@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Welcome to Luminaverse! In this universe we have a new generation of super-heroes and they're a bit overwhelmed by the amount of information they need to go through to help the citizens of the world. The information flood comes from different intelligence organizations, news reports, social media chatter, and direct alerts from allies. It's impossible for a human, or even a super-hero, to monitor everything 24/7. They need a system that can not only spot a crisis but also understand its context to avoid sending the wrong hero to the  (or any hero at all) to a false alarm.
+Welcome to Luminaverse! In this universe we have a new generation of super-heroes and they're a bit overwhelmed by the amount of information they need to go through to help the citizens of the world. The information flood comes from different intelligence organizations, news reports, social media chatter, and direct alerts from allies. It's impossible for a human, or even a super-hero, to monitor everything 24/7. They need a system that can not only spot a crisis but also understand its context to avoid sending the wrong hero to the (or any hero at all) to a false alarm.
 
 So our objective is to build an intelligent filter for global alerts, helping our super heroes to decide whom to send for which threats and we'll use AI Agents for this purpose.
 
@@ -61,8 +61,6 @@ This hack will help you explore the following tasks:
 - Challenge 6: A2A: Signal Received
 - Challenge 7: Acting Agents
 
-## Resources
-
 ## Prerequisites
 
 - Basic knowledge of GCP
@@ -70,7 +68,7 @@ This hack will help you explore the following tasks:
 - Access to a GCP environment
 
 > [!NOTE]  
-> In principle you could do the challenges in any environment, but we recommend Cloud Shell as it comes with all the required tooling.
+> In principle you could do the challenges in any environment, but we recommend Cloud Shell as it comes with most of the required tooling.
 
 ## Contributors
 
@@ -83,7 +81,7 @@ This hack will help you explore the following tasks:
 We’re taking baby steps, let’s get started with our development environment. This challenge is all about getting the quintessential *Agent* to work so that we can start building it further.
 
 > [!NOTE]  
-> You could run this (and the remaining challenges) from any VM, but we recommend you to use Cloud Shell as it comes with all the prerequisites pre-installed.
+> You could run this (and the remaining challenges) from any VM, but we recommend you to use Cloud Shell as it comes with most of the prerequisites pre-installed.
 
 ### Description
 
@@ -99,12 +97,13 @@ Once everything is set up, run `adk web` and make sure that the agent responds b
 
 ### Learning Resources
 
-TODO
+- [Cloud Shell](https://cloud.google.com/shell/docs/launching-cloud-shell)
+- [Cloud Shell Editor](https://cloud.google.com/shell/docs/launching-cloud-shell-editor)
+- [Previewing web apps](https://cloud.google.com/shell/docs/using-web-preview)
 
 ### Tips
 
-- TODO Cloud Shell Editor
-- TODO Setting up authentication for ADK
+- [Setting up authentication for ADK](https://google.github.io/adk-docs/get-started/quickstart/#set-up-the-model)
 
 ## Challenge 2: The Hero Toolkit
 
@@ -113,6 +112,9 @@ TODO
 We have our first agent, and if you'd now ask which super hero to pick for an alert, the LLM would gladly make some suggestions. But since it doesn't know about our Luminaverse, it would probably take the well known heroes, or fabricate imaginary ones. This is because LLMs lack real-time and specific information (think about your internal documents/databases/processes/rules, LLMs have no access to that information).
 
 This is where *Tools* come into the picture: they provide a way for LLMs/agents to access external systems, databases, or APIs, thereby augmenting the LLM's knowledge base and enabling it to perform more complex, data-dependent operations. Although in this challenge we'll use a tool to gather additional information, tools can also be used to execute actions (which we'll cover in the last challenge).
+
+> [!NOTE]  
+> Although we're using tools to gather additional information, tools can also be used to execute actions, create local files, update databases, send commmunication etc.
 
 ### Description
 
@@ -133,8 +135,8 @@ The provided code base already has a function that can look up our Luminaverse h
 - The changes have been pushed to the remote Git repository.
 
 ### Learning Resources
-
-TODO
+  
+- [Tools in ADK](https://google.github.io/adk-docs/tools/)
 
 ### Tips
 
@@ -146,7 +148,7 @@ TODO
 
 Meaningful, multi-turn conversations require agents to understand context. Just like humans, they need to recall the conversation history: what's been said and done to maintain continuity and avoid repetition. The Agent Development Kit (ADK) provides structured ways to manage this context through *Session*, *State*, and *(Long Term) Memory*.
 
-In this challenge we'll focus on the session state. Within each `Session` (our conversation thread), the `state` attribute acts like the agent's dedicated scratchpad for that specific interaction. While session events holds the full history, session state is where the agent stores and updates dynamic details needed during the conversation.
+In this challenge we'll focus on the session state. Within each `Session` (our conversation thread), the `state` attribute acts like the agent's dedicated scratchpad for that specific interaction. While session events hold the full history, session state is where the agent stores and updates dynamic details needed during the conversation.
 
 ### Description
 
@@ -159,12 +161,11 @@ Update the `hero_picker_agent` and make sure that the list of available heroes i
 
 ### Learning Resources
 
-TODO
+- [Session state in ADK](https://google.github.io/adk-docs/sessions/state/)
 
 ### Tips
 
 - You can use `adk web` UI to inspect the session state (and to verify that everything works as expected).
-- TODO
 
 ## Challenge 4: Teamwork
 
@@ -185,12 +186,11 @@ Create two new agents, a `threat_analysis_agent` which, given the alert message,
 
 ### Learning Resources
 
-TODO
+- [Multi-Agent Systems in ADK](https://google.github.io/adk-docs/agents/multi-agents/)
 
 ### Tips
 
-- You can use `adk web` UI to view the agents involved and inspect the session state (to verify that everything works as expected).
-- TODO
+- You can use `adk web` UI to view the agents involved.
 
 ## Challenge 5: MCP as the Matchmaker
 
@@ -207,7 +207,7 @@ We have already provided an `mcp-server` on Cloud Run. It's basically responsibl
 Create a new agent `hero_matcher_agent`, configure it to use the tool from that server, passing the `available_agents` and `threat_type` as arguments. Update the `dispatcher_agent` to call this agent as the last one in the sequence.
 
 > [!NOTE]  
-> In this challenge we're using a tool to do basic semantic search, but keep in mind that these can also be used to execute actions, creating tickets, updating databases, sending communication etc.
+> In this challenge we're using a tool to do basic semantic search, but keep in mind that these can also be used to execute actions such as creating tickets, updating databases, sending communication etc.
 
 ### Success Criteria
 
@@ -222,11 +222,11 @@ Create a new agent `hero_matcher_agent`, configure it to use the tool from that 
 
 ### Learning Resources
 
-TODO
+- [MCP Tools in ADK](https://google.github.io/adk-docs/tools/mcp-tools/)
 
 ### Tips
 
-- TODO proxy Cloud Run service
+- You can use a [proxy](https://cloud.google.com/sdk/gcloud/reference/run/services/proxy) to simplify the authentication for the Cloud Run service.
 
 ## Challenge 6: A2A: Signal Received
 
@@ -247,12 +247,12 @@ Create a new agent `signal_hero_agent` that uses A2A protocol to connect to the 
 
 ### Learning Resources
 
-TODO
+- [Using A2A Agents in ADK](https://google.github.io/adk-docs/a2a/quickstart-consuming/)
 
 ### Tips
 
-- You can use `adk web` UI to view the agents involved and inspect the session state (to verify that everything works as expected).
-- TODO proxy Cloud Run service
+- You can use `adk web` UI to view the agents involved.
+- You can use a [proxy](https://cloud.google.com/sdk/gcloud/reference/run/services/proxy) to simplify the authentication for the Cloud Run service.
 
 ## Challenge 7: Acting Agents
 
@@ -268,10 +268,6 @@ Create a new agent `update_availability_agent` that uses a tool to update the av
 
 - The Agent runs all the agents in sequence and updates the availability of the chosen hero as the last step.
 - The changes have been pushed to the remote Git repository.
-
-### Learning Resources
-
-TODO
 
 ### Tips
 
