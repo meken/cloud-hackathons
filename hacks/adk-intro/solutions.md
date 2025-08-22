@@ -7,6 +7,9 @@ Welcome to the coach's guide for Introduction to Agents with ADK gHack. Here you
 > [!NOTE]  
 > If you are a gHacks participant, this is the answer guide. Don't cheat yourself by looking at this guide during the hack!
 
+> [!IMPORTANT]  
+> As of June 2024 *Cloud Source Repositories* is [end of sale](https://cloud.google.com/source-repositories/docs/release-notes#June_17_2024). However, any organization that has created at least one CSR repository in the past, will still have access to existing repositories and will be able to create new ones. If you're running this in a Qwiklabs environment you're good to go, but if you're running this in **your** own environment, please verify that you have access to *Cloud Source Repositories* in your organization.
+
 ## Coach's Guides
 
 ## Challenges
@@ -26,10 +29,10 @@ Welcome to the coach's guide for Introduction to Agents with ADK gHack. Here you
 The first step is to clone the repository that has been created for the team.
 
 > [!IMPORTANT]  
-> We're using Cloud Source Repositories for this hack, which still uses `master` as the default branch. So, the students should either directly clone the `main` branch as shown below or switch to it after cloning.
+> We're using Cloud Source Repositories for this hack, which still uses `master` as the default branch. The easiest option is to stick to that.
 
 ```shell
-git clone -b main https://source.developers.google.com/p/$GOOGLE_CLOUD_PROJECT/r/ghacks-adk-intro
+git clone https://source.developers.google.com/p/$GOOGLE_CLOUD_PROJECT/r/ghacks-adk-intro
 ```
 
 Once the repository is cloned, although it's not a hard requirement, the best practice is to start with a virtual environment. There are multiple tools to create virtual environments and install packages but we'll stick to the defaults.
