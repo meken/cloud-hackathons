@@ -150,7 +150,7 @@ In this challenge we'll focus on the session state. Within each `Session` (our c
 
 ### Description
 
-Update the `hero_picker_agent` and make sure that the list of available agents is stored in the session state as `available_agents` after the agent runs.
+Update the `hero_picker_agent` and make sure that the list of available heroes is stored in the session state as `available_agents` after the agent runs.
 
 ### Success Criteria
 
@@ -198,11 +198,16 @@ TODO
 
 We have built and referenced our own tool in the second challenge, but what about using tools developed by others? This is where the Model Context Protocol (MCP) plays a role; it offers a standardized method for agents to comprehend and engage with the functionalities of external tools and services developed by others. This is vital as it empowers agents to expand their capabilities by using other pre-packaged tools.
 
+There's a plentitude of various MCP Tool providers (for example see this [list](https://mcpservers.org/)), which can run locally as well as remotely. For this challenge we'll use a sample tool that we have developed for this hack using [FastMCP](https://gofastmcp.com/getting-started/welcome) library and running on [Cloud Run](https://cloud.google.com/run/docs/host-mcp-servers).
+
 ### Description
 
 We have already provided an `mcp-server` on Cloud Run. It's basically responsible to do a semantic search to match which hero should be assigned given the threat type.
 
 Create a new agent `hero_matcher_agent`, configure it to use the tool from that server, passing the `available_agents` and `threat_type` as arguments. Update the `dispatcher_agent` to call this agent as the last one in the sequence.
+
+> [!NOTE]  
+> In this challenge we're using a tool to do basic semantic search, but keep in mind that these can also be used to execute actions, creating tickets, updating databases, sending communication etc.
 
 ### Success Criteria
 
@@ -233,7 +238,7 @@ In the previous challenge we've learned that we can use tools developed by other
 
 We have already provided an `a2a-server` on Cloud Run. It has a single agent deployed that can signal the hero using whatever method they prefer (lights, smoke, fax, email, carrier pigeon etc).
 
-Create a new agent `signal_hero_agent` using A2A protocol and add it to the `dispatcher_agent` sequence as the last one.
+Create a new agent `signal_hero_agent` that uses A2A protocol to connect to the remote `a2a-server` and add it to the `dispatcher_agent` sequence as the last one.
 
 ### Success Criteria
 
@@ -253,7 +258,7 @@ TODO
 
 ### Introduction
 
-The agent's abilities have so far been mostly limited to data retrieval and analysis; there's no transaction, no update, no ACTion. Agents in general will take action, beyond *retrieving data from other systems* to provide much better value to the user. You should think of agents that *do things* such as sending emails, updating CRMs, placing work orders, approving requests, and so on. Although in the previous challenge we've already dealt with an agent that does something (sending a signal), we're going to create a more concrete example in this challenge.
+The agent's abilities have so far been mostly limited to data retrieval and analysis; there's no transaction, no update, no *ACT*ion. Agents in general will take action, beyond *retrieving data from other systems* to provide much better value to the user. You should think of agents that *do things* such as sending emails, updating CRMs, placing work orders, approving requests, and so on. Although in the previous challenge we've already dealt with an agent that does something (sending a signal), we're going to create a more concrete example in this challenge.
 
 ### Description
 
