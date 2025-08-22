@@ -135,7 +135,7 @@ The provided code base already has a function that can look up our Luminaverse h
 - The changes have been pushed to the remote Git repository.
 
 ### Learning Resources
-  
+
 - [Tools in ADK](https://google.github.io/adk-docs/tools/)
 
 ### Tips
@@ -211,11 +211,14 @@ Create a new agent `hero_matcher_agent`, configure it to use the tool from that 
 
 ### Success Criteria
 
-- The Agent runs `hero_picker_agent`, `thret_analysis_agent`, `hero_matcher_agent` in sequence and returns the most appropriate hero.
+- The Agent runs `hero_picker_agent`, `threat_analysis_agent`, `hero_matcher_agent` in sequence and returns the most appropriate hero.
 - For example for the following alert message we expect hero TODO to be picked:
 
   ```text
-  TODO
+  URGENT - London. 
+  Reports from Scotland Yard confirm that the Tower of London has been breached. 
+  Witnesses describe ancient stone guardians coming to life and sealing the exits. 
+  Strange, glowing symbols are appearing on the walls. Standard police units are ineffective.
   ```
 
 - The changes have been pushed to the remote Git repository.
