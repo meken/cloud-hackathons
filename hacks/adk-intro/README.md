@@ -118,14 +118,14 @@ This is where *Tools* come into the picture: they provide a way for LLMs/agents 
 
 ### Description
 
-The provided code base already has a function that can look up our Luminaverse heroes (and their availability) in `tools.py`. Update the `hero_picker_agent` to use that function as a tool. Once everything works as expected, push the changes to the repository.
+The provided code base already has a function that can look up our Luminaverse heroes (and their availability) in `tools.py`. Update the `hero_finder_agent` to use that function as a tool. Once everything works as expected, push the changes to the repository.
 
 > [!NOTE]  
 > Typically we’d use a proper database or an external API to do the lookup, but for the sake of simplicity, the lookup tool for this challenge will be using a simple `sqlite` database.
 
 ### Success Criteria
 
-- The Agent has been configured to use the `available_agents` function as a tool.
+- The Agent has been configured to use the `get_available_heroes` function as a tool.
 - The Agent suggests an available hero from the Luminaverse for the following alert:
 
   ```text
@@ -152,7 +152,7 @@ In this challenge we'll focus on the session state. Within each `Session` (our c
 
 ### Description
 
-Update the `hero_picker_agent` and make sure that the list of available heroes is stored in the session state as `available_agents` after the agent runs.
+Update the `hero_finder_agent` and make sure that the list of available heroes is stored in the session state as `available_heroes` after the agent runs.
 
 ### Success Criteria
 
@@ -177,11 +177,11 @@ In this challenge we'll introduce the concept of sub-agents and workflow agents 
 
 ### Description
 
-Create two new agents, a `threat_analysis_agent` which, given the alert message, classifies the alert into one of `MYSTICAL`, `TECHNOLOGICAL`, `CRIMINAL` threat types, and stores that into the session store as `threat_type`. And a new sequential agent `dispatcher_agent` that calls the `hero_picker_agent` and the `threat_analysis_agent` in sequence. Once you have created the new agents, update the `root_agent` to be the `dispatcher_agent`.
+Create two new agents, a `threat_analysis_agent` which, given the alert message, classifies the alert into one of `MYSTICAL`, `TECHNOLOGICAL`, `CRIMINAL` threat types, and stores that into the session store as `threat_type`. And a new sequential agent `dispatcher_agent` that calls the `hero_finder_agent` and the `threat_analysis_agent` in sequence. Once you have created the new agents, update the `root_agent` to be the `dispatcher_agent`.
 
 ### Success Criteria
 
-- The Agent runs both `hero_picker_agent` and `threat_analysis_agent` in sequence and updates the session store.
+- The Agent runs both `hero_finder_agent` and `threat_analysis_agent` in sequence and updates the session store.
 - The changes have been pushed to the remote Git repository.
 
 ### Learning Resources
@@ -207,11 +207,11 @@ We have already provided an `mcp-server` on Cloud Run. It's basically responsibl
 Create a new agent `hero_matcher_agent`, configure it to use the tool from that server, passing the `available_agents` and `threat_type` as arguments. Update the `dispatcher_agent` to call this agent as the last one in the sequence.
 
 > [!NOTE]  
-> In this challenge we're using a tool to do basic semantic search, but keep in mind that these can also be used to execute actions such as creating tickets, updating databases, sending communication etc.
+> In this challenge we're using a tool to do basic matching, but keep in mind that these can also be used to execute actions such as creating tickets, updating databases, sending communications etc.
 
 ### Success Criteria
 
-- The Agent runs `hero_picker_agent`, `threat_analysis_agent`, `hero_matcher_agent` in sequence and returns the most appropriate hero.
+- The Agent runs `hero_finder_agent`, `threat_analysis_agent`, `hero_matcher_agent` in sequence and returns the most appropriate hero.
 - For example for the following alert message we expect hero TODO to be picked:
 
   ```text

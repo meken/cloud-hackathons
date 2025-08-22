@@ -23,26 +23,217 @@ Welcome to the coach's guide for Introduction to Agents with ADK gHack. Here you
 
 ### Notes & Guidance
 
+The first step is to clone the repository that has been created for the team.
+
+> [!IMPORTANT]  
+> We're using Cloud Source Repositories for this hack, which still uses `master` as the default branch. So, the students should either directly clone the `main` branch as shown below or switch to it after cloning.
+
+```shell
+git clone -b main https://source.developers.google.com/p/$GOOGLE_CLOUD_PROJECT/r/ghacks-adk-intro
+```
+
+Once the repository is cloned, although it's not a hard requirement, the best practice is to start with a virtual environment. There are multiple tools to create virtual environments and install packages but we'll stick to the defaults.
+
+```shell
+cd ghacks-adk-intro
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Now we can install the required libraries.
+
+```shell
+pip install -r requirements.txt
+```
+
+One final step before we can start running the `adk web` command is to set some environment variables.
+
+```shell
+REGION=us-central1
+cat > .env <<EOF
+GOOGLE_GENAI_USE_VERTEXAI=TRUE
+GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT
+GOOGLE_CLOUD_LOCATION=$REGION
+EOF
+source .env
+```
+
+Now we can run the `adk web` command and preview it by clicking the web preview icon in the Cloud Shell menu and selecting Preview and Change Port to 8000.
+
 ## Challenge 2: The Hero Toolkit
 
 ### Notes & Guidance
+
+The new driver should follow the same steps to clone the repository and set up their environment.
+
+Then edit the `heroes/agent.py` to update the prompt and configure the tool.
+
+```python
+hero_finder_agent = Agent(
+    name="hero_finder_agent",
+    model=settings.GEMINI_MODEL,
+    instruction="""
+    Return super heroes to respond to the threat.
+    Use the provided `get_available_heroes` tool to find the list of available heroes.
+    """,
+    tools=[tools.get_available_heroes]
+)
+```
+
+Make sure that the changes are pushed to the repository so the next driver can pick up the changes.
 
 ## Challenge 3: Agent's Logbook
 
 ### Notes & Guidance
 
+Again the new driver should follow the same steps for the first challenge to clone the repository (or pull the latest changes if they have already cloned it) and set up their environment (if they haven't done that already).
+
+Then edit the `heroes/agent.py` to update the prompt and configure the `output_key`. It's also possible to introduce another tool that stores things explicitly in the session state, which is fine too.
+
+```python
+hero_finder_agent = Agent(
+    name="hero_finder_agent",
+    model=settings.GEMINI_MODEL,
+    instruction="""
+    Return super heroes to respond to the threat.
+    Use the provided `get_available_heroes` tool to find the list of available heroes.
+    """,
+    tools=[tools.get_available_heroes],
+    output_key="available_heroes"
+)
+
+root_agent = hero_finder_agent
+```
+
+Make sure that the changes are pushed to the repository so the next driver can pick up the changes.
+
 ## Challenge 4: Teamwork
 
 ### Notes & Guidance
+
+Again the new driver should follow the same steps for the first challenge to clone the repository (or pull the latest changes if they have already cloned it) and set up their environment (if they haven't done that already).
+
+```python
+threat_analyzer_agent = Agent(
+    name="threat_analyzer_agent",
+    model=settings.GEMINI_MODEL,
+    instruction="""
+    Based on the alert message classify the threat into one of `MYSTICAL`, `TECHNOLOGICAL`, or `CRIMINAL`.
+    """,
+    output_key="threat_type"
+)
+
+dispatcher_agent = SequentialAgent(
+    name="dispatcher_agent",
+    sub_agents=[hero_finder_agent, threat_analyzer_agent]
+)
+
+root_agent = dispatcher_agent
+```
+
+Make sure that the changes are pushed to the repository so the next driver can pick up the changes.
 
 ## Challenge 5: MCP as the Matchmaker
 
 ### Notes & Guidance
 
+Again the new driver should follow the same steps for the first challenge to clone the repository (or pull the latest changes if they have already cloned it) and set up their environment (if they haven't done that already).
+
+First step is to run the Cloud Run proxy to simplify things.
+
+```shell
+gcloud run services proxy --region $REGION --port=8888 mcp-server
+```
+
+The following snippet indicates what needs to be changed.
+
+```python
+mcp_tool = MCPToolset(
+    connection_params=StreamableHTTPConnectionParams(
+        url="http://localhost:8888/"
+    )
+)
+
+hero_matcher_agent = Agent(
+    name="hero_matcher_agent",
+    model=settings.GEMINI_MODEL,
+    instruction="""
+    Using the {available_agents} and {threat_type} find the most appropriate hero with the `mcp_tool`
+    """,
+    tools=[mcp_tool],
+    output_key="chosen_hero"
+)
+
+dispatcher_agent = SequentialAgent(
+    name="dispatcher_agent",
+    sub_agents=[hero_finder_agent, threat_analyzer_agent, hero_matcher_agent]
+)
+
+```
+
+Make sure that the changes are pushed to the repository so the next driver can pick up the changes.
+
 ## Challenge 6: A2A: Signal Received
 
 ### Notes & Guidance
 
+Again the new driver should follow the same steps for the first challenge to clone the repository (or pull the latest changes if they have already cloned it) and set up their environment (if they haven't done that already).
+
+First step is to run the Cloud Run proxy to simplify things.
+
+```shell
+gcloud run services proxy --region $REGION --port=8080 a2a-server
+```
+
+The following snippet indicates what needs to be changed.
+
+```python
+from google.adk.agents.remote_a2a_agent import AGENT_CARD_WELL_KNOWN_PATH
+from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
+
+
+signal_hero_agent = RemoteA2aAgent(
+    name="signal_hero_agent",
+    description="Agent that handles signaling the chosen hero",
+    agent_card=(
+        f"http://localhost:8080/a2a/signal_hero_agent{AGENT_CARD_WELL_KNOWN_PATH}"
+    )
+)
+
+dispatcher_agent = SequentialAgent(
+    name="dispatcher_agent",
+    sub_agents=[hero_finder_agent, threat_analyzer_agent, hero_matcher_agent, signal_hero_agent]
+)
+```
+
+Make sure that the changes are pushed to the repository so the next driver can pick up the changes.
+
 ## Challenge 7: Acting Agent
 
 ### Notes & Guidance
+
+Again the new driver should follow the same steps for the first challenge to clone the repository (or pull the latest changes if they have already cloned it) and set up their environment (if they haven't done that already).
+
+This should be pretty much trivial, it's all about adding another agent to the sequence that updates the availability database.
+
+```python
+update_availability_agent = Agent(
+    name="update_availability_agent",
+    model=settings.GEMINI_MODEL,
+    instruction="""
+    Update the availability database to indicate that the {chosen_hero} is not available anymore using the `update_hero_availability` tool.
+    """,
+    tools=[tools.update_available_heroes]
+)
+
+dispatcher_agent = SequentialAgent(
+    name="dispatcher_agent",
+    sub_agents=[
+        hero_finder_agent, 
+        threat_analyzer_agent, 
+        hero_matcher_agent, 
+        signal_hero_agent,
+        update_availability_agent
+    ]
+)
+```
