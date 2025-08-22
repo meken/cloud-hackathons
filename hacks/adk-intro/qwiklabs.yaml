@@ -14,7 +14,7 @@
 schema_version: 2
 default_locale: en
 title: "[gHacks] Introduction to Agents with ADK"
-description: "In this hack we’ll use the Agent Development Kit (ADK) framework to develop a 
+description: "In this hack we'll use the Agent Development Kit (ADK) framework to develop a 
   basic agentic AI solution to match and dispatch super-heroes from the Luminaverse"
 instruction:
   type: md
@@ -89,6 +89,7 @@ environment:
     reference: user_5.username
   - label: Password 5
     reference: user_5.password
-
+  - label: Source repository
+    reference: project.startup_script.source_repo
   - label: Project ID
     reference: project.project_id

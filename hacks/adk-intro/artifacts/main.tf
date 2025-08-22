@@ -37,6 +37,15 @@ data "google_compute_default_service_account" "gce_default" {
   ]
 }
 
+resource "google_project_iam_member" "gce_default_iam" {
+  project = var.gcp_project_id
+  for_each = toset([
+    "roles/aiplatform.user"
+  ])
+  role   = each.key
+  member = "serviceAccount:${data.google_compute_default_service_account.gce_default.email}"
+}
+
 # In case a default network is not present in the project the variable `create_default_network` needs to be set.
 resource "google_compute_network" "default_network_created" {
   name                    = "default"
@@ -68,8 +77,9 @@ resource "google_compute_firewall" "fwr_allow_iap" {
   }
 }
 
-# This piece of code makes it possible to deal with the default network the same way, regardless of how it has
-# been created. Make sure to refer to the default network through this resource when needed.
+# This piece of code makes it possible to deal with the default network the same way, 
+# regardless of how it has been created. Make sure to refer to the default network through
+# this resource when needed.
 data "google_compute_network" "default_network" {
   name = "default"
   depends_on = [
@@ -84,14 +94,15 @@ resource "google_sourcerepo_repository" "repo" {
 }
 
 resource "google_service_account" "startup_vm_sa" {
-  account_id   = "sa-bqdwh-startup-vm"
+  account_id   = "sa-startup-vm"
   display_name = "Startup VM Service Account"
 }
 
 resource "google_project_iam_member" "startup_vm_sa_roles" {
   project = var.gcp_project_id
   for_each = toset([
-    "roles/storage.objectAdmin"
+    "roles/source.admin",
+    "roles/run.admin"
   ])
   role   = each.key
   member = "serviceAccount:${google_service_account.startup_vm_sa.email}"
@@ -128,7 +139,3 @@ resource "google_compute_instance" "startup_vm" {
     source_repo    = google_sourcerepo_repository.repo.name
   })
 }
-
-
-
-
