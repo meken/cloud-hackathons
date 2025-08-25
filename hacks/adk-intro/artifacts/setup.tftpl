@@ -15,19 +15,20 @@ echo "Retrieving the source code..."
 git clone https://github.com/meken/gcp-adk-intro-agent.git adk-agent
 
 echo "Configuring the repo credentials..."
-gcloud init && git config credential.helper gcloud.sh
+git config credential.helper gcloud.sh
 
 echo "Pushing the cloned repo to the new remote..."
 cd adk-agent
-git remote add google https://source.developers.google.com/p/$PROJECT_ID/r/$SOURCE_REPO
-git push --all google
+git remote add google $SOURCE_REPO
+git push google main:master
+cd ..
 
 # Set up the Cloud Run instances
 echo "Retrieving the source code for Cloud Run instances..."
 git clone https://github.com/meken/gcp-adk-intro-setup.git adk-setup
 
 echo "Deploying a2a server..."
-gcloud run deploy a2a-server \
+yes | gcloud run deploy a2a-server \
     --no-allow-unauthenticated \
     --region=$REGION \
     --set-env-vars=GOOGLE_CLOUD_PROJECT=$PROJECT_ID \

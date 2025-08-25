@@ -102,7 +102,8 @@ resource "google_project_iam_member" "startup_vm_sa_roles" {
   project = var.gcp_project_id
   for_each = toset([
     "roles/source.admin",
-    "roles/run.admin"
+    "roles/run.sourceDeveloper",
+    "roles/iam.serviceAccountUser"
   ])
   role   = each.key
   member = "serviceAccount:${google_service_account.startup_vm_sa.email}"
@@ -136,6 +137,6 @@ resource "google_compute_instance" "startup_vm" {
   metadata_startup_script = templatefile("${path.module}/setup.tftpl", {
     gcp_project_id = var.gcp_project_id,
     gcp_region     = var.gcp_region,
-    source_repo    = google_sourcerepo_repository.repo.name
+    source_repo    = google_sourcerepo_repository.repo.url
   })
 }
