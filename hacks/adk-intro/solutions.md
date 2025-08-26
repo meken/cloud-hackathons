@@ -187,6 +187,33 @@ dispatcher_agent = SequentialAgent(
 )
 ```
 
+The proxy solves the authenticaton part of this simple tool. It's also possible to make this work without the proxy. In that case we could create and use bearer tokens. The token creation is trivial and can be done through the `google-auth` library.
+
+```python
+import google.auth.transport.requests
+import google.oauth2.id_token
+
+def get_bearer_token(audience: str) -> str:
+    request = google.auth.transport.requests.Request()
+    token = google.oauth2.id_token.fetch_id_token(request, audience)
+    return token
+```
+
+ADK provides many different methods for handling the authentication configuration, but we'll stick to the simple method of providing the bearer token in the header of the request.
+
+```python
+CLOUD_RUN_URL="..." # typically https://mcp-server-$PROJECT_NUMBER.$REGION.run.app
+
+mcp_tool_set = MCPToolset(
+    connection_params=StreamableHTTPConnectionParams(
+        url=f"{CLOUD_RUN_URL}/mcp",
+        headers={"Authorization": f"Bearer {tools.get_bearer_token(CLOUD_RUN_URL)}"},
+    )
+)
+```
+
+As our tool is simple, this approach works fine, but in real world, you might need to use OAuth flows, API Keys etc.
+
 Make sure that the changes are pushed to the repository so the next driver can pick up the changes.
 
 ## Challenge 6: A2A: Signal Received
