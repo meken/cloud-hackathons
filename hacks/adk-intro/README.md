@@ -129,7 +129,11 @@ The provided code base already has a function that can look up our Luminaverse h
 - The Agent suggests an available hero from the Luminaverse for the following alert:
 
   ```text
-  TODO
+  URGENT - Tokyo.
+  The Shibuya Crossing has gone dark. 
+  All electronic billboards and screens have been hijacked, displaying a single, cryptic symbol.
+  Reports indicate that augmented reality overlays are malfunctioning city-wide, projecting 
+  hostile, glitching apparitions into the real world.
   ```
 
 - The changes have been pushed to the remote Git repository.
@@ -157,6 +161,16 @@ Update the `hero_finder_agent` and make sure that the list of available heroes i
 ### Success Criteria
 
 - The Agent has been configured to store the list of available agents in the session state.
+- The session state contains `Αλκμήνη, Ծովինար, Кассиопея, თამარი` after responding to the following alert:
+
+  ```text
+  WARNING - New York City.
+  Grand Central Station is frozen in time.
+  Witnesses report a "golden shimmer" that swept through the terminal, 
+  and now thousands of people are motionless statues.
+  A single, cloaked figure is seen moving among them.
+  ```
+
 - The changes have been pushed to the remote Git repository.
 
 ### Learning Resources
@@ -182,6 +196,16 @@ Create two new agents, a `threat_analysis_agent` which, given the alert message,
 ### Success Criteria
 
 - The Agent runs both `hero_finder_agent` and `threat_analysis_agent` in sequence and updates the session store.
+- The session state contains `Αλκμήνη, Ծովինար, Кассиопея, თამარი` for `available_heroes` and `TECHONOLOGICAL` for `threat_type` after responding to the following alert:
+  
+  ```text
+  ALERT - Istanbul.
+  The waters of the Bosphorus are receding at an unnatural rate.
+  Fishermen and ferries report automatons rising from the exposed seabed along the strait.
+  They are marching towards the historic peninsula, ignoring all attempts at communication.
+  The Grand Bazaar has been evacuated.
+  ```
+  
 - The changes have been pushed to the remote Git repository.
 
 ### Learning Resources
@@ -198,13 +222,13 @@ Create two new agents, a `threat_analysis_agent` which, given the alert message,
 
 We have built and referenced our own tool in the second challenge, but what about using tools developed by others? This is where the Model Context Protocol (MCP) plays a role; it offers a standardized method for agents to comprehend and engage with the functionalities of external tools and services developed by others. This is vital as it empowers agents to expand their capabilities by using other pre-packaged tools.
 
-There's a plentitude of various MCP Tool providers (for example see this [list](https://mcpservers.org/)), which can run locally as well as remotely. For this challenge we'll use a sample tool that we have developed for this hack using [FastMCP](https://gofastmcp.com/getting-started/welcome) library and running on [Cloud Run](https://cloud.google.com/run/docs/host-mcp-servers).
+There's a plentitude of various MCP Tool providers (for example see this [list](https://mcpservers.org/)), which can run locally as well as remotely. For this challenge we'll use a sample tool that we have developed for this hack using [FastMCP](https://gofastmcp.com/getting-started/welcome) library and running remotely on [Cloud Run](https://cloud.google.com/run/docs/host-mcp-servers).
 
 ### Description
 
 We have already provided an `mcp-server` on Cloud Run. It's basically responsible to do a semantic search to match which hero should be assigned given the threat type.
 
-Create a new agent `hero_matcher_agent`, configure it to use the tool from that server, passing the `available_agents` and `threat_type` as arguments. Update the `dispatcher_agent` to call this agent as the last one in the sequence.
+Create a new agent `hero_matcher_agent`, configure it to use the tool from that server, passing the `available_agents` and `threat_type` as arguments. Make sure that the response of this agent is stored in the session state as `chosen_hero`. Update the `dispatcher_agent` to call this agent as the last one in the sequence.
 
 > [!NOTE]  
 > In this challenge we're using a tool to do basic matching, but keep in mind that these can also be used to execute actions such as creating tickets, updating databases, sending communications etc.
@@ -212,7 +236,7 @@ Create a new agent `hero_matcher_agent`, configure it to use the tool from that 
 ### Success Criteria
 
 - The Agent runs `hero_finder_agent`, `threat_analysis_agent`, `hero_matcher_agent` in sequence and returns the most appropriate hero.
-- For example for the following alert message we expect hero TODO to be picked:
+- For example for the following alert message we expect hero `Αλκμήνη` to be put in the session state as `chosen_hero`:
 
   ```text
   URGENT - London. 
@@ -245,7 +269,15 @@ Create a new agent `signal_hero_agent` that uses A2A protocol to connect to the 
 
 ### Success Criteria
 
-- The Agent runs all the agents in sequence and signals the chosen hero.
+- The Agent runs all the agents in sequence and signals the chosen hero for the following alert message:
+
+  ```text
+  RED ALERT - Amsterdam.
+  The Rijksmuseum has been breached, but no alarms were triggered.
+  "The Night Watch" has been stolen. In its place, a single black feather was left on the gallery floor.
+  Interpol confirms this is the calling card of "Nyx", a notorious international art thief.
+  ```
+
 - The changes have been pushed to the remote Git repository.
 
 ### Learning Resources
@@ -256,6 +288,7 @@ Create a new agent `signal_hero_agent` that uses A2A protocol to connect to the 
 
 - You can use `adk web` UI to view the agents involved.
 - You can use a [proxy](https://cloud.google.com/sdk/gcloud/reference/run/services/proxy) to simplify the authentication for the Cloud Run service.
+- For this challenge if you're using the Cloud Run proxy, you need to stick to port `8080`.
 
 ## Challenge 7: Acting Agents
 
@@ -270,6 +303,17 @@ Create a new agent `update_availability_agent` that uses a tool to update the av
 ### Success Criteria
 
 - The Agent runs all the agents in sequence and updates the availability of the chosen hero as the last step.
+- For the following alert we expect the availability of the chosen hero (one of `Ծովինար, Кассиопея, თამარი`) to be updated:
+
+  ```text
+  URGENT - Hong Kong.
+  Multiple shipping containers at the Port of Hong Kong have been inexplicably crushed 
+  and their contents vanished, despite no signs of forced entry.
+  A new Triad leader, calling himself "The Iron Hand," is responsible. 
+  He is systematically extorting shipping magnates for "protection money," threatening to 
+  destroy their cargo if they don't comply. 
+  ```
+
 - The changes have been pushed to the remote Git repository.
 
 ### Tips
