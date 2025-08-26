@@ -126,7 +126,7 @@ The provided code base already has a function that can look up our Luminaverse h
 ### Success Criteria
 
 - The Agent has been configured to use the `get_available_heroes` function as a tool.
-- The Agent suggests an available hero from the Luminaverse for the following alert:
+- The Agent suggests the heroes `Αλκμήνη, Ծովինար, Кассиопея, თამარი` from the Luminaverse for the following alert:
 
   ```text
   URGENT - Tokyo.
