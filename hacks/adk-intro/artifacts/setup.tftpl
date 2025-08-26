@@ -15,10 +15,10 @@ echo "Retrieving the source code..."
 git clone https://github.com/meken/gcp-adk-intro-agent.git adk-agent
 
 echo "Configuring the repo credentials..."
+cd adk-agent
 git config credential.helper gcloud.sh
 
 echo "Pushing the cloned repo to the new remote..."
-cd adk-agent
 git remote add google $SOURCE_REPO
 git push google main:master
 cd ..
@@ -37,12 +37,12 @@ yes | gcloud run deploy a2a-server \
     --source adk-setup/a2a-server
 
 echo "Deploying mcp server..."
-gcloud run deploy mcp-server \
-    --no-allow-unauthenticated \
-    --region=$REGION \
-    --set-env-vars=GOOGLE_CLOUD_PROJECT=$PROJECT_ID \
-    --set-env-vars=GOOGLE_CLOUD_LOCATION=$REGION \
-    --set-env-vars=GOOGLE_GENAI_USE_VERTEXAI=True \
-    --source adk-setup/mcp-server
+    gcloud run deploy mcp-server \
+        --no-allow-unauthenticated \
+        --region=$REGION \
+        --set-env-vars=GOOGLE_CLOUD_PROJECT=$PROJECT_ID \
+        --set-env-vars=GOOGLE_CLOUD_LOCATION=$REGION \
+        --set-env-vars=GOOGLE_GENAI_USE_VERTEXAI=True \
+        --source adk-setup/mcp-server
 
 echo "All done!"

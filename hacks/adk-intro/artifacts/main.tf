@@ -24,6 +24,7 @@ resource "google_project_service" "default" {
     "artifactregistry.googleapis.com",
     "cloudfunctions.googleapis.com",
     "run.googleapis.com",
+    "aiplatform.googleapis.com",
     "logging.googleapis.com"
   ])
   service = each.key
@@ -40,7 +41,11 @@ data "google_compute_default_service_account" "gce_default" {
 resource "google_project_iam_member" "gce_default_iam" {
   project = var.gcp_project_id
   for_each = toset([
-    "roles/aiplatform.user"
+    "roles/aiplatform.user",
+    # Cloud Build related roles
+    "roles/artifactregistry.writer",
+    "roles/logging.logWriter",
+    "roles/storage.objectUser"
   ])
   role   = each.key
   member = "serviceAccount:${data.google_compute_default_service_account.gce_default.email}"

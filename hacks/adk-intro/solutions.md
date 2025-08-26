@@ -100,6 +100,7 @@ hero_finder_agent = Agent(
     instruction="""
     Return super heroes to respond to the threat.
     Use the provided `get_available_heroes` tool to find the list of available heroes.
+    Return only a comma separated list of available heroes, or nothing if there are no available heroes.
     """,
     tools=[tools.get_available_heroes],
     output_key="available_heroes"
@@ -117,6 +118,12 @@ Make sure that the changes are pushed to the repository so the next driver can p
 Again the new driver should follow the same steps for the first challenge to clone the repository (or pull the latest changes if they have already cloned it) and set up their environment (if they haven't done that already).
 
 ```python
+# keep other imports
+
+from google.adk.agents import SequentialAgent
+
+# keep hero_finder_agent as is
+
 threat_analyzer_agent = Agent(
     name="threat_analyzer_agent",
     model=settings.GEMINI_MODEL,
@@ -151,9 +158,15 @@ gcloud run services proxy --region $REGION --port=8888 mcp-server
 The following snippet indicates what needs to be changed.
 
 ```python
-mcp_tool = MCPToolset(
+# keep other imports
+from google.adk.tools.mcp_tool import MCPToolset
+from google.adk.tools.mcp_tool import StreamableHTTPConnectionParams
+
+# keep hero_finder_agent and threat_analyzer_agent as is
+
+mcp_tool_set = MCPToolset(
     connection_params=StreamableHTTPConnectionParams(
-        url="http://localhost:8888/"
+        url="http://localhost:8888/mcp"
     )
 )
 
@@ -161,9 +174,10 @@ hero_matcher_agent = Agent(
     name="hero_matcher_agent",
     model=settings.GEMINI_MODEL,
     instruction="""
-    Using the {available_agents} and {threat_type} find the most appropriate hero with the `mcp_tool`
+    Using the {available_heroes} and {threat_type} find the most appropriate hero with the `match_hero` tool.
+    Return only the name of the chosen hero.
     """,
-    tools=[mcp_tool],
+    tools=[mcp_tool_set],
     output_key="chosen_hero"
 )
 
@@ -171,7 +185,6 @@ dispatcher_agent = SequentialAgent(
     name="dispatcher_agent",
     sub_agents=[hero_finder_agent, threat_analyzer_agent, hero_matcher_agent]
 )
-
 ```
 
 Make sure that the changes are pushed to the repository so the next driver can pick up the changes.
@@ -188,12 +201,17 @@ First step is to run the Cloud Run proxy to simplify things.
 gcloud run services proxy --region $REGION --port=8080 a2a-server
 ```
 
+> [!IMPORTANT]  
+> Currently when an A2A Agent is accessed through the Cloud Run proxy, the proxy port must match the port that the container is running on (which is port `8080` by default). Note that this only applies to the A2A server, the MCP server can be proxied through any port.
+
 The following snippet indicates what needs to be changed.
 
 ```python
+# keep other imports
 from google.adk.agents.remote_a2a_agent import AGENT_CARD_WELL_KNOWN_PATH
 from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
 
+# keep hero_finder_agent, threat_analyzer_agent, and hero_matcher_agent as is
 
 signal_hero_agent = RemoteA2aAgent(
     name="signal_hero_agent",
@@ -226,7 +244,7 @@ update_availability_agent = Agent(
     instruction="""
     Update the availability database to indicate that the {chosen_hero} is not available anymore using the `update_hero_availability` tool.
     """,
-    tools=[tools.update_available_heroes]
+    tools=[tools.update_hero_availability]
 )
 
 dispatcher_agent = SequentialAgent(
