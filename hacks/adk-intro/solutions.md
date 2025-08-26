@@ -83,6 +83,8 @@ hero_finder_agent = Agent(
 )
 ```
 
+Format of the response is not relevant for this challenge as long as all of the available heroes are returned.
+
 Make sure that the changes are pushed to the repository so the next driver can pick up the changes.
 
 ## Challenge 3: Agent's Logbook

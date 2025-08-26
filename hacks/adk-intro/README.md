@@ -114,14 +114,14 @@ We have our first agent, and if you'd now ask which super hero to pick for an al
 This is where *Tools* come into the picture: they provide a way for LLMs/agents to access external systems, databases, or APIs, thereby augmenting the LLM's knowledge base and enabling it to perform more complex, data-dependent operations. Although in this challenge we'll use a tool to gather additional information, tools can also be used to execute actions (which we'll cover in the last challenge).
 
 > [!NOTE]  
-> Although we're using tools to gather additional information, tools can also be used to execute actions, create local files, update databases, send commmunication etc.
+> Although we'll be using a tool to gather additional information in this challenge, tools can also be used to execute actions, such as creating tickets, updating local files, updating databases, generating media, sending commmunication etc.
 
 ### Description
 
 The provided code base already has a function that can look up our Luminaverse heroes (and their availability) in `tools.py`. Update the `hero_finder_agent` to use that function as a tool. Once everything works as expected, push the changes to the repository.
 
 > [!NOTE]  
-> Typically we’d use a proper database or an external API to do the lookup, but for the sake of simplicity, the lookup tool for this challenge will be using a simple `sqlite` database.
+> Typically we’d use a proper database or an external API to do the lookup, but for the sake of simplicity, the lookup tool for this challenge will be using a local `sqlite` database.
 
 ### Success Criteria
 
@@ -156,7 +156,7 @@ In this challenge we'll focus on the session state. Within each `Session` (our c
 
 ### Description
 
-Update the `hero_finder_agent` and make sure that the list of available heroes is stored in the session state as `available_heroes` after the agent runs.
+Modify the `hero_finder_agent` to save the list of heroes in the session state. This list should be a comma-separated string stored in the session state under the name `available_heroes`.
 
 ### Success Criteria
 
@@ -187,7 +187,7 @@ Update the `hero_finder_agent` and make sure that the list of available heroes i
 
 Breaking down complex problems into smaller, manageable sub-problems is a well-established strategy in software development. Multi-agent systems apply this principle to AI, allowing specialized agents to handle specific aspects of a larger task.
 
-In this challenge we'll introduce the concept of sub-agents and workflow agents which are specialized agents that control the execution flow of its sub-agents.
+In this challenge we'll introduce the concept of *sub-agents* and *workflow agents* which are specialized agents that control the execution flow of its sub-agents.
 
 ### Description
 
