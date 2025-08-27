@@ -41,11 +41,7 @@ data "google_compute_default_service_account" "gce_default" {
 resource "google_project_iam_member" "gce_default_iam" {
   project = var.gcp_project_id
   for_each = toset([
-    "roles/aiplatform.user",
-    # Cloud Build related roles
-    "roles/artifactregistry.writer",
-    "roles/logging.logWriter",
-    "roles/storage.objectUser"
+    "roles/aiplatform.user"
   ])
   role   = each.key
   member = "serviceAccount:${data.google_compute_default_service_account.gce_default.email}"
@@ -98,6 +94,20 @@ resource "google_sourcerepo_repository" "repo" {
   depends_on = [google_project_service.default]
 }
 
+resource "google_service_account" "build_sa" {
+  account_id   = "sa-build"
+  display_name = "Build Service Account"
+}
+
+resource "google_project_iam_member" "build_sa_roles" {
+  project = var.gcp_project_id
+  for_each = toset([
+    "roles/run.builder"
+  ])
+  role   = each.key
+  member = "serviceAccount:${google_service_account.build_sa.email}"
+}
+
 resource "google_service_account" "startup_vm_sa" {
   account_id   = "sa-startup-vm"
   display_name = "Startup VM Service Account"
@@ -108,10 +118,17 @@ resource "google_project_iam_member" "startup_vm_sa_roles" {
   for_each = toset([
     "roles/source.admin",
     "roles/run.sourceDeveloper",
-    "roles/iam.serviceAccountUser"
+    "roles/iam.serviceAccountUser",
+    "roles/logging.logWriter"
   ])
   role   = each.key
   member = "serviceAccount:${google_service_account.startup_vm_sa.email}"
+}
+
+resource "google_artifact_registry_repository" "cloud_run_source_deploy" {
+  location      = var.gcp_region
+  repository_id = "cloud-run-source-deploy"
+  format        = "DOCKER"
 }
 
 resource "google_compute_instance" "startup_vm" {
@@ -142,6 +159,13 @@ resource "google_compute_instance" "startup_vm" {
   metadata_startup_script = templatefile("${path.module}/setup.tftpl", {
     gcp_project_id = var.gcp_project_id,
     gcp_region     = var.gcp_region,
-    source_repo    = google_sourcerepo_repository.repo.url
+    source_repo    = google_sourcerepo_repository.repo.url,
+    build_sa       = google_service_account.build_sa.email,
   })
+
+  depends_on = [ 
+    google_project_iam_member.build_sa_roles,
+    google_project_iam_member.startup_vm_sa_roles,
+    google_artifact_registry_repository.cloud_run_source_deploy
+  ]
 }
