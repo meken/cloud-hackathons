@@ -35,12 +35,16 @@ The first step is to clone the repository that has been created for the team.
 git clone https://source.developers.google.com/p/$GOOGLE_CLOUD_PROJECT/r/ghacks-adk-intro
 ```
 
+Since we're using Cloud Source Repositories, the authentication is done automatically through OAuth. If there are permission denied errors, make sure that the variable `$GOOGLE_CLOUD_PROJECT` is set (sometimes Cloud Shell starts without it being set correctly).
+
+If they get the message `warning: You appear to have cloned an empty repository`, they were too quick. The repository is initialized asynchronously at project startup and takes a minute or so. In that case they should retry (after deleting the empty repository, the `ghacks-adk-intro` directory).
+
 Once the repository is cloned, although it's not a hard requirement, the best practice is to start with a virtual environment. There are multiple tools to create virtual environments and install packages but we'll stick to the defaults.
 
 ```shell
 cd ghacks-adk-intro
-python3 -m venv venv
-source venv/bin/activate
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
 Now we can install the required libraries.
@@ -61,7 +65,12 @@ EOF
 source .env
 ```
 
+> [!NOTE]  
+> We've configured Git to ignore the file `.env` as we don't want it to be checked in. Although in our case it doesn't contain sensitive information (other than the project id), it typically will have keys and other secret information, so it's not a good practice to check that in Git.
+
 Now we can run the `adk web` command and preview it by clicking the web preview icon in the Cloud Shell menu and selecting Preview and Change Port to 8000.
+
+If you get authentication errors, make sure that the environment variables as defined above (in the `.env` file) are set and have been sourced.
 
 ## Challenge 2: The Hero Toolkit
 
@@ -107,8 +116,6 @@ hero_finder_agent = Agent(
     tools=[tools.get_available_heroes],
     output_key="available_heroes"
 )
-
-root_agent = hero_finder_agent
 ```
 
 Make sure that the changes are pushed to the repository so the next driver can pick up the changes.
@@ -271,7 +278,8 @@ update_availability_agent = Agent(
     name="update_availability_agent",
     model=settings.GEMINI_MODEL,
     instruction="""
-    Update the availability database to indicate that the {chosen_hero} is not available anymore using the `update_hero_availability` tool.
+    Only if there's a chosen hero, update the availability database to indicate that the {chosen_hero} is 
+    not available anymore using the `update_hero_availability` tool.
     """,
     tools=[tools.update_hero_availability]
 )
