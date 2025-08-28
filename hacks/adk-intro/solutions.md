@@ -35,7 +35,7 @@ The first step is to clone the repository that has been created for the team.
 git clone https://source.developers.google.com/p/$GOOGLE_CLOUD_PROJECT/r/ghacks-adk-intro
 ```
 
-Since we're using Cloud Source Repositories, the authentication is done automatically through OAuth. If there are permission denied errors, make sure that the variable `$GOOGLE_CLOUD_PROJECT` is set (sometimes Cloud Shell starts without it being set correctly).
+Since we're using Cloud Source Repositories, the authentication is done automatically through OAuth. If there are permission denied errors, make sure that the variable `$GOOGLE_CLOUD_PROJECT` is set (sometimes Cloud Shell starts without it being set correctly). If the challenges are run from another VM, either [SSH authentication](https://cloud.google.com/source-repositories/docs/authentication#ssh) would need to be set up, or `gcloud source repos clone` needs to be used (which requires setting up gcloud authentication on the VM first).
 
 If they get the message `warning: You appear to have cloned an empty repository`, they were too quick. The repository is initialized asynchronously at project startup and takes a minute or so. In that case they should retry (after deleting the empty repository, the `ghacks-adk-intro` directory).
 
@@ -53,7 +53,7 @@ Now we can install the required libraries.
 pip install -r requirements.txt
 ```
 
-One final step before we can start running the `adk web` command is to set some environment variables.
+One final step before we can start running the `adk web` command is to set some environment variables to configure the authentication (might require gcloud authentication to be set up if not being run from Cloud Shell).
 
 ```shell
 REGION=us-central1
@@ -66,7 +66,7 @@ source .env
 ```
 
 > [!NOTE]  
-> We've configured Git to ignore the file `.env` as we don't want it to be checked in. Although in our case it doesn't contain sensitive information (other than the project id), it typically will have keys and other secret information, so it's not a good practice to check that in Git.
+> We've configured Git to ignore the file `.env` as we don't want it to be checked in. Although in our case it doesn't contain sensitive information (other than the project id), it typically will have keys and other secret information, so it's not a good practice to store that in a Git repository.
 
 Now we can run the `adk web` command and preview it by clicking the web preview icon in the Cloud Shell menu and selecting Preview and Change Port to 8000.
 
@@ -102,7 +102,7 @@ Make sure that the changes are pushed to the repository so the next driver can p
 
 Again the new driver should follow the same steps for the first challenge to clone the repository (or pull the latest changes if they have already cloned it) and set up their environment (if they haven't done that already).
 
-Then edit the `heroes/agent.py` to update the prompt and configure the `output_key`. It's also possible to introduce another tool that stores things explicitly in the session state, which is fine too.
+Then edit the `heroes/agent.py` to update the prompt and configure the `output_key`. It's also possible to introduce another tool that stores things explicitly in the session state using the `CallContext` or `ToolContext` but it's much more work (see the official [docs](https://google.github.io/adk-docs/sessions/state/#how-state-is-updated-recommended-methods) for more details).
 
 ```python
 hero_finder_agent = Agent(
@@ -208,7 +208,7 @@ def get_bearer_token(audience: str) -> str:
     return token
 ```
 
-ADK provides many different methods for handling the authentication configuration, but we'll stick to the simple method of providing the bearer token in the header of the request.
+ADK provides many different classes and methods for handling the authentication configuration, but we'll stick to the simple method of providing the bearer token in the header of the request.
 
 ```python
 CLOUD_RUN_URL="..." # typically https://mcp-server-$PROJECT_NUMBER.$REGION.run.app
@@ -221,7 +221,10 @@ mcp_tool_set = MCPToolset(
 )
 ```
 
-As our tool is simple, this approach works fine, but in real world, you might need to use OAuth flows, API Keys etc.
+> [!NOTE]  
+> At the time of this writing using the `auth_scheme` and `auth_credentials` for bearer tokens doesn't work well with MCP servers, as those credentials are not utilized for listing the tools, tracked [here](https://github.com/google/adk-python/issues/2168).
+
+As our tool is simple, this approach works fine, but in real world, you might need to use OAuth flows, API keys etc. And there will be cases where the currently authenticated user's credentials need to be forwarded to remote agents/tools so that they can perform actions on behalf of the user (see the official [docs](https://google.github.io/adk-docs/safety/#identity-and-authorization) for more details).
 
 Make sure that the changes are pushed to the repository so the next driver can pick up the changes.
 

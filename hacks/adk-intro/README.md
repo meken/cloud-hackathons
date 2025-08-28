@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Welcome to Luminaverse! In this universe we have a new generation of super-heroes and they're a bit overwhelmed by the amount of information they need to go through to help the citizens of the world. The information flood comes from different intelligence organizations, news reports, social media chatter, and direct alerts from allies. It's impossible for a human, or even a super-hero, to monitor everything 24/7. They need a system that can not only spot a crisis but also understand its context to avoid sending the wrong hero to the (or any hero at all) to a false alarm.
+Welcome to Luminaverse! In this universe we have a new generation of super-heroes and they're a bit overwhelmed by the amount of information they need to go through to help the citizens of the world. The information flood comes from different intelligence organizations, news reports, social media chatter, and direct alerts from allies. It's impossible for a human, or even a super-hero, to monitor everything 24/7. They need a system that can not only spot a crisis but also understand its context to avoid sending the wrong hero (or any hero at all) to a false alarm.
 
 So our objective is to build an intelligent filter for global alerts, helping our super heroes to decide whom to send for which threats and we'll use AI Agents for this purpose.
 
@@ -111,10 +111,10 @@ Once everything is set up, run `adk web` and make sure that the agent responds b
 
 We have our first agent, and if you'd now ask which super hero to pick for an alert, the LLM would gladly make some suggestions. But since it doesn't know about our Luminaverse, it would probably take the well known heroes, or fabricate imaginary ones. This is because LLMs lack real-time and specific information (think about your internal documents/databases/processes/rules, LLMs have no access to that information).
 
-This is where *Tools* come into the picture: they provide a way for LLMs/agents to access external systems, databases, or APIs, thereby augmenting the LLM's knowledge base and enabling it to perform more complex, data-dependent operations. Although in this challenge we'll use a tool to gather additional information, tools can also be used to execute actions (which we'll cover in the last challenge).
+This is where *Tools* come into the picture: they provide a way for LLMs/agents to access external systems, databases, or APIs, thereby augmenting the LLM's knowledge base and enabling it to perform more complex, data-dependent operations. Although in this challenge we'll use a tool to gather additional information, tools can also be used to execute actions such as creating tickets, modifying local files, updating databases, generating media, sending communications etc.
 
 > [!NOTE]  
-> Although we'll be using a tool to gather additional information in this challenge, tools can also be used to execute actions, such as creating tickets, updating local files, updating databases, generating media, sending commmunication etc.
+> This might be not obvious as we're keepings simple in this hack, but keep in mind that LLMs are flexible enough to call the appropriate tools even when you ask them questions that might not be directly related to the tool. For example, imagine an Agent with a tool for looking up weather information, you could ask the Agent what to wear or whether to take an umbrella with you, and the Agent would use the tool to check the weather conditions to find the right outfit.
 
 ### Description
 
@@ -226,7 +226,7 @@ There's a plentitude of various MCP Tool providers (for example see this [list](
 
 ### Description
 
-We have already provided an `mcp-server` on Cloud Run. It's basically responsible to do a semantic search to match which hero should be assigned given the threat type.
+We have already provided an `mcp-server` on Cloud Run. It provides a single tool that's basically responsible for doing a semantic search to match which hero should be assigned given the threat type.
 
 Create a new agent `hero_matcher_agent`, configure it to use the tool from that server, passing the `available_agents` and `threat_type` as arguments. Make sure that the response of this agent is stored in the session state as `chosen_hero`. Update the `dispatcher_agent` to call this agent as the last one in the sequence.
 
