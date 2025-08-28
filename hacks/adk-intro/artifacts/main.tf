@@ -129,6 +129,10 @@ resource "google_artifact_registry_repository" "cloud_run_source_deploy" {
   location      = var.gcp_region
   repository_id = "cloud-run-source-deploy"
   format        = "DOCKER"
+
+  depends_on = [
+    google_project_service.default
+  ]
 }
 
 resource "google_compute_instance" "startup_vm" {
@@ -163,7 +167,7 @@ resource "google_compute_instance" "startup_vm" {
     build_sa       = google_service_account.build_sa.email,
   })
 
-  depends_on = [ 
+  depends_on = [
     google_project_iam_member.build_sa_roles,
     google_project_iam_member.startup_vm_sa_roles,
     google_artifact_registry_repository.cloud_run_source_deploy
