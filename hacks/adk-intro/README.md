@@ -109,12 +109,12 @@ Once everything is set up, run `adk web` and make sure that the agent responds b
 
 ### Introduction
 
-We have our first agent, and if you'd now ask which super hero to pick for an alert, the LLM would gladly make some suggestions. But since it doesn't know about our Luminaverse, it would probably take the well known heroes, or fabricate imaginary ones. This is because LLMs lack real-time and specific information (think about your internal documents/databases/processes/rules, LLMs have no access to that information).
+We have our first agent, and if you'd now ask which super hero to pick for an alert, the LLM would gladly make some suggestions. But since it doesn't know about our Luminaverse, it would probably take the well-known heroes, or fabricate imaginary ones. This is because LLMs lack real-time and specific information (think about your internal documents/databases/processes/rules, LLMs have no access to that information).
 
 This is where *Tools* come into the picture: they provide a way for LLMs/agents to access external systems, databases, or APIs, thereby augmenting the LLM's knowledge base and enabling it to perform more complex, data-dependent operations. Although in this challenge we'll use a tool to gather additional information, tools can also be used to execute actions such as creating tickets, modifying local files, updating databases, generating media, sending communications etc.
 
 > [!NOTE]  
-> This might not be too obvious as we're keepings simple in this hack, but keep in mind that LLMs are flexible enough to call the appropriate tools even when you ask them questions that might not be directly related to the tool. For example, imagine an Agent with a tool for looking up weather information, you could ask the Agent what to wear, and the Agent would use the tool to check the weather conditions to find the right outfit.
+> This might not be too obvious as we're keeping it simple in this hack, but keep in mind that LLMs are flexible enough to call the appropriate tools even when you ask them questions that might not be directly related to the tool. For example, imagine an Agent with a tool for looking up weather information, you could ask the Agent what to wear, and the Agent would use the tool to check the weather conditions to find the right outfit.
 
 ### Description
 
@@ -189,6 +189,9 @@ Breaking down complex problems into smaller, manageable sub-problems is a well-e
 
 In this challenge we'll introduce the concept of *sub-agents* and *workflow agents* which are specialized agents that control the execution flow of its sub-agents.
 
+> [!NOTE]  
+> Workflow agents (sequential, parallel, loop) can be useful for orchestration in many cases as they're reliable, well structured and predictable. However, it's also possible to use LLM based Agents for orchestration if more flexibility is needed. In that case you'll be defining the order and conditions for running the sub-agents in the agent's instructions (the prompt).
+
 ### Description
 
 Create two new agents, a `threat_analysis_agent` which, given the alert message, classifies the alert into one of `MYSTICAL`, `TECHNOLOGICAL`, `CRIMINAL` threat types, and stores that into the session store as `threat_type`. And a new sequential agent `dispatcher_agent` that calls the `hero_finder_agent` and the `threat_analysis_agent` in sequence. Once you have created the new agents, update the `root_agent` to be the `dispatcher_agent`.
@@ -196,7 +199,7 @@ Create two new agents, a `threat_analysis_agent` which, given the alert message,
 ### Success Criteria
 
 - The Agent runs both `hero_finder_agent` and `threat_analysis_agent` in sequence and updates the session store.
-- The session state contains `Αλκμήνη, Ծովինար, Кассиопея, თამარი` for `available_heroes` and `TECHONOLOGICAL` for `threat_type` after responding to the following alert:
+- The session state contains `Αλκμήνη, Ծովինար, Кассиопея, თამარი` for `available_heroes` and `TECHNOLOGICAL` for `threat_type` after responding to the following alert:
   
   ```text
   ALERT - Istanbul.
@@ -222,7 +225,7 @@ Create two new agents, a `threat_analysis_agent` which, given the alert message,
 
 We have built and referenced our own tool in the second challenge, but what about using tools developed by others? This is where the Model Context Protocol (MCP) plays a role; it offers a standardized method for agents to comprehend and engage with the functionalities of external tools and services developed by others. This is vital as it empowers agents to expand their capabilities by using other pre-packaged tools.
 
-There's a plentitude of various MCP Tool providers (for example see this [list](https://mcpservers.org/)), which can run locally as well as remotely. For this challenge we'll use a sample tool that we have developed for this hack using [FastMCP](https://gofastmcp.com/getting-started/welcome) library and running remotely on [Cloud Run](https://cloud.google.com/run/docs/host-mcp-servers).
+There's a plethora of various MCP Tool providers (for example see this [list](https://mcpservers.org/)), which can run locally as well as remotely. For this challenge we'll use a sample tool that we have developed for this hack using [FastMCP](https://gofastmcp.com/getting-started/welcome) library and running remotely on [Cloud Run](https://cloud.google.com/run/docs/host-mcp-servers).
 
 ### Description
 
@@ -259,7 +262,7 @@ Create a new agent `hero_matcher_agent`, configure it to use the tool from that 
 
 ### Introduction
 
-In the previous challenge we've learned that we can use tools developed by others, but how about agents? This is where Agent2Agent comes in, it provides a standard way for discovering and utilizing agents developed by others.
+In the previous challenge we've learned that we can use tools developed by others, but what about agents? This is where Agent2Agent comes in, it provides a standard way for discovering and utilizing agents developed by others.
 
 ### Description
 
