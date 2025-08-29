@@ -215,7 +215,7 @@ MCP_SERVER_CLOUD_RUN_URL="..." # typically https://mcp-server-$PROJECT_NUMBER.$R
 
 mcp_tool_set = MCPToolset(
     connection_params=StreamableHTTPConnectionParams(
-        url=f"{CLOUD_RUN_URL}/mcp",
+        url=f"{MCP_SERVER_CLOUD_RUN_URL}/mcp",
         headers={"Authorization": f"Bearer {tools.get_bearer_token(MCP_SERVER_CLOUD_RUN_URL)}"},
     )
 )
