@@ -211,12 +211,12 @@ def get_bearer_token(audience: str) -> str:
 ADK provides many different classes and methods for handling the authentication configuration, but we'll stick to the simple method of providing the bearer token in the header of the request.
 
 ```python
-CLOUD_RUN_URL="..." # typically https://mcp-server-$PROJECT_NUMBER.$REGION.run.app
+MCP_SERVER_CLOUD_RUN_URL="..." # typically https://mcp-server-$PROJECT_NUMBER.$REGION.run.app
 
 mcp_tool_set = MCPToolset(
     connection_params=StreamableHTTPConnectionParams(
         url=f"{CLOUD_RUN_URL}/mcp",
-        headers={"Authorization": f"Bearer {tools.get_bearer_token(CLOUD_RUN_URL)}"},
+        headers={"Authorization": f"Bearer {tools.get_bearer_token(MCP_SERVER_CLOUD_RUN_URL)}"},
     )
 )
 ```
@@ -241,7 +241,7 @@ gcloud run services proxy --region $REGION --port=8080 a2a-server
 ```
 
 > [!IMPORTANT]  
-> Currently when an A2A Agent is accessed through the Cloud Run proxy, the proxy port must match the port that the container is running on (which is port `8080` by default). Note that this only applies to the A2A server, the MCP server can be proxied through any port.
+> Currently when an A2A Agent is accessed through the Cloud Run proxy, the proxy port must match the port that the container is running on (which is port `8080` by default). Note that this only applies to the A2A server, the MCP server can be proxied through any port. Once [relative URLs](https://github.com/a2aproject/A2A/issues/160) are supported by A2A, this should be fixed.
 
 The following snippet indicates what needs to be changed.
 
@@ -265,6 +265,30 @@ dispatcher_agent = SequentialAgent(
     sub_agents=[hero_finder_agent, threat_analyzer_agent, hero_matcher_agent, signal_hero_agent]
 )
 ```
+
+Similar to the MCP server authentication we can make this work without the proxy too. In that case we could create and use bearer tokens (see MCP server authentication for the token creation).
+
+```python
+import httpx
+
+A2A_SERVER_CLOUD_RUN_URL="..." # typically https://a2a-server-$PROJECT_NUMBER.$REGION.run.app
+
+httpx_client = httpx.AsyncClient(headers={
+        "Authorization": f"Bearer {tools.get_bearer_token(A2A_SERVER_CLOUD_RUN_URL)}"
+    })
+
+signal_hero_agent = RemoteA2aAgent(
+    name="signal_hero_agent",
+    description="Agent that handles signaling the chosen hero",
+    agent_card=(
+        f"{A2A_SERVER_CLOUD_RUN_URL}/a2a/signal_hero_agent{AGENT_CARD_WELL_KNOWN_PATH}"
+    ),
+    httpx_client=httpx_client
+)
+```
+
+> [!NOTE]  
+> Again, due to lack of relative URL support in A2A `url` definitions, if this authentication method is chosen, the `url` field of `agent.json` needs to be updated too (can be done through the Cloud Console by editing the source of Cloud Run instance for `a2a-server`).
 
 Make sure that the changes are pushed to the repository so the next driver can pick up the changes.
 
