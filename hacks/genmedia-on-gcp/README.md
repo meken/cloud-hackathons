@@ -68,7 +68,9 @@ Start by designing the **brand guidelines**, these should include:
 - *Mood / Color Palette* (e.g. film noir)  
 - *Target Audience* (e.g. 20-35 year old farmers)
 
-These characteristics will guide all the visuals we create for the product.
+These characteristics will guide all the visuals we create for the ad.
+
+Create a description of the **product**. This description needs to be detailed enough so that we can achieve consistency of the Cymbal Pod from shot to shot in the ad.
 
 Next, create a description of your **protagonist** who is the main character of your ad. This description needs to be detailed enough so that we can achieve consistency from shot to shot in the ad.
 
@@ -84,6 +86,7 @@ We've created a storage bucket with the same name as your project id, navigate t
 ### Success Criteria
 
 - You have created a set of brand guidelines at a minimum describing the *aesthetics* and the *values* of the brand.  
+- You have created a detailed text description of the Cymbal Pod itself.  
 - You have created a detailed text description of the protagonist of your narrative.  
 - You have created a text description/script for at least three scenes that seamlessly tell your story.  
 - You have created a tagline or call to action that meets the brand guidelines.  
@@ -98,13 +101,15 @@ We've created a storage bucket with the same name as your project id, navigate t
 
 ### Introduction
 
-Now that we have our brand guidelines, our protagonist and our narrative, it's time to create our visuals. This is the **storyboard** of your ad, which visually shows the flow of your narrative and your protagonist within it.
+Now that we have our brand guidelines, our product, our protagonist and our narrative, it's time to create our visuals. This is the **storyboard** of your ad, which visually shows the flow of your narrative and your protagonist and product within it.
 
 ### Description
 
 First we will create our **protagonist**. Using *Imagen* and/or *Nano Banana*, generate a character *model sheet* and *turnaround* images for your protagonist using your description of them and your brand guidelines. The model sheet standardizes a character's appearance, poses, and gestures, while the turnaround images depict the character at different angles.
 
-Next, create images for your **storyboard** visualizing the scenes crafted in the previous challenge. Once you've created these images, now place your protagonist in these scenes. You can use *Imagen* here but *Nano Banana* really shines at this kind of task.
+Next we will do a similar exercise for our **product**. Generate a *model sheet* and *turnaround* images for the Cymbal Pod itself, showing its appearance from various angles.
+
+Now we can create images for your **storyboard** visualizing the scenes crafted in the previous challenge. Once you've created these images, now place your protagonist in these scenes. You can use *Imagen* here but *Nano Banana* really shines at this kind of task.
 
 We also need a **final closing frame** that will inform Veo on how to end the video. It should include space for a Cymbal Pod logo and space for the text of the tagline or call to action.
 
@@ -150,7 +155,7 @@ You know the drill, once finished, store the resulting clips in the storage buck
 
 ### Success Criteria
 
-- High-quality, 5-7 second video clips for each of the storyboard scenes are generated.  
+- High-quality, 16:9, 5-7 second video clips without sound for each of the storyboard scenes are generated.  
 - The video aesthetics are *highly consistent* with the corresponding static images.  
 - The motion depicted is *smooth* and *realistic*.  
 - When viewed in sequence, the clips form a coherent narrative, with logical transitions.  
