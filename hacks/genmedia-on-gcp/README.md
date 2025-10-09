@@ -122,8 +122,8 @@ Make sure that all of this work is stored in the storage bucket that has been cr
 
 ### Success Criteria
 
-- Multiple consistent images are generated that clearly defines the **protagonist's appearance** from various angles.
-- Multiple consistent images are generated that clearly defines the **product's appearance** from various angles.
+- Multiple consistent images are generated that clearly define the **protagonist's appearance** from various angles.
+- Multiple consistent images are generated that clearly define the **product's appearance** from various angles.
 - You have generated **distinct storyboard images** and a **final closing frame image**.
 - The *Cymbal Pod*'s design is *visibly consistent* across all storyboard images.
 - The protagonist's appearance is *visibly consistent* across all storyboard images.
@@ -155,7 +155,8 @@ You know the drill, once finished, store the resulting clips in the storage buck
 
 ### Success Criteria
 
-- High-quality, 5-7 second video clips for each of the storyboard scenes are generated.
+- High-quality video clips for each of the storyboard scenes are generated.
+- The total runtime for the video clips should be around 20-30 seconds.
 - The video aesthetics are *highly consistent* with the corresponding static images.
 - The motion depicted is *smooth* and *realistic*.
 - When viewed in sequence, the clips form a coherent narrative, with logical transitions.
