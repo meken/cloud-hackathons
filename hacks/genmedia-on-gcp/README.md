@@ -86,7 +86,7 @@ We've created a storage bucket with the same name as your project id, navigate t
 
 ### Success Criteria
 
-- You have created a set of brand guidelines at a minimum describing the *aesthetics* and the *values* of the brand.
+- You have created a set of brand guidelines describing the *aesthetics*, *values*, *mood/color palette* and *target audience* for the brand.
 - You have created a detailed text description of the protagonist of your narrative.
 - You have created a text description/script for at least three scenes that seamlessly tell your story.
 - You have created a tagline or call to action that meets the brand guidelines.
@@ -105,29 +105,29 @@ Now that we have our brand guidelines, our protagonist and our narrative, it's t
 
 ### Description
 
-First we will create our **protagonist**. Using *Imagen* and/or *Nano Banana*, generate a character for your protagonist using your description of them and your brand guidelines. Once you have your character generate images that depict the character at different angles (front, side, back, 3/4, etc).
+First we will create our **protagonist**. Using *Imagen* and/or *Nano Banana*, generate a representative image of your protagonist using your description of them and your brand guidelines. Once you have your protagonist images, generate more images that depict the protagonist at different angles (front, side, back, 3/4, etc).
 
-Once you have your protoganist, do the same for the **product**.
+Once you have your protoganist, generate the same set of images for the **product**.
 
-Next, create images for your **storyboard** visualizing the scenes crafted in the previous challenge. Once you've created these images, now place your protagonist in these scenes.
+Next, create images for your **storyboard** visualizing the scenes crafted in the previous challenge. These storyboard images should contain *accurate* and *consistent* depictions of the product and protagonist when they are shown.
 
 We also need a **final closing frame** that will inform Veo on how to end the video. It should include space for a Cymbal Pod logo and space for the text of the tagline or call to action.
 
 Finally, use *Imagen* to generate **a logo** for the Cymbal Pod that conveys the brand.
 
 > [!IMPORTANT]  
-> At least your storyboard must be in 16:9 format as we'll use it as reference for the video clips in the next challenge.
+> The storyboard images must be in 16:9 format because we'll use them as references for the video clips we'll create in the next challenge
 
 Make sure that all of this work is stored in the storage bucket that has been created for you, as we'll use these assets when we compose our final video.
 
 ### Success Criteria
 
 - Multiple consistent images are generated that clearly define the **protagonist's appearance** from various angles.
-- Multiple consistent images are generated that clearly define the **product's appearance** from various angles.
+- Multiple consistent images are generated that clearly define the **Cymbal Pod's appearance** from various angles.
 - You have generated **distinct storyboard images** and a **final closing frame image**.
 - The *Cymbal Pod*'s design is *visibly consistent* across all storyboard images.
 - The protagonist's appearance is *visibly consistent* across all storyboard images.
-- The overall aesthetic is *consistent* and conforms to your brand guidelines.
+- The overall aesthetic, mood and color palette is *consistent* and conforms to your brand guidelines.
 - Your coach approves of the visual consistency of your images.
 - The images are stored in the storage bucket that has been provided to you.
 
@@ -157,7 +157,7 @@ You know the drill, once finished, store the resulting clips in the storage buck
 
 - High-quality video clips for each of the storyboard scenes are generated.
 - The total runtime for the video clips should be around 20-30 seconds.
-- The video aesthetics are *highly consistent* with the corresponding static images.
+- The video aesthetics, mood and color palette are *highly consistent* with the corresponding static images.
 - The motion depicted is *smooth* and *realistic*.
 - When viewed in sequence, the clips form a coherent narrative, with logical transitions.
 - Your coach approves of the visual consistency of your videos and their fidelity to your storyboard images.

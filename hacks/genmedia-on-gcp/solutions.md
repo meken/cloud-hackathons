@@ -42,10 +42,10 @@ We're expecting *at least* three scenes, but it makes sense to have more (and sh
 
 The idea is that the participants should use the descriptions from Challenge 1, and use either Gemini or *Help me write* capabilities with Vertex AI Media Studio to generate the required prompts. They should start using *Imagen* for the original images for the protagonist and the product, and then switch to Nano Banana to generate the different angles.
 
-For the storyboard scene generation again Nano Banana would be the best fit. They can start with the relevant character and product pictures and describe their storyboard scene (maybe optimized through Gemini or *Help me write* capabilities) to generate the images.
+For the storyboard scene generation again Nano Banana would be the best fit. They can start uploading the relevant protagonist and product pictures together with the text of the their storyboard scene (maybe optimized through Gemini or *Help me write* capabilities) to generate the images.
 
 > [!NOTE]  
-> If participants choose to generate the different angles or the storyboard scenes with Imagen, this could be quite hard for consistency. Let them experiment to find out how hard that is but **do not** let them spend too much time on that approach.
+> If participants choose to generate the different angles or the storyboard scenes with Imagen, this could be quite hard for consistency. Let them experiment to find out how hard that is but **DO NOT** let them spend too much time on that approach.
 
 > [!WARNING]  
 > At the time of this writing Nano Banana in Vertex AI Media Studio has a limit of 10MB, so if there are too many images inserted in a single conversation, things will fail. Participants should use multiple conversations and/or fewer images.
@@ -54,7 +54,7 @@ For the storyboard scene generation again Nano Banana would be the best fit. The
 
 ### Notes & Guidance
 
-The storyboard images created in the previous challenge can be used as *Reference* to generate the video clips.
+The storyboard images created in the previous challenge should be used as a *Reference* to generate the video clips. If the participants gloss over this, they will struggle with consistency. Similarly, just like the previous challenge, **DO NOT** let them struggle for too long.
 
 > [!NOTE]  
 > At the time of this writing only Veo 2 can do references, so it's okay if participants use that model.
