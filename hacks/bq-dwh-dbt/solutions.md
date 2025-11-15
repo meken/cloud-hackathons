@@ -21,7 +21,7 @@
 Although most of this will be done through the UI by the participants, the following commands make it possible to run this challenge from the command line.
 
 ```shell
-REGION=us-central1  
+REGION=us-central1
 BQ_DATASET=raw
 bq mk --location=$REGION -d $BQ_DATASET
 ```
