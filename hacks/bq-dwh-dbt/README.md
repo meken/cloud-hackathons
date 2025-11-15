@@ -50,13 +50,13 @@ This first step is all about getting started with the source data. Typically dat
 
 ### Description
 
-We have already copied the data from the underlying database to a specific Cloud Storage bucket. Go ahead and find that bucket, and have a look at its contents. Create a new BigQuery dataset called `raw` in the same region as that storage bucket, and create **BigLake** tables for the following entities: `person`, `sales_order_header` and `sales_order_detail`. You can ignore the other files for now. Make sure to name the *Cloud Resource* connection **conn** and to create it in the same region as the storage bucket.
+We have already copied the data from the underlying database to a specific Cloud Storage bucket. Go ahead and find that bucket, and have a look at its contents. Create a new BigQuery dataset called `dev_raw` in the same region as that storage bucket, and create **BigLake** tables for the following entities: `person`, `sales_order_header` and `sales_order_detail`. You can ignore the other files for now. Make sure to name the *Cloud Resource* connection **conn** and to create it in the same region as the storage bucket.
 
 ### Success Criteria
 
-- There is a new BigQuery dataset `raw` in the same region as the landing bucket.
+- There is a new BigQuery dataset `dev_raw` in the same region as the landing bucket.
 - There is a new *Cloud Resource* connection with the id **conn** in the same region as the landing bucket.
-- There are 3 BigLake tables with content in the `raw` dataset: `person`, `sales_order_header` and `sales_order_detail`.
+- There are 3 BigLake tables with content in the `dev_raw` dataset: `person`, `sales_order_header` and `sales_order_detail`.
 
 ### Learning Resources
 
@@ -72,12 +72,12 @@ Before we create our dimensional model we'll first do some cleanup. There's a pl
 
 ### Description
 
-Some of the tables have duplicate records and problematic columns that we'd like to remove. Create a new BigQuery dataset called `curated` and create a new table for each BigLake table from the previous challenge. Name the new tables by prefixing them with `stg_` and remove any **duplicate** records as well as any columns with **only `null` values**. Make sure that the columns `order_date`, `due_date`, `ship_date`, `birth_date` and `date_first_purchase` have the **data type `DATE`** in the new tables.
+Some of the tables have duplicate records and problematic columns that we'd like to remove. Create a new BigQuery dataset called `dev_curated` and create a new table for each BigLake table from the previous challenge. Name the new tables by prefixing them with `stg_` and remove any **duplicate** records as well as any columns with **only `null` values**. Make sure that the columns `order_date`, `due_date`, `ship_date`, `birth_date` and `date_first_purchase` have the **data type `DATE`** in the new tables.
 
 ### Success Criteria
 
-- There is a new BigQuery dataset `curated` in the same region as the other datasets.
-- There are 3 BigQuery tables with content in the `curated` dataset: `stg_person`, `stg_sales_order_header` and `stg_sales_order_detail` with no duplicate records and no columns with only `null` values.
+- There is a new BigQuery dataset `dev_curated` in the same region as the other datasets.
+- There are 3 BigQuery tables with content in the `dev_curated` dataset: `stg_person`, `stg_sales_order_header` and `stg_sales_order_detail` with no duplicate records and no columns with only `null` values.
 - The columns `order_date`, `due_date`, `ship_date`, `birth_date` and `date_first_purchase` in the new tables have the data type `DATE`.
 
 ### Learning Resources
@@ -98,24 +98,27 @@ Although we've only dealt with 3 tables so far, our data model has many more tab
 
 ### Description
 
-In order to connect from DBT to BigQuery we're going to use a service account. Navigate to Service Accounts page and find the `DBT Service Account`. Create a new JSON key for this service account and download it.
+In order to connect from DBT to BigQuery we're going to use a service account. Navigate to Service Accounts page and find the `BQ DWH DBT Service Account`. Create a new JSON key for this service account and download it.
 
 > [!NOTE]  
-> It's not recommended to use service account key files in production, Workload Identity Federation is the preferred option, but for the sake of simplicity we'll stick to key files for this workshop.
+> It's **NOT** recommended to use service account key files in production. Workload Identity Federation is the preferred option, but for the sake of simplicity we'll stick to key files for this workshop.
 
 Log in to the [Cloud DBT Console](https://emea.dbt.com) using the DBT credentials provided to you. Select the project `gHacks` and create a new *Environment*. Call the *Environment* `gHacks-playground` and set its type to `Development`. Configure a new *Connection* of type `BigQuery`, use the service account key file that you've created. Make sure to set the *Location* to the same region in which you have created your datasets in the previous challenges.
 
 > [!NOTE]  
 > The Connection configuration opens in a new tab, after you've completed the configuration, you can close that tab and the new connection should be in the drop down for your environment.
 
-Once the new *Development Environment* is created, go to the DBT Studio, and run the model for `staging`.
+Once the new *Development Environment* is created, it's time to create *Development Credentials*. These credentials will be used during development to test your models. Use the connection that we've configured for the *Development Environment* and make sure to use `dev` as the dataset
 
-TODO Development Credentials, how do you get there?
+> [!NOTE]  
+> Using `dev` as the dataset will prefix the dataset names with `dev_`. Typically you'd want to use a separate prefix for your own profile, but again for the sake of simplicity the whole team will be developing with the same set of development datasets.
+
+Now go to the DBT Studio, and build the models for the tag `staging`.
 
 ### Success Criteria
 
 - There's a successful execution of the model for the `staging` tables.
-- The following 12 tables have been created in the `curated` dataset:
+- The following 12 tables have been created in the `dev_curated` dataset:
   - `stg_address`
   - `stg_country_region`
   - `stg_credit_card`
@@ -133,6 +136,11 @@ TODO Development Credentials, how do you get there?
 
 TODO
 
+### Tips
+
+- TODO where to find Development Credentials
+- The command bar at the bottom of *DBT Studio* allows you to enter command line parameters to the `dbt build` command.
+
 ## Challenge 4: Dimensional modeling
 
 ### Introduction
@@ -141,7 +149,7 @@ Dimensional modeling is a data warehousing technique that organizes data into fa
 
 ### Description
 
-We're going to create a **star schema** by extracting *dimension* tables and a *fact* table from the *staging* tables that have been created in the previous challenge. First you need to create another dataset and call it `dwh`.
+We're going to create a **star schema** by extracting *dimension* tables and a *fact* table from the *staging* tables that have been created in the previous challenge. First you need to create another dataset and call it `dev_dwh`.
 
 We have already provided the code for the dimension tables, first run the pipeline for the tag `dimension` to generate the dimension tables. Then create a new `fact_sales.sql` file in the same folder as the dimension tables, configure it with the tag `fact`, `order_date` as the partition column and `product_key` as the clustering column. Include the following columns in the the fact table:
 
@@ -163,13 +171,13 @@ We have already provided the code for the dimension tables, first run the pipeli
 Once the configuration is complete run the model with the tag `fact` and commit your changes.
 
 > [!NOTE]  
-> If you've created the fact table with no or a different partition column, you'll have to drop it first manually before you can run the Dataform pipeline with the `fact` tag.
+> If you've created the fact table with no or a different partition column, you'll have to drop it first manually before you can run the DBT model with the `fact` tag.
 
 ### Success Criteria
 
-- There is a new BigQuery dataset `dwh` in the same region as the other datasets.
+- There is a new BigQuery dataset `dev_dwh` in the same region as the other datasets.
 - There's a successful execution of the model for the `dimension` and `fact` tags.
-- There are dimension tables and a new partitioned and clustered fact table, `fact_sales` in the `dwh` dataset, with the columns as specified above having in total **121317** rows.
+- There are dimension tables and a new partitioned and clustered fact table, `fact_sales` in the `dev_dwh` dataset, with the columns as specified above having in total **121317** rows.
 
 ### Learning Resources
 
@@ -197,9 +205,19 @@ This challenge is all about Cloud Composer, which is basically a managed and ser
 
 ### Description
 
-We've already created a *Cloud Composer* environment for you. You need to configure and run [this pre-configured DAG](https://raw.githubusercontent.com/meken/gcp-dataform-bqdwh/v2.0.0/dags/etlflow.py) (which is basically a collection of tasks organized with dependencies and relationships) on that environment. The DAG (Directed Acyclic Graph) is scheduled to run daily at midnight, pulls source data from different source systems (although in our case it's using a dummy operator to illustrate the idea), runs the DBT model to generate all of the required tables, and finally runs inferencing on the fact table (using a dummy operator).
+We've already created a *Cloud Composer* environment for you. You need to configure and run [this pre-configured DAG](https://raw.githubusercontent.com/meken/gcp-dbt-bqdwh/refs/heads/main/dags/pipeline.py) (which is basically a collection of tasks organized with dependencies and relationships) on that environment. The DAG (Directed Acyclic Graph) is scheduled to run daily at midnight, pulls source data from different source systems (although in our case it's using a dummy operator to illustrate the idea), runs the DBT models to generate all of the required tables, and finally runs inferencing on the fact table (using a dummy operator).
 
-Find the DAGs bucket for the Cloud Composer environment and copy the provided DAG into the correct location. Update the *environment variables* of the Cloud Composer environment to refer to the correct Dataform repository and use the tag `v1.0.4` as the Git reference.
+Before we can run our models in *production* through Cloud Composer we'll have to create a few things on DBT side. First, we'll need to create a new *Deployment Environment*. Call it `gHacks-production`, set *Environment type* to `Deployment`, *Deployment type* to `PROD` and use the same *Connection* as the one we created for *Development Environment*. Configure the dataset to be `prod` (do not test it yet).
+
+Now create a new *Job*, give it a name of your preference and select the (only) production environment that has just been created. Note the *Account ID* and the *Job ID* as you'll need those later.
+
+Create a new *Service Token*, and make sure that it has sufficient permissions to run jobs.
+
+Now, you can move to Cloud Composer to create th.e DBT connection. Create a new DBT Cloud Connection, call it `dbt_cloud_default`, set the *Tenant* to be `emea.dbt.com` and configure the *Account ID* and the *API key* (the service token you've created in the previous step).
+
+Update the *environment variables* of the Cloud Composer environment to refer to the correct *Job ID*.
+
+Find the DAGs bucket for the Cloud Composer environment and copy the provided DAG into the correct location.
 
 > [!NOTE]  
 > It might take a few minutes for the DAG to be discovered by Airflow, be patient :) Once the DAG is discovered it will be started automatically, make sure to configure the environment variables before you upload the DAG.
@@ -215,6 +233,10 @@ Find the DAGs bucket for the Cloud Composer environment and copy the provided DA
 - [Cloud Composer Overview](https://cloud.google.com/composer/docs/composer-3/composer-overview)
 - [Cloud Composer Environment Variables](https://cloud.google.com/composer/docs/composer-3/set-environment-variables)
 - [Triggering DAGs](https://cloud.google.com/composer/docs/composer-3/trigger-dags)
+
+### Tips
+
+- You'll need to open the *Airflow UI* to configure the *DBT Cloud* Connection.
 
 ## Challenge 6: Monitoring the workflow
 

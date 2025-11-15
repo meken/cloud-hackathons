@@ -75,7 +75,7 @@ data "google_compute_network" "default_network" {
 
 resource "google_project_service_identity" "composer_default_sa" {
   provider = google-beta
-  service  = google_project_service.composer_api.service
+  service  = "composer.googleapis.com"
 }
 
 resource "google_service_account" "dbt_sa" {
@@ -127,6 +127,10 @@ resource "google_project_iam_member" "composer_sa_roles" {
 resource "google_project_iam_member" "startup_vm_sa_roles" {
   project = var.gcp_project_id
   for_each = toset([
+    # TODO remove these roles
+    # "roles/resourcemanager.projectIamAdmin",
+    # "roles/bigquery.admin",
+    ##########################
     "roles/composer.admin",
     "roles/storage.objectAdmin"
   ])
