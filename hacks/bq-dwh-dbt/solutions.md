@@ -146,16 +146,11 @@ EXECUTE IMMEDIATE FORMAT("""
 );
 ```
 
-## Challenge 3: DBT for automation
+## Challenge 3: dbt for automation
 
 ### Notes & Guidance
 
-Configuring the Git connection should be trivial through the UI, you should click on the link `CONNECT WITH GIT` in the `SETTINGS` tab. In that settings tab you can also set the *Google Cloud Project ID* by editing `Workspace compilation overrides`.
-
-After creating the workspace you can then click on `START EXECUTION` and pick Tag *staging*. Don't forget to include the dependencies.
-
-> [!NOTE]  
-> Although this is probably not required anymore, in case you get package not found errors, you'll need to navigate to the `workflow_settings.yaml` and click on `INSTALL PACKAGES` button to install the required packages so that the compilation works.
+TODO
 
 ## Challenge 4: Dimensional modeling
 
@@ -176,25 +171,24 @@ Also note that BigQuery doesn't enforce primary & foreign key constraints, but t
 Another thing to be aware of is that the gross profit can be negative.
 
 ```sql
-config {
-    type: "table",
-    schema: "dwh",
-    tags: ["fact"],
-    bigquery: {
-      partitionBy: "order_date",
-      clusterBy: ["product_key"]
-    }
-}
+{{ config(
+    materialized="table",
+    
+    partition_by={
+      "field": "order_date"
+    },
+    cluster_by=["product_key"]
+) }}
 
 SELECT
-  ${keys.surrogate("sod.sales_order_id", "sod.sales_order_detail_id")} AS sales_key,
-  ${keys.surrogate("sod.product_id")} AS product_key,
-  ${keys.surrogate("customer_id")} AS customer_key,
-  ${keys.surrogate("credit_card_id")} AS credit_card_key,
-  ${keys.surrogate("ship_to_address_id")} AS ship_address_key,
-  ${keys.surrogate("status")} AS order_status_key,
-  ${keys.surrogate("order_date")} AS order_date_key,
-  soh.order_date, 
+  {{ dbt_utils.generate_surrogate_key(["sod.sales_order_id", "sod.sales_order_detail_id"]) }} AS sales_key,
+  {{ dbt_utils.generate_surrogate_key(["sod.product_id"]) }} AS product_key,
+  {{ dbt_utils.generate_surrogate_key(["customer_id"]) }} AS customer_key,
+  {{ dbt_utils.generate_surrogate_key(["credit_card_id"]) }} AS credit_card_key,
+  {{ dbt_utils.generate_surrogate_key(["ship_to_address_id"]) }} AS ship_address_key,
+  {{ dbt_utils.generate_surrogate_key(["status"]) }} AS order_status_key,
+  {{ dbt_utils.generate_surrogate_key(["order_date"]) }} AS order_date_key,
+  soh.order_date,
   sod.unit_price,
   sod.unit_price_discount,
   p.standard_cost AS cost_of_goods_sold,
@@ -202,23 +196,12 @@ SELECT
   sod.order_qty * sod.unit_price AS gross_revenue,
   sod.order_qty * (sod.unit_price * (1 - sod.unit_price_discount) - p.standard_cost) AS gross_profit
 FROM
-  ${ref("stg_sales_order_detail")} sod,
-  ${ref("stg_sales_order_header")} soh,
-  ${ref("stg_product")} p
+  {{ ref("stg_sales_order_detail") }} sod,
+  {{ ref("stg_sales_order_header") }} soh,
+  {{ ref("stg_product") }} p
 WHERE
   sod.sales_order_id = soh.sales_order_id
   AND sod.product_id = p.product_id
-
--- This is causing an error: *Exceeded rate limits: too many table update operations*, disabling it for now
---post_operations {
---  ${keys.primary(ctx, "sales_key")}
---  ${keys.foreign(ctx, ref("dim_product"), "product_key")}
---  ${keys.foreign(ctx, ref("dim_customer"), "customer_key")}
---  ${keys.foreign(ctx, ref("dim_credit_card"), "credit_card_key")}
---  ${keys.foreign(ctx, ref("dim_address"), "address_key", "ship_address_key")}
---  ${keys.foreign(ctx, ref("dim_order_status"), "order_status_key")}
---  ${keys.foreign(ctx, ref("dim_date"), "date_key", "order_date_key")}
---}
 ```
 
 Total number of rows for this table should be: **121317**
@@ -227,12 +210,7 @@ Total number of rows for this table should be: **121317**
 
 ### Notes & Guidance
 
-You need to set the environment variable `DATAFORM_REPOSITORY_ID` to the repository name (not the development workspace) configured in Challenge 4.
-
-Note that the provided Git reference points to a tag in the remote repo, which includes the working code for the fact & obt tables. So Dataform will be using our code instead of the code built by the participants in the previous challenges.
-
-> [!WARNING]  
-> Keep in mind that the DAG runs the Dataform pipeline which will recreate the tables. At the time of this writing, recreating tables unfortunately removes the row level security filters and data policies, although there is a bug filed to address this issue. The current alternative is to apply these measures as part of the Dataform ([post_operations](https://cloud.google.com/dataform/docs/dataform-core#define-SQL) for RLS and [policy tags](https://cloud.google.com/dataform/docs/policy-tags) for masking) or Cloud Composer pipelines.
+TODO
 
 ## Challenge 6: Monitoring the workflow
 

@@ -14,7 +14,7 @@ In this hack, you will explore and learn about the following concepts:
 
 - BigQuery as a classic Data warehouse
 - BigLake for accesing data in an object store and applying table semantics
-- Dataform for automating data transformation steps
+- *dbt* for automating data transformation steps
 - Dimensional modeling with a star schema
 - Cloud Composer for orchestration
 - Cloud Monitoring for monitoring and alerting
@@ -181,9 +181,8 @@ Once the configuration is complete run the model with the tag `fact` and commit 
 
 ### Learning Resources
 
-- [Creating tables with Dataform](https://cloud.google.com/dataform/docs/define-table)
-- [Create table partitions and clusters with Dataform](https://cloud.google.com/dataform/docs/partitions-clusters)
-- [Defining additional table configurations with Dataform](https://cloud.google.com/dataform/docs/table-settings#execute-sql-after-table)
+- [dbt SQL models](https://docs.getdbt.com/docs/build/sql-models)
+- [dbt BigQuery configurations](https://docs.getdbt.com/reference/resource-configs/bigquery-configs)
 - [Introduction to partitioned tables](https://cloud.google.com/bigquery/docs/partitioned-tables)
 - [Introduction to clustered tables](https://cloud.google.com/bigquery/docs/clustered-tables)
 
