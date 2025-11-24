@@ -80,7 +80,7 @@ resource "google_project_service_identity" "composer_default_sa" {
 
 resource "google_service_account" "dbt_sa" {
   account_id   = "sa-bqdwh-dbt"
-  display_name = "BQ DWH DBT Service Account"
+  display_name = "BQ DWH dbt Service Account"
 }
 
 resource "google_service_account" "composer_sa" {

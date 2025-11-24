@@ -1,12 +1,12 @@
-# Data Warehousing with BigQuery and DBT
+# Data Warehousing with BigQuery and dbt
 
 ## Introduction
 
-In this hack we'll implement a classic data warehouse using modern tools, such as Cloud Storage, BigQuery, DBT and Cloud Composer. We'll start with a modified version of the well known *AdventureWorks* OLTP database (a sample database that contains sales data for a fictitious, multinational manufacturing company that sells bicycles and cycling accessories) and build a dimensional model using DBT.
+In this hack we'll implement a classic data warehouse using modern tools, such as Cloud Storage, BigQuery, *dbt* and Cloud Composer. We'll start with a modified version of the well known *AdventureWorks* OLTP database (a sample database that contains sales data for a fictitious, multinational manufacturing company that sells bicycles and cycling accessories) and build a dimensional model using *dbt*.
 
 ![Architecture of the solution](./images/bq-dwh-dbt.png)
 
-In our scenario, the data has already been copied from the database to a landing bucket in Cloud Storage as CSV files. In the first challenge we'll create BigLake tables in BigQuery to make that data accessible in BigQuery. In the second challenge we'll apply some basic cleansing and transformations to load the data into staging tables. In the third challenge we're going to automate this process using DBT. The fourth challenge is all about creating the dimensional model and the fact table. In the last challenges we'll automate, orchestrate and monitor the whole process by tapping into Cloud Composer and Cloud Monitoring.
+In our scenario, the data has already been copied from the database to a landing bucket in Cloud Storage as CSV files. In the first challenge we'll create BigLake tables in BigQuery to make that data accessible in BigQuery. In the second challenge we'll apply some basic cleansing and transformations to load the data into staging tables. In the third challenge we're going to automate this process using *dbt*. The fourth challenge is all about creating the dimensional model and the fact table. In the last challenges we'll automate, orchestrate and monitor the whole process by tapping into Cloud Composer and Cloud Monitoring.
 
 ## Learning Objectives
 
@@ -23,7 +23,7 @@ In this hack, you will explore and learn about the following concepts:
 
 - Challenge 1: Loading the source data
 - Challenge 2: Staging tables
-- Challenge 3: DBT for automation
+- Challenge 3: *dbt* for automation
 - Challenge 4: Dimensional modeling
 - Challenge 5: Cloud Composer for orchestration
 - Challenge 6: Monitoring the workflow
@@ -90,20 +90,20 @@ Some of the tables have duplicate records and problematic columns that we'd like
 - Data Profile (with 100% sampling!) can help you find `null` columns.
 - [EXCEPT](https://cloud.google.com/bigquery/docs/reference/standard-sql/query-syntax#select_except) is useful when you want to discard a few columns when selecting all columns from a table.
 
-## Challenge 3: DBT for automation
+## Challenge 3: *dbt* for automation
 
 ### Introduction
 
-Although we've only dealt with 3 tables so far, our data model has many more tables, and we have to perform multiple SQL operations to process the data. Doing this manually is error-prone and labor intensive. Wouldn't it be great if we could automate this by developing and operationalizing scalable data transformation pipelines in BigQuery using SQL? Enter *DBT* 🙂
+Although we've only dealt with 3 tables so far, our data model has many more tables, and we have to perform multiple SQL operations to process the data. Doing this manually is error-prone and labor intensive. Wouldn't it be great if we could automate this by developing and operationalizing scalable data transformation pipelines in BigQuery using SQL? Enter *dbt* 🙂
 
 ### Description
 
-In order to connect from DBT to BigQuery we're going to use a service account. Navigate to Service Accounts page and find the `BQ DWH DBT Service Account`. Create a new JSON key for this service account and download it.
+In order to connect from *dbt* to BigQuery we're going to use a service account. Navigate to Service Accounts page and find the `BQ DWH dbt Service Account`. Create a new JSON key for this service account and download it.
 
 > [!NOTE]  
 > It's **NOT** recommended to use service account key files in production. Workload Identity Federation is the preferred option, but for the sake of simplicity we'll stick to key files for this workshop.
 
-Log in to the [Cloud DBT Console](https://emea.dbt.com) using the DBT credentials provided to you. Select the project `gHacks` and create a new *Environment*. Call the *Environment* `gHacks-playground` and set its type to `Development`. Configure a new *Connection* of type `BigQuery`, use the service account key file that you've created. Make sure to set the *Location* to the same region in which you have created your datasets in the previous challenges.
+Log in to the [dbt Cloud console](https://emea.dbt.com) using the *dbt* credentials provided to you. Select the project `gHacks` and create a new *Environment*. Call the *Environment* `gHacks-playground` and set its type to `Development`. Configure a new *Connection* of type `BigQuery`, use the service account key file that you've created. Make sure to set the *Location* to the same region in which you have created your datasets in the previous challenges.
 
 > [!NOTE]  
 > The Connection configuration opens in a new tab, after you've completed the configuration, you can close that tab and the new connection should be in the drop down for your environment.
@@ -113,7 +113,7 @@ Once the new *Development Environment* is created, it's time to create *Developm
 > [!NOTE]  
 > Using `dev` as the dataset will prefix the dataset names with `dev_`. Typically you'd want to use a separate prefix for your own profile, but again for the sake of simplicity the whole team will be developing with the same set of development datasets.
 
-Now go to the DBT Studio, and build the models for the tag `staging`.
+Now go to the *dbt* Studio, and build the models for the tag `staging`.
 
 ### Success Criteria
 
@@ -134,12 +134,12 @@ Now go to the DBT Studio, and build the models for the tag `staging`.
 
 ### Learning Resources
 
-TODO
+- [dbt - Creating Devolopment Environments](https://docs.getdbt.com/docs/dbt-cloud-environments#create-a-development-environment)
+- [dbt - Tag support](https://docs.getdbt.com/reference/resource-configs/tags)
 
 ### Tips
 
-- TODO where to find Development Credentials
-- The command bar at the bottom of *DBT Studio* allows you to enter command line parameters to the `dbt build` command.
+- The command bar at the bottom of *dbt Studio* allows you to enter command line parameters to the `dbt build` command.
 
 ## Challenge 4: Dimensional modeling
 
@@ -171,7 +171,7 @@ We have already provided the code for the dimension tables, first run the pipeli
 Once the configuration is complete run the model with the tag `fact` and commit your changes.
 
 > [!NOTE]  
-> If you've created the fact table with no or a different partition column, you'll have to drop it first manually before you can run the DBT model with the `fact` tag.
+> If you've created the fact table with no or a different partition column, you'll have to drop it first manually before you can run the *dbt* model with the `fact` tag.
 
 ### Success Criteria
 
@@ -196,7 +196,7 @@ Once the configuration is complete run the model with the tag `fact` and commit 
 
 ### Introduction
 
-Running the DBT models manually works, but it's not very practical. We'd rather automate this process and run it periodically. Although DBT provides a lot of functionality to automate and schedule running pipelines, we're going to consider a bit more flexible orchestrator that can also run additional steps that might not be part of the DBT pipelines, such as pulling data from source systems, running ML models etc.
+Running the *dbt* models manually works, but it's not very practical. We'd rather automate this process and run it periodically. Although *dbt* provides a lot of functionality to automate and schedule running pipelines, we're going to consider a bit more flexible orchestrator that can also run additional steps that might not be part of the *dbt* pipelines, such as pulling data from source systems, running ML models etc.
 
 This challenge is all about Cloud Composer, which is basically a managed and serverless version of the well-known [Apache Airflow](https://airflow.apache.org/) framework, to schedule and run our complete pipeline.
 
@@ -205,15 +205,15 @@ This challenge is all about Cloud Composer, which is basically a managed and ser
 
 ### Description
 
-We've already created a *Cloud Composer* environment for you. You need to configure and run [this pre-configured DAG](https://raw.githubusercontent.com/meken/gcp-dbt-bqdwh/refs/heads/main/dags/pipeline.py) (which is basically a collection of tasks organized with dependencies and relationships) on that environment. The DAG (Directed Acyclic Graph) is scheduled to run daily at midnight, pulls source data from different source systems (although in our case it's using a dummy operator to illustrate the idea), runs the DBT models to generate all of the required tables, and finally runs inferencing on the fact table (using a dummy operator).
+We've already created a *Cloud Composer* environment for you. You need to configure and run [this pre-configured DAG](https://raw.githubusercontent.com/meken/gcp-dbt-bqdwh/refs/heads/main/dags/pipeline.py) (which is basically a collection of tasks organized with dependencies and relationships) on that environment. The DAG (Directed Acyclic Graph) is scheduled to run daily at midnight, pulls source data from different source systems (although in our case it's using a dummy operator to illustrate the idea), runs the *dbt* models to generate all of the required tables, and finally runs inferencing on the fact table (using a dummy operator).
 
-Before we can run our models in *production* through Cloud Composer we'll have to create a few things on DBT side. First, we'll need to create a new *Deployment Environment*. Call it `gHacks-production`, set *Environment type* to `Deployment`, *Deployment type* to `PROD` and use the same *Connection* as the one we created for *Development Environment*. Configure the dataset to be `prod` (do not test it yet).
+Before we can run our models in *production* through Cloud Composer we'll have to create a few things on *dbt* side. First, we'll need to create a new *Deployment Environment*. Call it `gHacks-production`, set *Environment type* to `Deployment`, *Deployment type* to `PROD` and use the same *Connection* as the one we created for *Development Environment*. Configure the dataset to be `prod` (do not test it yet).
 
 Now create a new *Job*, give it a name of your preference and select the (only) production environment that has just been created. Note the *Account ID* and the *Job ID* as you'll need those later.
 
 Create a new *Service Token*, and make sure that it has sufficient permissions to run jobs.
 
-Now, you can move to Cloud Composer to create th.e DBT connection. Create a new DBT Cloud Connection, call it `dbt_cloud_default`, set the *Tenant* to be `emea.dbt.com` and configure the *Account ID* and the *API key* (the service token you've created in the previous step).
+Now, you can move to Cloud Composer to create the *dbt* connection. Create a new *dbt* Cloud Connection, call it `dbt_cloud_default`, find and set the *Tenant* (you can look this up in *Account Information* in the *dbt Cloud console*, it will look like `<subdomain.region>.dbt.com`) and configure the *Account ID* and the *API key* (the service token you've created in the previous step).
 
 Update the *environment variables* of the Cloud Composer environment to refer to the correct *Job ID*.
 
@@ -236,7 +236,7 @@ Find the DAGs bucket for the Cloud Composer environment and copy the provided DA
 
 ### Tips
 
-- You'll need to open the *Airflow UI* to configure the *DBT Cloud* Connection.
+- You'll need to open the *Airflow UI* to configure the *dbt Cloud* Connection.
 
 ## Challenge 6: Monitoring the workflow
 

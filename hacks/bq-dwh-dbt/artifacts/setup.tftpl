@@ -40,6 +40,6 @@ gcloud composer environments create cmp-bqdwh \
     --image-version composer-3-airflow-2.10 \
     --service-account "$COMPOSER_SA" \
     --storage-bucket "gs://$DAGS_BUCKET" \
-    --env-variables GCP_PROJECT_ID=$PROJECT_ID,GCP_REGION=$REGION,DATAFORM_REPOSITORY_ID=,DATAFORM_GIT_REF=
+    --env-variables JOB_ID=
 
 echo "Startup script finished successfully"
