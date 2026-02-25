@@ -25,12 +25,12 @@ jobs:
       - name: Create new branch
         run: |
           git config user.name "GitHub Actions Bot"
-          git config user.email "${{ env.AUTHOR }}"
-          git checkout -b ${{ env.BRANCH_NAME }}
+          git config user.email "${AUTHOR}"
+          git checkout -b ${BRANCH_NAME}
       - name: Generate the required structure
-        run: tools/setup-newhack.sh -h "${{ env.HACK }}" -t "${{ env.TITLE }}" -a "${{ env.AUTHOR }}"
+        run: tools/setup-newhack.sh -h "${HACK}" -t "${TITLE}" -a "${AUTHOR}"
       - name: Push branch
         run: |
           git add .
-          git commit -m "Inital commit for the hack ${{ env.HACK }}"
-          git push -u origin ${{ env.BRANCH_NAME }}
+          git commit -m "Inital commit for the hack ${HACK}"
+          git push -u origin ${BRANCH_NAME}
