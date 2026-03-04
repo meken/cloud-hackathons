@@ -22,8 +22,10 @@ variable "gcp_zone" {
 }
 
 ## --------------------------------------------------------------
-variable "gcp_user" {
-  type        = string
-  description = "Email address of the lab user."
-}
+# Commenting out this section as QL users are Owners and we suggest
+# either Editor or Owner roles when this is run in customer envs as well
+# variable "gcp_user" {
+#   type        = string
+#   description = "Email address of the lab user."
+# }
 

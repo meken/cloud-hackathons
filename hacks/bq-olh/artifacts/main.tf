@@ -25,20 +25,21 @@ resource "google_project_service" "enabled_apis" {
 }
 
 # 3. IAM ROLES FOR THE USER
-resource "google_project_iam_member" "user_roles" {
-  for_each = toset([
-    "roles/compute.admin",
-    "roles/bigquery.admin",
-    "roles/storage.admin",
-    "roles/serviceusage.serviceUsageAdmin",
-    "roles/dataproc.admin",
-    "roles/aiplatform.colabEnterpriseAdmin",
-    "roles/aiplatform.user"
-  ])
-  project = var.gcp_project_id
-  role    = each.key
-  member  = "user:${var.gcp_user}" 
-}
+# Commenting out as QL users are Owners
+# resource "google_project_iam_member" "user_roles" {
+#   for_each = toset([
+#     "roles/compute.admin",
+#     "roles/bigquery.admin",
+#     "roles/storage.admin",
+#     "roles/serviceusage.serviceUsageAdmin",
+#     "roles/dataproc.admin",
+#     "roles/aiplatform.colabEnterpriseAdmin",
+#     "roles/aiplatform.user"
+#   ])
+#   project = var.gcp_project_id
+#   role    = each.key
+#   member  = "user:${var.gcp_user}" 
+# }
 
 # 4. IAM ROLES FOR COMPUTE SERVICE ACCOUNT
 data "google_project" "project" {}
