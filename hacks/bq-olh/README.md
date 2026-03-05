@@ -232,10 +232,12 @@ Requirements:
 
 - [Export table metadata](https://docs.cloud.google.com/bigquery/docs/exporting-data#export_table_metadata)
 - [Create a Spark session in a BigQuery Studio notebook](https://docs.cloud.google.com/bigquery/docs/use-spark#create-a-single-spark-session-in-a-bigquery-studio-notebook)
+- [Spark dynamic allocation properties](https://docs.cloud.google.com/dataproc-serverless/docs/concepts/autoscaling#spark_dynamic_allocation_properties)
 
 ### Tips
 
 - Create the Spark session with version 2.3 (using the runtime\_config) and the available subnet (using environment\_config.execution\_config)
+- Create the Spark session without the need for autoscaling, as this is not allowed.
 - A Notebook runtime template is available to you. Make sure you create your runtime based on this template.
 
 ## Challenge 6: AI with multi-modal analysis

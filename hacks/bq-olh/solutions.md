@@ -349,37 +349,23 @@ The following should not be necessary, but just in case... Authenticate the Note
 Create the Spark session:
 
 ```python
-import pyspark
 from google.cloud.dataproc_spark_connect import DataprocSparkSession
-from google.cloud.dataproc_v1 import Session, RuntimeConfig
+from google.cloud.dataproc_v1 import Session
+# Create the Dataproc Serverless session.
+session = Session()
 
-# BLMS "custom" Iceberg catalog for BigQuery implementation
-bq_catalog = "bq_catalog"
+# Set the session configuration for BigLake Metastore with the Iceberg environment.
+catalog="bq_catalog"
 
-# BLMS "rest" Iceberg catalog implementation
-rest_catalog = "rest_catalog"
+session.environment_config.execution_config.subnetwork_uri = f"{SUBNET_NAME}"
+session.runtime_config.properties[f"spark.sql.catalog.{catalog}"] = "org.apache.iceberg.spark.SparkCatalog"
+session.runtime_config.properties[f"spark.sql.catalog.{catalog}.catalog-impl"] = "org.apache.iceberg.gcp.bigquery.BigQueryMetastoreCatalog"
+session.runtime_config.properties[f"spark.sql.catalog.{catalog}.gcp_project"] = f"{PROJECT_ID}"
+session.runtime_config.properties[f"spark.sql.catalog.{catalog}.gcp_location"] = f"{LOCATION}"
+session.runtime_config.properties[f"spark.sql.catalog.{catalog}.warehouse"] = f"gs://{DATA_BUCKET_NAME}-sales-data"
+session.runtime_config.properties["spark.dynamicAllocation.enabled"] = "false"
 
-# BLMS "rest" Iceberg catalog implementation with federation to the BQ catalog
-rest_catalog_with_bq_federation = "rest_catalog_with_bq_federation"
-
-session = Session(runtime_config=RuntimeConfig(version='2.3'))
-session.environment_config.execution_config.subnetwork_uri = SUBNET_NAME
-
-session.runtime_config.properties[f'spark.sql.catalog.{rest_catalog_with_bq_federation}'] = 'org.apache.iceberg.spark.SparkCatalog'
-session.runtime_config.properties[f'spark.sql.catalog.{rest_catalog_with_bq_federation}.type'] = 'rest'
-session.runtime_config.properties[f'spark.sql.catalog.{rest_catalog_with_bq_federation}.uri'] = 'https://biglake.googleapis.com/iceberg/v1/restcatalog'
-session.runtime_config.properties[f'spark.sql.catalog.{rest_catalog_with_bq_federation}.warehouse'] = f"bq://projects/{PROJECT_ID}" # NOTE: this enables catalog federation with BigQuery instead of a standalone catalog
-session.runtime_config.properties[f'spark.sql.catalog.{rest_catalog_with_bq_federation}.header.x-goog-user-project'] = PROJECT_ID
-session.runtime_config.properties[f'spark.sql.catalog.{rest_catalog_with_bq_federation}.rest.auth.type'] = 'org.apache.iceberg.gcp.auth.GoogleAuthManager'
-session.runtime_config.properties[f'spark.sql.catalog.{rest_catalog_with_bq_federation}.io-impl'] = 'org.apache.iceberg.gcp.gcs.GCSFileIO'
-session.runtime_config.properties[f'spark.sql.catalog.{rest_catalog_with_bq_federation}.rest-metrics-reporting-enabled'] = 'false'
-session.runtime_config.properties["spark.dynamicAllocation.enabled"] = "false"  # Do not use autoscaling
-session.runtime_config.properties["spark.executor.instances"] = "2"             # Set your desired number of executors
-
-# General packages and configuration
-session.runtime_config.properties["spark.sql.extensions"] = "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions"
-
-# Create the Spark session. This will take some time.
+# Create the Spark Connect session.
 spark = (
    DataprocSparkSession.builder
      .appName("BigLake Iceberg Lab")
@@ -425,7 +411,7 @@ Requirements:
 Solution query:
 
 ```python
-spark.sql(f"USE `{rest_catalog_with_bq_federation}`;")
+spark.sql(f"USE `{catalog}`;")
 
 spark.sql(f"USE NAMESPACE`{DATASET_NAME}`;")
 
