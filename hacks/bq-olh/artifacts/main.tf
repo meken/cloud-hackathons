@@ -19,7 +19,7 @@ resource "google_project_service" "enabled_apis" {
     "orgpolicy.googleapis.com",
     "aiplatform.googleapis.com",
     "dataform.googleapis.com",
-    "roles/aiplatform.user"
+    "datacatalog.googleapis.com"
   ])
   service  = each.key
   disable_on_destroy = false
