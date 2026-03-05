@@ -61,6 +61,9 @@ In BigQuery, we aim to have 2 datasets. One for *marketing* and one for *sales*.
 
 You have been provided with raw sales data stored in a bucket on Google Cloud Storage. In this bucket, you will find the necessary data to create tables for orders, order\_items and products. First, create a **new** Cloud Storage bucket to serve as our data lake storage. Then, configure a **BigLake Connection** (Cloud Resource) to allow BigQuery to access this bucket. Finally, create the *sales* BigQuery dataset and 3 Iceberg tables, located within the bucket you created earlier, named `products`, `orders` and `order_items`. Finally, load the raw data into the Iceberg tables.
 
+> [!NOTE]  
+> The data is loaded in the background to your bucket in Google Cloud Storages. If you do not yet see folders for the different tables in the bucket, then please wait a minute or so.
+
 The schema of the three tables are as follows:
 
 #### Schema files

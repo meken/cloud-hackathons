@@ -373,6 +373,8 @@ session.runtime_config.properties[f'spark.sql.catalog.{rest_catalog_with_bq_fede
 session.runtime_config.properties[f'spark.sql.catalog.{rest_catalog_with_bq_federation}.rest.auth.type'] = 'org.apache.iceberg.gcp.auth.GoogleAuthManager'
 session.runtime_config.properties[f'spark.sql.catalog.{rest_catalog_with_bq_federation}.io-impl'] = 'org.apache.iceberg.gcp.gcs.GCSFileIO'
 session.runtime_config.properties[f'spark.sql.catalog.{rest_catalog_with_bq_federation}.rest-metrics-reporting-enabled'] = 'false'
+session.runtime_config.properties["spark.dynamicAllocation.enabled"] = "false"  # Do not use autoscaling
+session.runtime_config.properties["spark.executor.instances"] = "2"             # Set your desired number of executors
 
 # General packages and configuration
 session.runtime_config.properties["spark.sql.extensions"] = "org.apache.iceberg.spark.extensions.IcebergSparkSessionExtensions"
