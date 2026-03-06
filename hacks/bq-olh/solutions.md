@@ -363,7 +363,8 @@ session.runtime_config.properties[f"spark.sql.catalog.{catalog}.catalog-impl"] =
 session.runtime_config.properties[f"spark.sql.catalog.{catalog}.gcp_project"] = f"{PROJECT_ID}"
 session.runtime_config.properties[f"spark.sql.catalog.{catalog}.gcp_location"] = f"{LOCATION}"
 session.runtime_config.properties[f"spark.sql.catalog.{catalog}.warehouse"] = f"gs://{DATA_BUCKET_NAME}-sales-data"
-session.runtime_config.properties["spark.dynamicAllocation.enabled"] = "false"
+
+# session.runtime_config.properties["spark.dynamicAllocation.enabled"] = "false"
 
 # Create the Spark Connect session.
 spark = (
