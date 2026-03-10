@@ -7,8 +7,6 @@ apt-get install -y wget unzip
 export DEST_PROJECT_ID=${gcp_project_id}
 export REGION=${gcp_region}
 export DEST_BUCKET_NAME=${gcs_bucket}
-export NAT_GATEWAY_NAME=${nat_gateway_name}
-export ROUTER_NAME=${router_name}
 export NETWORK_NAME=${network_name}
 export SUBNET_NAME=${subnet_name}
 
@@ -95,16 +93,6 @@ curl -X POST \
      "https://$${REGION}-aiplatform.googleapis.com/v1/projects/$${DEST_PROJECT_ID}/locations/$${REGION}/notebookRuntimeTemplates" 
 
 
-# Delete the route to save cost
-gcloud compute routers nats delete $NAT_GATEWAY_NAME \
-    --router=$ROUTER_NAME \
-    --region=$REGION \
-    --quiet
-
-gcloud compute routers delete $ROUTER_NAME \
-    --region=$REGION \
-    --quiet
-
 
 # Delete the instance
-# gcloud compute instances delete startup-vm --zone=${gcp_zone} --quiet
+gcloud compute instances delete startup-vm --zone=${gcp_zone} --quiet

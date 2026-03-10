@@ -98,25 +98,6 @@ resource "google_compute_firewall" "allow_ssh" {
   }
 }
 
-resource "google_compute_router" "router" {
-  name    = "olh-router"
-  region  = google_compute_subnetwork.olh_subnet.region
-  network = google_compute_network.olh_net.id
-}
-
-resource "google_compute_router_nat" "nat" {
-  name                               = "olh-router-nat"
-  router                             = google_compute_router.router.name
-  region                             = google_compute_router.router.region
-  nat_ip_allocate_option             = "AUTO_ONLY"
-  source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
-
-  log_config {
-    enable = true
-    filter = "ERRORS_ONLY"
-  }
-}
-
 # 6. STORAGE (GCS BUCKET)
 resource "google_storage_bucket" "raw_data" {
   name                        = local.bucket_name
@@ -141,8 +122,7 @@ resource "google_compute_instance" "startup-vm" {
   tags         = ["http-server"]
 
   depends_on = [
-    google_project_iam_binding.compute_sa,
-    google_compute_router_nat.nat
+    google_project_iam_binding.compute_sa
   ]
 
   boot_disk {
@@ -158,6 +138,7 @@ resource "google_compute_instance" "startup-vm" {
 
   network_interface {
     subnetwork = google_compute_subnetwork.olh_subnet.name
+    access_config {}
   }
 
   service_account {
@@ -169,8 +150,6 @@ resource "google_compute_instance" "startup-vm" {
     gcp_region       = var.gcp_region,
     gcp_zone         = var.gcp_zone,
     gcs_bucket       = google_storage_bucket.raw_data.name
-    nat_gateway_name = google_compute_router_nat.nat.name
-    router_name      = google_compute_router.router.name
     network_name     = google_compute_network.olh_net.name
     subnet_name      = google_compute_subnetwork.olh_subnet.name
   })
