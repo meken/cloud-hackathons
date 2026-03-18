@@ -39,6 +39,18 @@ We're expecting *at least* three scenes, but it makes sense to have more (and sh
 
 > Attempting to prompt "A knight battles a dragon, then flies on its back to a castle, then attends a feast" in a single prompt for an 8-second clip will likely result in a muddled or incomplete depiction of one small part, or a very rushed and incoherent sequence. Instead, generate each distinct part as a separate clip if needed
 
+#### Pro Tips for the Students
+
+- Take **5 mins** with your team discussing what the brand guidelines, product and protagonist should be like. Be creative! Don't waste time here.
+- See the example below and use Gemini to help you write.  
+- Focus on your story and keep in mind that you have 20-30 seconds to tell that story. Each scene is about 8 seconds.  
+- Don't try to squeeze too many different things in a single scene. Keep it simple.  
+- Parallelize your work.
+  - One person can work on the POD/vehicle/Product design  
+  - One person on Styling - think about your favourite movie and their color pallets. [Some ideas here](https://digitalsynopsis.com/design/cinema-palettes-famous-movie-colors/#google_vignette)  
+  - One person on the Protagonist  
+  - Rest work on a storyline/narrative.
+
 ## Challenge 2: The Visual Blueprint
 
 ### Notes & Guidance
@@ -53,6 +65,13 @@ For the storyboard scene generation again Nano Banana would be the best fit. The
 > [!WARNING]  
 > At the time of this writing Nano Banana in Vertex AI Media Studio has a limit of 10MB, so if there are too many images inserted in a single conversation, things will fail. Also there are limits to how many images can be included in a single prompt (3 for Nano Banana at the moment), if the participants go beyond that limit, Nano Banana will silently ignore those. Participants should use multiple conversations and/or fewer images.
 
+#### Pro Tips for the Students
+
+- The more details provided by the output of the previous challenge, the more consistent your images will be.
+- Avoid too many things at once. Keep the scene clean. Focus on a good storyline. It can be funny, it can be emotional.  
+- Google Models take IP and Safety very seriously. Do not use any known persons, products likeness or names. Safety filter will trigger if Gemini detects such references in the prompt.  
+- Have a distinct tagline and logo.
+
 ## Challenge 3: From Stills to Motion
 
 ### Notes & Guidance
@@ -60,6 +79,17 @@ For the storyboard scene generation again Nano Banana would be the best fit. The
 The storyboard images created in the previous challenge should be used as a *Reference* to generate the video clips. If the participants gloss over this, they will struggle with consistency. Similarly, just like the previous challenge, **DO NOT** let them struggle for too long.
 
 There's a plethora of different options here, participants can use the story board imags as *Reference*s, or generate start and end frames based on the story board and use those for the newer *Veo* models.
+
+#### Pro Tips for the Students
+
+- In the interest of time and so that everyone gets to play, parallelize this task across your team.
+- Video generation is time-intensive. To optimize efficiency, we recommend that **two or three team members simultaneously generate distinct video sets**. Afterwards, compare and select the most effective clips, or regenerate as necessary. Do not delay progress.
+- For enhanced consistency, consider **utilizing a screenshot of the final frame** from Video 1 as the initiating frame for Video 2.
+- Upload **3-5** images and detailed descriptions.
+- Can't emphasize enough to go through this guide [Veo on Vertex AI video generation prompt guide](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/video/video-gen-prompt-guide). This separates a great shot from a good shot.
+- Google Models take IP and Safety very seriously. Do not use any known persons, products, films, references, likeness or names. Safety filter will trigger if Gemini detects such references in the prompt.
+- If you see your character develop discrepancies between scenes, like their look changes, go back to the previous challenge and develop better images.
+- Also if certain actions are not consistent (opening doors differently), include reference images for those.
 
 ## Challenge 4: The Assembly
 
@@ -71,11 +101,23 @@ In the rest of this gHack's challenges, you will be piecing together your final 
 
 Google Vids is a web-based video creation app designed to make producing professional videos as simple as creating a slide deck without any prior video editing experience. It is available on any Google Workspace account and also on personal gmail accounts if necessary.
 
+#### Pro Tips for the Students
+
+- Don't worry about the sound at this step. Just focus on the complete Video. You will add a voiceover in the next step  
+- You could use Gemini for generating text as well, but in case you're not getting what you want, you can just use text elements within your video editor.
+
 ## Challenge 5: Giving It a Voice
 
 ### Notes & Guidance
 
 You'll have the choice to use Google's Chirp 3 HD model or Gemini itself to create the voice-overs. The difference between these two lies in the source of vocal identity and style. Chirp functions as an advanced text-to-speech engine, requiring a pre-existing voice, either from its library or a custom clone, to articulate the provided text with high fidelity; any stylistic nuance is primarily achieved through manipulating the text itself with punctuation and pacing adjustments. In contrast, Gemini operates as a true generative voice model, creating the vocal characteristics and delivery style from scratch based on natural language prompts. This allows a user to conjure a voice by describing it (e.g., "a deep, soothing voice") and directing its emotional tone (e.g., "speak with excitement"), offering a layer of creative control and on-the-fly vocal design that Chirp, in this context, does not.
+
+#### Pro Tips for the Students
+
+- This is the final touch of your video. A good narrative is what you need.
+- You can sample voices and choose the right voice from the samples [here](https://docs.cloud.google.com/text-to-speech/docs/chirp3-hd).  
+- If you have already established if it's a male or female voice the choice is easier!
+- Finally, add these audio tracks in the proper places in your video sequence timeline. You can use Vids to insert the audio. You can change the speed of the audio in both Vids and in Chirp.
 
 ## Challenge 6: The Soundtrack
 
