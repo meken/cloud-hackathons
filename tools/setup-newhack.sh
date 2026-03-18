@@ -1,16 +1,16 @@
 #!/bin/bash
 
 usage() {
-    echo "Usage: ${0} -h <hack:string> -a <author:string> -t <title:string>" 1>&2; exit 1
+    echo "Usage: ${0} -h <hack:string> -a <author:string> -t <title:string> -n <networking:bool>" 1>&2; exit 1
 }
 
-NETWORKING=false
-while getopts "h:a:t:n" OPT; do
+NETWORKING="false"
+while getopts "h:a:t:n:" OPT; do
   case "${OPT}" in
     h) HACK="${OPTARG}";;
     a) AUTHOR="${OPTARG}";;
     t) TITLE="${OPTARG}";;
-    n) NETWORKING=true;;
+    n) NETWORKING="${OPTARG}";;
 #    *) usage;;
   esac
 done
@@ -19,12 +19,16 @@ if [ -z "${HACK}" ] || [ -z "${AUTHOR}" ] || [ -z "${TITLE}" ]; then
     usage
 fi
 
+if [[ "${NETWORKING}" != "true" && "${NETWORKING}" != "false" ]]; then
+    echo "Only true/false is supported for -n option" 1>&2; exit 1
+fi
+
 if [[ ! "$HACK" =~ ^[a-z0-9\-]+$ ]]; then
-    echo "Hack name '$HACK' should be all snake case, all lower case"
+    echo "Hack name '$HACK' should be all snake case, all lower case"; exit 1
 fi
 
 if [[ ! "$AUTHOR" =~ ^.+@.+\..+$ ]]; then
-    echo "Author '$AUTHOR' is a not a valid email address"
+    echo "Author '$AUTHOR' is a not a valid email address"; exit 1
 fi
 
 if [ ! -d hacks ]; then
