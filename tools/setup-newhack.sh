@@ -4,11 +4,13 @@ usage() {
     echo "Usage: ${0} -h <hack:string> -a <author:string> -t <title:string>" 1>&2; exit 1
 }
 
-while getopts "h:a:t:" OPT; do
+NETWORKING=false
+while getopts "h:a:t:n" OPT; do
   case "${OPT}" in
     h) HACK="${OPTARG}";;
     a) AUTHOR="${OPTARG}";;
     t) TITLE="${OPTARG}";;
+    n) NETWORKING=true;;
 #    *) usage;;
   esac
 done
@@ -66,7 +68,7 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "6.13.0"
+      version = "~> 7.24.0"
     }
   }
 }
@@ -100,18 +102,88 @@ variable "gcp_zone" {
 }
 EOF
 
-cat <<EOF > $BASEDIR/artifacts/main.tf
-$LICENSE
-resource "google_project_service" "compute_api" {
-  service            = "compute.googleapis.com"
-  disable_on_destroy = false  
+if [ "${NETWORKING}" = true ]; then
+cat <<EOF >> $BASEDIR/artifacts/variables.tf
+
+# Relevant when running in an environment where no default network exists yet
+variable "create_default_network" {
+  type        = bool
+  default     = false
+  description = "Whether to create a default network with subnets for all regions"
 }
 EOF
+fi
+
+cat <<EOF > $BASEDIR/artifacts/main.tf
+$LICENSE
+resource "google_project_service" "default" {
+  project  = var.gcp_project_id
+  for_each = toset([
+    "cloudresourcemanager.googleapis.com",
+    "serviceusage.googleapis.com",
+    "iam.googleapis.com",
+    "storage.googleapis.com",
+    "compute.googleapis.com"
+  ])
+  service = each.key
+
+  disable_on_destroy = false
+}
+EOF
+
+if [ "${NETWORKING}" = true ]; then
+cat <<EOF >> $BASEDIR/artifacts/main.tf
+
+# In case a default network is not present in the project, this variable needs to be set
+resource "google_compute_network" "default_network_created" {
+  name                    = "default"
+  auto_create_subnetworks = true
+  count                   = var.create_default_network ? 1 : 0
+  depends_on = [
+    google_project_service.default
+  ]
+}
+
+# Enabling comms between VMs for auto mode subnets (needed by Dataproc/Dataflow workers)
+resource "google_compute_firewall" "fwr_allow_custom" {
+  name          = "fwr-ingress-allow-custom"
+  network       = google_compute_network.default_network_created[0].self_link
+  count         = var.create_default_network ? 1 : 0
+  source_ranges = ["10.128.0.0/9"]
+  allow {
+    protocol = "all"
+  }
+}
+
+# Enabling Identity-Aware-Proxy for TCP forwarding (for SSH access from Console)
+resource "google_compute_firewall" "fwr_allow_iap" {
+  name          = "fwr-ingress-allow-iap"
+  network       = google_compute_network.default_network_created[0].self_link
+  count         = var.create_default_network ? 1 : 0
+  source_ranges = ["35.235.240.0/20"]
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+}
+
+# This piece of code makes it possible to deal with the default network the same way, 
+# regardless of how it has been created. Make sure to refer to the default network through
+# this resource when needed.
+data "google_compute_network" "default_network" {
+  name = "default"
+  depends_on = [
+    google_project_service.default,
+    google_compute_network.default_network_created
+  ]
+}
+EOF
+fi
 
 cat <<EOF > $BASEDIR/artifacts/runtime.yaml
 $LICENSE
 runtime: terraform
-version: 1.4.6
+version: 1.12.1
 EOF
 
 TAB="$(printf '\t')"
