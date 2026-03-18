@@ -4,14 +4,25 @@ on:
   workflow_dispatch:
     inputs:
       hackId:
-        description: The id of the hack, this is used as folder name, short, sweet and all lower/snake case, e.g. mlops-on-gcp
+        description: > 
+          The id of the hack, this is used as folder name, short, sweet and all lower/snake case, e.g. mlops-on-gcp
         required: true
       hackTitle:
-        description: The title of the hack, mainly used as lab title for Qwiklabs, e.g IoT hack of the Century
+        description: >
+          The title of the hack, mainly used as lab title for Qwiklabs, e.g IoT hack of the Century
         required: true
       hackAuthor:
-        description: The email address of the author, used in QL_OWNER, you can add more later, e.g. user@example.com
+        description: >
+          The email address of the author, used in QL_OWNER, you can add more later, e.g. user@example.com
         required: true
+      networking:
+        description: >
+          Provides configuration for creating/using the default network, true or false. Note that even though the 
+          Terraform configuration will be there when this is set to true, you still need to set the 
+          `create_default_network` Terraform variable when running Terraform to _create_ the default network.
+        required: false
+        default: "false"
+
 jobs:
   scaffold:
     runs-on: ubuntu-latest
@@ -20,6 +31,7 @@ jobs:
       HACK: ${{ github.event.inputs.hackId }}
       AUTHOR: ${{ github.event.inputs.hackAuthor }}
       TITLE: ${{ github.event.inputs.hackTitle }}
+      NETWORKING: ${{ github.event.inputs.networking }}
     steps:
       - uses: actions/checkout@v4
       - name: Create new branch
@@ -28,7 +40,7 @@ jobs:
           git config user.email "${AUTHOR}"
           git checkout -b ${BRANCH_NAME}
       - name: Generate the required structure
-        run: tools/setup-newhack.sh -h "${HACK}" -t "${TITLE}" -a "${AUTHOR}"
+        run: tools/setup-newhack.sh -h "${HACK}" -t "${TITLE}" -a "${AUTHOR}" -n "${NETWORKING}"
       - name: Push branch
         run: |
           git add .
