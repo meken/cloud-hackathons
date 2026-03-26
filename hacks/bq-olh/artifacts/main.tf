@@ -123,7 +123,7 @@ resource "google_compute_instance" "startup-vm" {
   tags         = ["http-server"]
 
   depends_on = [
-    google_project_iam_binding.compute_sa
+    compute_sa_roles.compute_sa
   ]
 
   boot_disk {
