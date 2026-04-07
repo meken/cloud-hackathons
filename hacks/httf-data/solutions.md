@@ -451,7 +451,7 @@ gcloud storage cp image-generation-pipeline.yaml $BUCKET
 Now you can pick the `yaml` file from the UI, and provide the following parameters (replace the variables with their values).
 
 | Parameter | Value |
-| ---       | --- |
+| --- | --- |
 | dataset_id | `$BQ_DATASET` |
 | location | `$REGION` |
 | output_bucket | `$BUCKET/product_images` |

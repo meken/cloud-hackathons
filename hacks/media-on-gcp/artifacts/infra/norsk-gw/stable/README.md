@@ -13,7 +13,7 @@ terraform plan --var-file marketplace_test.tfvars --var project_id=<YOUR_PROJECT
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|----------|
+| ------ | ------------- | ------ | --------- | ---------- |
 | project_id | The ID of the project in which to provision resources. | `string` | `null` | yes |
 | goog_cm_deployment_name | The name of the deployment and VM instance. | `string` | `null` | yes |
 | source_image | The image name for the disk for the VM instance. | `string` | `"projects/id3as-public/global/images/norsk-studio-byol-debian-12-x86-64-2025-05-13"` | no |
@@ -43,7 +43,7 @@ terraform plan --var-file marketplace_test.tfvars --var project_id=<YOUR_PROJECT
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ------ | ------------- |
 | site_url | Site Url |
 | admin_user | Username for Admin password. |
 | admin_password | Password for Admin. |
