@@ -47,7 +47,7 @@ data "google_project" "project" {}
 
 resource "google_project_iam_member" "compute_sa_roles" {
   for_each = toset([
-    "roles/resourcemanager.projectIamAdmin",
+    # "roles/resourcemanager.projectIamAdmin",
     "roles/dataproc.worker",
     "roles/dataproc.editor",
     "roles/bigquery.connectionAdmin",
