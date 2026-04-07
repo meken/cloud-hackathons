@@ -101,6 +101,14 @@ bq mk -d --location="${LOCATION}" "${PROJECT_ID}:${DATASET_ID}" < /dev/null
 
 ### 4. Create Iceberg-format tables in BigQuery
 
+You can download the schema of these tables by using the following links. The schemas are in JSON format:
+
+```shell
+curl -L -O https://github.com/pbavinck/ghacks-olh-data/releases/download/v1.0.0/orders.json
+curl -L -O https://github.com/pbavinck/ghacks-olh-data/releases/download/v1.0.0/order_items.json
+curl -L -O https://github.com/pbavinck/ghacks-olh-data/releases/download/v1.0.0/products.json
+```
+
 The Iceberg table is created in its own folder within the bucket
 
 ```shell

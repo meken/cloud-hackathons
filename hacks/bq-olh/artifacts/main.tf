@@ -47,6 +47,7 @@ data "google_project" "project" {}
 
 resource "google_project_iam_member" "compute_sa_roles" {
   for_each = toset([
+    # "roles/resourcemanager.projectIamAdmin",
     "roles/dataproc.worker",
     "roles/dataproc.editor",
     "roles/bigquery.connectionAdmin",
@@ -122,7 +123,7 @@ resource "google_compute_instance" "startup-vm" {
   tags         = ["http-server"]
 
   depends_on = [
-    google_project_iam_binding.compute_sa
+    google_project_iam_member.compute_sa_roles
   ]
 
   boot_disk {
@@ -155,12 +156,3 @@ resource "google_compute_instance" "startup-vm" {
   })
 }
 
-# Grant Project IAM Admin role to compute@developer service account 
-# (add permissions as necessary for what commands you need to run)
-resource "google_project_iam_binding" "compute_sa" {
-  role    = "roles/resourcemanager.projectIamAdmin"
-  project = var.gcp_project_id
-  members = [
-    "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com",
-  ]
-}
