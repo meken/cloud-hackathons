@@ -33,7 +33,7 @@ jobs:
       TITLE: ${{ github.event.inputs.hackTitle }}
       NETWORKING: ${{ github.event.inputs.networking }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Create new branch
         run: |
           git config user.name "GitHub Actions Bot"

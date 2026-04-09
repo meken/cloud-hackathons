@@ -126,13 +126,13 @@ The generated json file can be copied to the default GCS bucket (created as part
 
 The parameters for the Vertex AI Pipeline Job:
 
-| Parameter            | Value |
-| ---                  | ---   |
-| GCS output directory | `gs://{PROJECT_ID}/pipelines`|
-| endpoint             | `[none]`  |
-| location             | `us-central1` |
-| project\_id          | `{PROJECT_ID}`|
-| python\_pkg          | `gcp_mlops_demo-0.8.0.dev0.tar.gz`|
+| Parameter            | Value                              |
+| ---                  | ---                                |
+| GCS output directory | `gs://{PROJECT_ID}/pipelines`      |
+| endpoint             | `[none]`                           |
+| location             | `us-central1`                      |
+| project\_id          | `{PROJECT_ID}`                     |
+| python\_pkg          | `gcp_mlops_demo-0.8.0.dev0.tar.gz` |
 
 The `python_pkg` parameter can also be the full path to the package, and also works without the `tar.gz` extension. `GCS output directory` could also be any folder in the bucket (no trailing `/` characters though).
 
@@ -249,11 +249,11 @@ Setting this up through the UI should be trivial, the training sample data uri s
 
 The *retraining* (`clouddeploy.yaml`) build pipeline requires the following variables to be set.
 
-| Variable                  | Value |
-| ---                       | ---   |
-| \_PYTHON\_PKG             | `gcp_mlops_demo-0.8.0.dev0` |
-| \_ENDPOINT                | `ep-taxi-tips` |
-| \_LOCATION                | `us-central1` |
+| Variable      | Value                       |
+| ---           | ---                         |
+| `_PYTHON_PKG` | `gcp_mlops_demo-0.8.0.dev0` |
+| `_ENDPOINT`   | `ep-taxi-tips`              |
+| `_LOCATION`   | `us-central1`               |
 
 The *retraining* pipeline must respond to a *Pub/Sub message* using the topic created for the notification channel.
 
@@ -261,13 +261,13 @@ The *retraining* pipeline must respond to a *Pub/Sub message* using the topic cr
 
 The main challenge is to configure the build pipelines properly. You'll need the following variables for the *batch predictions* (`batchdeploy.yaml`) pipeline. This pipeline must have a *webhook event* trigger.
 
-| Variable                  | Value |
-| ---                       | ---   |
-| \_PYTHON\_PKG             | `gcp_mlops_demo-0.8.0.dev0` |
-| \_MODEL\_NAME             | `taxi-tips`   |
-| \_SOURCE\_TABLE\_URI      | `bq://{PROJECT_ID}.{DATASET}.{TABLE}` |
-| \_TRAINING\_SAMPLE\_URI   | `gs://{PROJECT_ID}/data/sample/sample.csv`|
-| \_LOCATION                | `us-central1` |
+| Variable                | Value                                      |
+| ---                     | ---                                        |
+| `_PYTHON_PKG`           | `gcp_mlops_demo-0.8.0.dev0`                |
+| `_MODEL_NAME`           | `taxi-tips`                                |
+| `_SOURCE_TABLE_URI`     | `bq://{PROJECT_ID}.{DATASET}.{TABLE}`      |
+| `_TRAINING_SAMPLE_URI`  | `gs://{PROJECT_ID}/data/sample/sample.csv` |
+| `_LOCATION`             | `us-central1`                              |
 
 The Cloud Scheduler cron job configuration should be: `30 3 * * 7` with HTTP target type and webhook URL from the previous build configuration, using the POST method (see the note around the webhook URL in [Online Loop](#online-loop) section if you get 404s). One thing to remember is to set the *Content-Type* header to *application/json* otherwise the execution will fail.
 
@@ -275,10 +275,10 @@ You can verify the Cloud Scheduler job by a *Force run*.
 
 Similarly the *retraining* (`clouddeploy.yaml`) build pipeline requires the following variables to be set.
 
-| Variable                  | Value |
-| ---                       | ---   |
-| \_PYTHON\_PKG             | `gcp_mlops_demo-0.8.0.dev0` |
-| \_ENDPOINT                | `[none]` |
-| \_LOCATION                | `us-central1` |
+| Variable       | Value                       |
+| ---            | ---                         |
+| `_PYTHON_PKG`  | `gcp_mlops_demo-0.8.0.dev0` |
+| `_ENDPOINT`    | `[none]`                    |
+| `_LOCATION`    | `us-central1`               |
 
 The *retraining* pipeline must respond to a *Pub/Sub message* using the topic created for the notification channel.

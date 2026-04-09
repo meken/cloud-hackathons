@@ -61,15 +61,15 @@ Create a new *Spanner Enterprise edition* instance called `onlineboutique` with 
 - All the data from the MySQL database `ecom` is migrated to the new Spanner database.
 - Verify that the following tables with the corresponding row counts exist in the new Spanner database:
 
-  | Table | #Rows |
-  | ---   | ---   |
-  | distribution_centers | 10  |
+  | Table                | #Rows   |
+  | ---                  | ---     |
+  | distribution_centers | 10      |
   | events               | 2438862 |
-  | inventory_items      | 494254 |
-  | order_items          | 182905 |
-  | orders               | 125905 |  
-  | products             | 29120 |
-  | users                | 100000 |
+  | inventory_items      | 494254  |
+  | order_items          | 182905  |
+  | orders               | 125905  |  
+  | products             | 29120   |
+  | users                | 100000  |
 
 ### Learning Resources
 
@@ -98,15 +98,15 @@ Copy each table from the Spanner database to the newly created BigQuery dataset.
 - All the data from the Spanner database `ecom` is exported to the new BigQuery dataset.
 - Verify that the following tables with the corresponding row counts exist in the new BigQuery dataset:
 
-  | Table | #Rows |
-  | ---   | ---   |
-  | distribution_centers | 10  |
+  | Table                | #Rows   |
+  | ---                  | ---     |
+  | distribution_centers | 10      |
   | events               | 2438862 |
-  | inventory_items      | 494254 |
-  | order_items          | 182905 |
-  | orders               | 125905 |  
-  | products             | 29120 |
-  | users                | 100000 |
+  | inventory_items      | 494254  |
+  | order_items          | 182905  |
+  | orders               | 125905  |  
+  | products             | 29120   |
+  | users                | 100000  |
 
 ### Learning Resources
 

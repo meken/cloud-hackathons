@@ -12,7 +12,7 @@ jobs:
     if: github.repository == 'GoogleCloudPlatform/cloud-hackathons'
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
     - name: Set branch specific variables
       id: environment
       run: |
@@ -24,10 +24,6 @@ jobs:
     - name: Split the files 
       run: |
         tools/setup-pages.sh
-    - name: Set up Node
-      uses: actions/setup-node@v4
-      with:
-        node-version: 16
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
@@ -37,10 +33,10 @@ jobs:
         NOKOGIRI_USE_SYSTEM_LIBRARIES=true bundle install --quiet --gemfile=tools/Gemfile
         github-pages build --source=dist
     - name: GCP Login
-      uses: google-github-actions/auth@v2
+      uses: google-github-actions/auth@v3
       with:
         credentials_json: ${{ secrets.GCP_CREDENTIALS }}
     - name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v2
+      uses: google-github-actions/setup-gcloud@v3
     - name: Publish to GCS
       run: gcloud storage rsync _site ${{ secrets[steps.environment.outputs.BRANCH_SPECIFIC_BUCKET_NAME] }} --delete-unmatched-destination-objects --recursive

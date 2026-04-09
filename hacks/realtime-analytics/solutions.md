@@ -119,7 +119,7 @@ The subnet needs to be in format `regions/${REGION}/subnetworks/${subnet}`
 Required parameters for the template *Datastream to BigQuery*
 
 | Parameter | Value |
-| ---       | ---   |
+| --- | --- |
 | File location for Datastream file output in Cloud Storage | `gs://${PROJECT_ID}` |
 | The Pub/Sub subscription on the Cloud Storage bucket | `projects/${PROJECT_ID}/subscriptions/cdc_sub` |
 | Datastream output file format (avro/json) | `JSON` |
@@ -133,7 +133,7 @@ Required parameters for the template *Datastream to BigQuery*
 The following optional parameters must be set too.
 
 | Parameter | Value |
-| ---       | ---   |
+| --- | --- |
 | Cloud Storage location of your Javascript UDF | `gs://${PROJECT_ID}-other/js/retail_transform.js` |
 | The name of the JavaScript function you wish to call as your UDF | `process` |
 | Max workers | `5` |

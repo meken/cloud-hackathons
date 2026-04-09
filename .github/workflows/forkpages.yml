@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Fix the base url
         run: |
           echo "baseurl: ${GITHUB_EVENT_REPOSITORY_NAME}" >> _config.yml
@@ -30,10 +30,6 @@ jobs:
       - name: Split the files 
         run: |
           tools/setup-pages.sh
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 16
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -43,11 +39,11 @@ jobs:
           NOKOGIRI_USE_SYSTEM_LIBRARIES=true bundle install --quiet --gemfile=tools/Gemfile
           github-pages build --source=dist        
       - name: Set up Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: '_site'
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

@@ -82,9 +82,9 @@ For this challenge we'll use Gemini to determine what the title (including any s
 - Less than 2500 tokens are used to determine the title.
 - The following papers should yield the corresponding titles, you can see those in the `Logs` section of the Cloud Run Function. Make sure that only the title is output:
 
-  | Paper                                           | Title |
-  | ---                                             | ---   |
-  | [LOFAR paper](https://arxiv.org/pdf/2309.00102) | *The LOFAR Two-Metre Sky Survey (LOTSS) VI. Optical identifications for the second data release*|
+  | Paper | Title |
+  | --- | --- |
+  | [LOFAR paper](https://arxiv.org/pdf/2309.00102) | *The LOFAR Two-Metre Sky Survey (LOTSS) VI. Optical identifications for the second data release* |
   | [PEARL paper](https://arxiv.org/pdf/2309.00031) | *PEARLS: Near Infrared Photometry in the JWST North Ecliptic Pole Time Domain Field* |
 
 ### Learning Resources
@@ -179,7 +179,7 @@ Upload the following papers to Cloud Storage Bucket and run your SQL query in Bi
 - Running the SQL query yields the following results
 
   | Title | Category |
-  | ---   | ---      |
+  | --- | --- |
   | From particles to orbits: precise dark matter density profiles using dynamical information | Astrophysics |
   | Bayesian inference methodology to characterize the dust emissivity at far-infrared and submillimeter frequencies | Astrophysics |
   | Computing Twin-Width Parameterized by the Feedback Edge Number | Computer Science |
