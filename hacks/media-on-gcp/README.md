@@ -73,9 +73,9 @@ Using Google Cloud's Generative Media offerings can make quick work of ad creati
 
 You will work as a team and get creative to come up with an imaginary product. Then use your creativity to create an ad for that product.
 
-In the Google Cloud Console and find **Media Studio** within the **Vertex AI** suite.
+In the Google Cloud Console and find **Studio** within the **Agent Platform** suite.
 
-In the **Media Studio** you have access to the generative AI creative tooling.
+In the **Agent Platform Studio** you have access to the generative AI creative tooling.
 
 - Use Veo to create shots.
 - Use Imagen to create still images.
@@ -114,9 +114,9 @@ Install the client and then use the credentials provided by your coach to log in
 
 ### Learning Resources
 
-- [Veo video generation overview](https://cloud.google.com/vertex-ai/generative-ai/docs/video/overview)
-- [Imagen image generation overview](https://cloud.google.com/vertex-ai/generative-ai/docs/image/overview)
-- [Lyra music generation overview](https://cloud.google.com/vertex-ai/generative-ai/docs/music/generate-music)
+- [Veo video generation overview](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/video/overview)
+- [Imagen image generation overview](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/capabilities/image-generation)
+- [Lyra music generation overview](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/music/overview)
 - [DaVince Resolve Beginners Guide Video (13 min)](https://youtu.be/SzttF-qnqsM)
 - [DaVinci Resolve New Features Guide](https://documents.blackmagicdesign.com/SupportNotes/DaVinci_Resolve_20_New_Features_Guide.pdf)
 - [HP Anywhere PCoIP Downloads](https://anyware.hp.com/find/product/hp-anyware)
@@ -358,7 +358,7 @@ Now we need to get a **Gemini API Key**
 - On that same page, create credentials of type: **API key**
 - Provide a name for your api key : example - Gemini API Key
 - In API restrictions section, click radio button Restrict Key
-- In the filter select Generative Language API and Vertex AI
+- In the filter select Generative Language API and Agent Platform
 - A new API is created, save this key, you'll be using it soon.
 
 Next we will deploy and run the pipeline

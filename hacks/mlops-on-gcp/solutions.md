@@ -20,9 +20,9 @@ We'll be assuming that all necessary services have been enabled and the (default
 
 ### Notes & Guidance
 
-The Vertex AI Workbench Instance can run anywhere, but a region close to the participants is preferred. And the *Permissions*&rarr;*Single user only* option must be chosen, which requires to enter the Advanced Setting section for Vertex AI Workbench Instance.
+The Workbench Instance can run anywhere, but a region close to the participants is preferred. And the *Permissions*&rarr;*Single user only* option must be chosen, which requires to enter the Advanced Setting section for Workbench Instance.
 
-Creating a virtual environment is essential otherwise things might break due to dependency conflicts. The instructions point to a gist that works with `pip` and Vertex AI Workbench Instances have that installed. However, `conda` virtual environments would work fine too. Make sure to run these from a *Terminal* in Jupyter (not from a *Notebook*)!
+Creating a virtual environment is essential otherwise things might break due to dependency conflicts. The instructions point to a gist that works with `pip` and Workbench Instances have that installed. However, `conda` virtual environments would work fine too. Make sure to run these from a *Terminal* in Jupyter (not from a *Notebook*)!
 
 ```shell
 python3 -m venv .playground
@@ -124,7 +124,7 @@ Alternatively they could also run `python src/trainer/pipeline.py` as the module
 
 The generated json file can be copied to the default GCS bucket (created as part of the first challenge) or downloaded locally.
 
-The parameters for the Vertex AI Pipeline Job:
+The parameters for the Agent Platform Pipeline Job:
 
 | Parameter            | Value                              |
 | ---                  | ---                                |

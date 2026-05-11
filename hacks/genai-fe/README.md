@@ -95,7 +95,7 @@ Now the source data is available in BigQuery, use BigQuery ML capabilities to ge
 ### Learning Resources
 
 - [Generate multimodal embeddings](https://cloud.google.com/bigquery/docs/generate-multimodal-embeddings)
-- [Latest versions and identifiers of Gemini models](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/model-versions#latest_stable_models)
+- [Latest versions and identifiers of Gemini models](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/model-versions)
 - [The ML.GENERATE_EMBEDDING function](https://cloud.google.com/bigquery/docs/reference/standard-sql/bigqueryml-syntax-generate-embedding)
 
 ### Tips
@@ -112,9 +112,9 @@ Once we have determined the correct segment, we'll use that for RAG. Retrieval a
 
 ### Description
 
-Design a SQL query that retrieves the **top result** from the embeddings table given the phrase `car crash`. Once you have found the correct video segment, you'll use Vertex AI Studio to extract the exact timestamp of the crash from that video segment.
+Design a SQL query that retrieves the **top result** from the embeddings table given the phrase `car crash`. Once you have found the correct video segment, you'll use Agent Platform Studio to extract the exact timestamp of the crash from that video segment.
 
-Navigate to Vertex AI Studio, *Create Prompt* section, and design a prompt to get the exact timestamp of the crash, using the video segment in your prompt.
+Navigate to Agent Platform Studio and design a prompt to get the exact timestamp of the crash, referencing the video segment you found, in your prompt.
 
 > [!NOTE]  
 > Have a look at the video segment to confirm when the crash happened. You can preview the videos in the Console, just browse to the specific video through Cloud Storage Bucket browser and there will be a button for *Preview*.
@@ -122,17 +122,17 @@ Navigate to Vertex AI Studio, *Create Prompt* section, and design a prompt to ge
 ### Success Criteria
 
 - The SQL query returns the uri for `cam_15_07.mp4`.
-- Vertex AI Studio outputs the exact timestamp of the crash covered in the video segment in `dd/mm/yyyy * HH:MM:SS` format.
+- Agent Platform Studio outputs the exact timestamp of the crash covered in the video segment in `dd/mm/yyyy * HH:MM:SS` format.
 
 ### Learning Resources
 
 - [Generate and search multimodal embeddings](https://cloud.google.com/bigquery/docs/generate-multimodal-embeddings)
-- [Using multimodal prompts in Gemini](https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/video-understanding)
+- [Using multimodal prompts in Gemini](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/capabilities/video-understanding)
 - [What is RAG?](https://cloud.google.com/use-cases/retrieval-augmented-generation)
 
 ### Tips
 
-- In Vertex AI Studio you can use different words to describe the crash (e.g. collision), experiment with those as well as different models/settings. And in case you need additional help with your prompt design, consider the [AI-powered prompt writing](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/prompts/ai-powered-prompt-writing).
+- In Agent Platform Studio you can use different words to describe the crash (e.g. collision), experiment with those as well as different models/settings. And in case you need additional help with your prompt design, consider the [AI-powered prompt writing](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/prompts/ai-powered-prompt-writing).
 - The video has the timestamp information in the right format in the top left corner of each frame.
 
 ## Challenge 4: Telemetry to the rescue!
