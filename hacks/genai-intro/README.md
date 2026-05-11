@@ -10,11 +10,11 @@ Introduction to GenAI will challenge you to build a system that catalogues scien
 
 This hack will help you explore the following tasks:
 
-- Using Vertex AI Foundational models for text understanding
+- Using Gemini for text understanding
 - Prompt engineering
 - Using BigQuery to run LLMs
 - How to use text embeddings for semantic search in BigQuery
-- Vertex AI Vector Search for storing and searching text embeddings
+- Agent Platform Vector Search for storing and searching text embeddings
 
 ## Challenges
 
@@ -90,12 +90,12 @@ For this challenge we'll use Gemini to determine what the title (including any s
 ### Learning Resources
 
 - Using Python [str.format](https://www.w3schools.com/python/ref_string_format.asp)
-- [Prompt Engineering](https://cloud.google.com/vertex-ai/docs/generative-ai/text/text-prompts)
+- [Prompt Engineering](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/prompts/introduction-prompt-design)
 
 ### Tips
 
 - You can edit and redeploy the Cloud Run Function from the Console.
-- You can test your prompts using [Vertex AI Studio](https://cloud.google.com/vertex-ai/docs/generative-ai/text/test-text-prompts#generative-ai-test-text-prompt-console).
+- You can test your prompts using [Agent Platform Studio](https://docs.cloud.google.com/gemini-enterprise-agent-platform/agent-studio/quickstart).
 - You could get the content from PDF files by opening them in PDF reader and copying the text (or if you're very familiar with the CLI and love experimenting with `jq` you can do that by using `gcloud storage cat` & `jq` commands from Cloud Shell by accessing the JSON files in the staging bucket).
 
 ## Challenge 3: Summarizing a large document using chaining
@@ -142,13 +142,13 @@ In order to get the summaries, we'll implement the *Refine* approach for this ch
 ### Learning Resources
 
 - Using Python [str.format](https://www.w3schools.com/python/ref_string_format.asp)
-- [Prompt Engineering](https://cloud.google.com/vertex-ai/docs/generative-ai/text/text-prompts)
+- [Prompt Engineering](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/prompts/introduction-prompt-design)
 
 ## Challenge 4: BigQuery &#10084; LLMs
 
 ### Introduction
 
-So far we've used the Gemini APIs from the Vertex AI Python SDK. It's also possible to use those through BigQuery, this challenge is all about using BigQuery to run an LLM.
+So far we've used the Gemini APIs from the Agent Platform Python SDK. It's also possible to use those through BigQuery, this challenge is all about using BigQuery to run an LLM.
 
 ### Description
 
@@ -262,10 +262,9 @@ Now run the same query as the previous challenge, *Which paper is about characte
 ### Learning Resources
 
 - [BQ Exporting Data](https://cloud.google.com/bigquery/docs/exporting-data#sql)
-- [Vector Search overview](https://cloud.google.com/vertex-ai/docs/vector-search/overview)
-- [Vector Search index data requirements](https://cloud.google.com/vertex-ai/docs/vector-search/setup/format-structure)
-- [Running a REST query against a public index endpoint](https://cloud.google.com/vertex-ai/docs/vector-search/query-index-public-endpoint)
-- [Quickstart: Build a Python program to query a public index endpoint](https://cloud.google.com/vertex-ai/docs/vector-search/quickstart#run-query)
+- [Vector Search overview](https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search/overview)
+- [Vector Search index data requirements](https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search/format-structure)
+- [Running a REST query against a public index endpoint](https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/vector-search/query-index-public-endpoint#query_public_endpoint-cli)
 
 ### Tips
 

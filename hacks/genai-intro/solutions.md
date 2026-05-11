@@ -146,7 +146,7 @@ for PDF in *.pdf; do
 done
 ```
 
-Now, we can create the connection to Vertex AI to call the API and make sure that the corresponding service account (that's created after the creation of the connection) has the correct role.
+Now, we can create the connection to Agetn Platform to call the API and make sure that the corresponding service account (that's created after the creation of the connection) has the correct role.
 
 ```shell
 CONN_ID=conn-llm
@@ -348,8 +348,10 @@ In case students use different methods to generate the text embeddings for the s
 See below a Python version of the same code:
 
 ```python
+
+from google import genai
 from google.cloud import aiplatform
-from vertexai.language_models import TextEmbeddingModel
+
 
 # retrieve index endpoint (assuming that there's only one)
 index_endpoint_name = aiplatform.MatchingEngineIndexEndpoint.list()[0].name
@@ -357,9 +359,10 @@ index_endpoint = aiplatform.MatchingEngineIndexEndpoint(index_endpoint_name=inde
 
 # embed the query, note that the model version is an example, use whatever is latest/ga, but make sure that version
 # matches the version which was used from BigQuery to generate the embeddings for the summaries
-model = TextEmbeddingModel.from_pretrained("textembedding-005")  # make sure that the version matches
+model = TextEmbeddingModel.from_pretrained("")  # make sure that the version matches
 query = "Which paper is about characteristics of living organisms in alien worlds?"
-query_embeddings = model.get_embeddings([query])[0]
+client = genai.Client()
+query_embeddings = client.models.embed_content(model="textembedding-005", contents=[query])
 
 # query the index endpoint for the nearest neighbors.
 resp = index_endpoint.find_neighbors(

@@ -6,7 +6,7 @@ Welcome to the future of advertising! In this workshop, you'll step into the rol
 
 ![Challenge Overview](./images/easy-ads-overview.png)
 
-This isn't about writing code. It's about mastering the art of the prompt. You will use Google Cloud's generative AI tools within Vertex AI Studio to bring your vision to life. The challenge lies in guiding these models to produce a final ad that is not just aesthetically pleasing, but also **coherent, consistent,** and **on-brand,** complete with **multilingual voice-over**, graphic overlays and a **custom soundtrack**.
+This isn't about writing code. It's about mastering the art of the prompt. You will use Google Cloud's generative AI tools within Agent Platform Studio to bring your vision to life. The challenge lies in guiding these models to produce a final ad that is not just aesthetically pleasing, but also **coherent, consistent,** and **on-brand,** complete with **multilingual voice-over**, graphic overlays and a **custom soundtrack**.
 
 ## Learning Objectives
 
@@ -39,7 +39,7 @@ This hack will help you master the following skills:
 ## Prerequisites
 
 - Basic understanding of generative AI concepts (text-to-image, text-to-video, text-to-speech).  
-- Access to a Google Cloud project with Vertex AI Studio enabled, including access to Gemini, Veo, Chirp, and Lyria models.  
+- Access to a Google Cloud project with Agent Platform Studio enabled, including access to Gemini, Veo, Chirp, and Lyria models.  
 - Access to a basic video editing tool (e.g., Google Vids, DaVinci Resolve, Adobe Premiere Pro, CapCut, iMovie, or any online editor).
 
 ## Contributors
@@ -146,13 +146,13 @@ We've already created a storage bucket for you, make sure that all of this work 
 
 ### Learning Resources
 
-- [Vertex AI Studio Quickstart](https://cloud.google.com/vertex-ai/generative-ai/docs/start/quickstarts/quickstart)
+- [Agent Platform Studio Quickstart](https://docs.cloud.google.com/gemini-enterprise-agent-platform/agent-studio/quickstart)
 - [Nano Banana Prompting Guide](https://developers.googleblog.com/en/how-to-prompt-gemini-2-5-flash-image-generation-for-the-best-results/)
 
 ### Tips
 
 - If you're in a squeeze for time, you can parallelize the protagonist, product, and logo generation. You'll need both product and protagonist contact sheets to start with the storyboard images though.
-- Keep in mind that some models will have limitations with respect to how many reference images you can include in a prompt and the maximum size. See for example the *Technical Specifications* for [Nano Banana](https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash-image)
+- Keep in mind that some models will have limitations with respect to how many reference images you can include in a prompt and the maximum size. See for example the *Technical Specifications* for [Nano Banana 2](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-image)
 - There are also limits in the Media Studio UI, you might want to use the Import from Cloud Storage options instead of uploading your images in your prompt
 
 ## Challenge 3: From Stills to Motion
@@ -163,7 +163,7 @@ With your storyboard and protagonist created, it's time to bring your vision to 
 
 ### Description
 
-Using the *Veo* family of models in Vertex AI Studio, generate video clips for each of your storyboard scenes from Challenge 2. Make sure you use your generated images as references in your prompts to guide the model.
+Using the *Veo* family of models in Agent Platform Studio, generate video clips for each of your storyboard scenes from Challenge 2. Make sure you use your generated images as references in your prompts to guide the model.
 
 > [!IMPORTANT]  
 > It's fine to have background sound or noises for some parts of your video, but keep in mind that you'll be generating voice-overs in a later challenge. Also, if you need to have dialog that syncs with lips on the screen, that needs to be done during video creation time.
@@ -182,7 +182,7 @@ Once finished, store your favorite clips for each scene in the storage bucket pr
 
 ### Learning Resources
 
-- [Generate videos with Veo](https://cloud.google.com/vertex-ai/docs/generative-ai/video/generate-videos)
+- [Generate videos with Veo](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/video/overview)
 - [Veo Prompting Guide](https://cloud.google.com/blog/products/ai-machine-learning/ultimate-prompting-guide-for-veo-3-1)
 
 ### Tips
@@ -227,7 +227,7 @@ First, write a short, compelling script for your ad. The script should consist o
 > [!NOTE]  
 > Once again, Gemini is fair game to generate the script, but you're also free to use your own writing creativity.
 
-Next, use the *Chirp 3 HD* model in Vertex AI or the *Gemini TTS* model to generate the voice-overs from your script. Choose one of the voice-overs and generate it in a foreign language, (e.g. Italian, Afrikaans, Turkish).
+Next, use the Agent Platform *Chirp 3 HD* model or the *Gemini TTS* model to generate the voice-overs from your script. Choose one of the voice-overs and generate it in a foreign language, (e.g. Italian, Afrikaans, Turkish).
 
 Finally, add these audio tracks to the video you assembled in Challenge 4 in the proper places in your video sequence timeline.
 
@@ -250,7 +250,7 @@ Music is an important layer of emotion in your ad. To complete your masterpiece,
 
 ### Description
 
-Using the *Lyria* model in Vertex AI, generate a music track for the entire ad. Remember to adhere to your brand guidelines.
+Using the Agent Platform *Lyria* model, generate a music track for the entire ad. Remember to adhere to your brand guidelines.
 
 Once you have a track you're happy with, add it as a final audio layer to your video sequence timeline. Make sure to balance the volume so that the music complements the voice-overs without overpowering them.
 

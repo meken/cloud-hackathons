@@ -442,7 +442,7 @@ pip install -r requirements.txt
 python3 genai-imagen-pipeline.py
 ```
 
-Easiest option to make the generated `yaml` file to Vertex AI Pipelines is to upload it to the newly created bucket.
+Easiest option to make the generated `yaml` file to Agent Platform Pipelines is to upload it to the newly created bucket.
 
 ```shell
 gcloud storage cp image-generation-pipeline.yaml $BUCKET

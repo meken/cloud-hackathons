@@ -22,7 +22,7 @@ Welcome to the coach's guide for the *Easy Ads: From Concept to Creation with Ge
 
 ### Notes & Guidance
 
-If the participants are using Vertex AI Studio for generating the story, they should turn on auto-save. This way they can keep track of their progress and easily hand over the generated descriptions to the next driver.
+If the participants are using Agent Platform Studio for generating the story, they should turn on auto-save. This way they can keep track of their progress and easily hand over the generated descriptions to the next driver.
 
 > [!NOTE]  
 > As mentioned in the instructions using Gemini is fair game, but using the first best response might lead to generic outputs, so adding a bit of creativity, or a few more iterations, would make the end results better.
@@ -55,7 +55,7 @@ We're expecting *at least* three scenes, but it makes sense to have more (and sh
 
 ### Notes & Guidance
 
-The idea is that the participants should use the descriptions from Challenge 1, and use either Gemini or *Help me write* capabilities with Vertex AI Media Studio to generate the required prompts. Nano Banana can be used to create the original images as well as to generate the different angles.
+The idea is that the participants should use the descriptions from Challenge 1, and use either Gemini or *Help me write* capabilities with Agent Platform Studio to generate the required prompts. Nano Banana can be used to create the original images as well as to generate the different angles.
 
 > [!IMPORTANT]  
 > Participants should try to stay away from *Imagen* family of models, these are not well suited for this task. *Gemini Native Image* (aka: *Nano Banana*) is the recommended model.
@@ -63,7 +63,7 @@ The idea is that the participants should use the descriptions from Challenge 1, 
 For the storyboard scene generation again Nano Banana would be the best fit. They can start uploading the relevant protagonist and product pictures together with the text of the their storyboard scene (maybe optimized through Gemini or *Help me write* capabilities) to generate the images.
 
 > [!WARNING]  
-> At the time of this writing Nano Banana in Vertex AI Media Studio has a limit of 10MB, so if there are too many images inserted in a single conversation, things will fail. Also there are limits to how many images can be included in a single prompt (3 for Nano Banana at the moment), if the participants go beyond that limit, Nano Banana will silently ignore those. Participants should use multiple conversations and/or fewer images.
+> At the time of this writing Nano Banana in Agent Platform Studio has a limit of 10MB, so if there are too many images inserted in a single conversation, things will fail. Also there are limits to how many images can be included in a single prompt (3 for Nano Banana at the moment), if the participants go beyond that limit, Nano Banana will silently ignore those. Participants should use multiple conversations and/or fewer images.
 
 #### Pro Tips for the Students
 
@@ -86,7 +86,7 @@ There's a plethora of different options here, participants can use the story boa
 - Video generation is time-intensive. To optimize efficiency, we recommend that **two or three team members simultaneously generate distinct video sets**. Afterwards, compare and select the most effective clips, or regenerate as necessary. Do not delay progress.
 - For enhanced consistency, consider **utilizing a screenshot of the final frame** from Video 1 as the initiating frame for Video 2.
 - Upload **3-5** images and detailed descriptions.
-- Can't emphasize enough to go through this guide [Veo on Vertex AI video generation prompt guide](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/video/video-gen-prompt-guide). This separates a great shot from a good shot.
+- Can't emphasize enough to go through this guide [Veo on Agent Platform video generation prompt guide](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/video/video-gen-prompt-guide). This separates a great shot from a good shot.
 - Google Models take IP and Safety very seriously. Do not use any known persons, products, films, references, likeness or names. Safety filter will trigger if Gemini detects such references in the prompt.
 - If you see your character develop discrepancies between scenes, like their look changes, go back to the previous challenge and develop better images.
 - Also if certain actions are not consistent (opening doors differently), include reference images for those.

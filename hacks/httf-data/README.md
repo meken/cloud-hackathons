@@ -214,23 +214,23 @@ Using the embeddings model in Spanner do a search for the query *Luxury items fo
 
 ### Introduction
 
-Now we have product descriptions, we can generate images based on these descriptions using GenAI. This will involve running a Vertex AI Pipeline to orchestrate a few things, such as iterating over the data, preparing the prompt based on the product description, running *Imagen* to generate the images, pick one of the results (randomly), store the image in Cloud Storage and record the URI in BigQuery.
+Now we have product descriptions, we can generate images based on these descriptions using GenAI. This will involve running a Agent Platform Pipeline to orchestrate a few things, such as iterating over the data, preparing the prompt based on the product description, running *Imagen* to generate the images, pick one of the results (randomly), store the image in Cloud Storage and record the URI in BigQuery.
 
 ### Description
 
 Create a new Cloud Storage bucket and name it `{YOUR PROJECT ID}-images`.  Update the BigQuery `products` table to include `image_uri` and `image_url` columns.
 
-We've already prepared the code for a Vertex AI Pipeline, download it from [here](https://github.com/meken/gcp-httf-data-kfp/archive/refs/heads/main.zip) and install its dependencies. Then run the code, it will create a `yaml` file. Navigate to Vertex AI Pipelines and *Create run* with that `yaml` file, provide the required parameters and submit the job.
+We've already prepared the code for a Agent Platform Pipeline, download it from [here](https://github.com/meken/gcp-httf-data-kfp/archive/refs/heads/main.zip) and install its dependencies. Then run the code, it will create a `yaml` file. Navigate to Agent Platform Pipelines and *Create run* with that `yaml` file, provide the required parameters and submit the job.
 
 ### Success Criteria
 
 - There's a new Cloud Storage bucket called `{YOUR PROJECT ID}-images`.
 - The BigQuery `products` table has the new columns `image_uri` and `image_url`.
-- The provided Vertex AI Pipeline has been successfully run.
+- The provided Agent Platform Pipeline has been successfully run.
 - There are product images generated for the `products` and the corresponding urls are in the BigQuery table.
 
 ### Learning Resources
 
 - [Creating new Cloud Storage Buckets](https://cloud.google.com/storage/docs/creating-buckets)
 - [Modifying table schemas in BigQuery](http://cloud.google.com/bigquery/docs/managing-table-schemas)
-- [Vertex AI Pipelines](https://cloud.google.com/vertex-ai/docs/pipelines/introduction)
+- [Running Agent Platform Pipelines](https://docs.cloud.google.com/gemini-enterprise-agent-platform/machine-learning/pipelines/run-pipeline)

@@ -71,7 +71,7 @@ Once everything is set up, run `adk web` and make sure that the agent responds b
 - [Cloud Shell](https://cloud.google.com/shell/docs/launching-cloud-shell)
 - [Cloud Shell Editor](https://cloud.google.com/shell/docs/launching-cloud-shell-editor)
 - [Previewing web apps](https://cloud.google.com/shell/docs/using-web-preview)
-- [Setting up authentication for ADK](https://google.github.io/adk-docs/get-started/quickstart/#gemini---google-cloud-vertex-ai)
+- [Setting up authentication for ADK](https://adk.dev/agents/models/google-gemini/#google-cloud-agent-platform)
 
 ### Tips
 

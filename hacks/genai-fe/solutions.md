@@ -41,7 +41,7 @@ bq mk --location=$REGION -d $BQ_DATASET
 Create a connection and give permission to access the bucket. We're providing the CLI command here, but participants will likely use the console for that, which is fine.
 
 > [!NOTE]  
-> It's possible to create the *connection* from the Console, but it can be confusing as (per the docs) you need to create a Vertex AI connection, which can be used for BigLake and Object Table entities. The creation of the table needs to happen either through `bq` CLI or the SQL editor.
+> It's possible to create the *connection* from the Console, but it can be confusing as (per the docs) you need to create a Agent Platform connection, which can be used for BigLake and Object Table entities. The creation of the table needs to happen either through `bq` CLI or the SQL editor.
 
 ```shell
 CONN_ID=conn
@@ -77,7 +77,7 @@ SELECT COUNT(*) FROM `$BQ_DATASET.videos`
 
 ### Notes & Guidance
 
-In principle the same connection can be used to access Vertex AI models as long as it has the correct permissions, so we're now adding the additional permissions (can be done through the Console too). If participants want to use another connection/service account, that's fine too.
+In principle the same connection can be used to access Agent Platform models as long as it has the correct permissions, so we're now adding the additional permissions (can be done through the Console too). If participants want to use another connection/service account, that's fine too.
 
 ```shell
 gcloud projects add-iam-policy-binding $GOOGLE_CLOUD_PROJECT --member="serviceAccount:$SA_CONN" \
@@ -87,7 +87,7 @@ gcloud projects add-iam-policy-binding $GOOGLE_CLOUD_PROJECT --member="serviceAc
 > [!NOTE]  
 > It takes a while (1-2 minutes) before the IAM changes are propagated, so if the model creation fails due to lack of permissions even after granting the correct role, just retry after some time.
 
-Now, create the model
+Now, create the model (keep in mind `multimodalembedding@001` is an example and might be end of life by now, use any available embedding model)
 
 ```sql
 CREATE OR REPLACE MODEL `$BQ_DATASET.multimodal_embedding_model`
@@ -175,9 +175,9 @@ LIMIT 1
 > [!NOTE]  
 > If you're wondering about the prefix `base` in the example queries above, it's one of the outputs of the `VECTOR_SEARCH` function that contains all columns from the `base_table` (which is the first argument,`$BQ_DATASET.cctv_embeddings` in this case).
 
-#### Prompt for Vertex AI Studio
+#### Prompt for Agent Platform Studio
 
-In the Vertex AI Studio, in *Create Prompt* section (used to be called Free form), it's possible to add the video segment (`cam_15_07.mp4`) to the prompt through clicking on the media icon (bottom right corner) and choosing `Import from Cloud Storage` option.
+In the Agent Platform Studio, it's possible to add the video segment (`cam_15_07.mp4`) to the prompt through clicking on the media icon (bottom right corner) and choosing `Import from Cloud Storage` option.
 
 The *Prompt* should be something like the following, (where `[cam_15_07.mp4]` is the video segment inserted into the prompt).
 
@@ -192,7 +192,7 @@ And the correct response will be: *11/05/2024 15:42:06* (the exact wording might
 > [!WARNING]  
 > The footage is from a European race, so the time format in the video is `dd/mm/yyyy` and not `mm/dd/yyyy`.
 
-We've succesfully tested this with `gemini-2.0-flash-001` using the default settings, but participants are free to experiment with different models and settings to get the correct answer.
+We've succesfully tested this with `gemini-2.0-flash-001` using the default settings (which is end of life by now), but participants are free to experiment with different available models and settings to get the correct answer.
 
 ## Challenge 4: Telemetry to the rescue!
 
