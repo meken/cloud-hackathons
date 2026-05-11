@@ -17,7 +17,7 @@ Teams are not left on their own to solve the challenges. Coaches work with each 
 ### Data & AI
 
 - [Introduction to GenAI](./hacks/genai-intro/README.md)
-  > **UPDATED FOR GEMINI** We will build a system to catalog scientific papers. Whenever new papers are uploaded to Cloud Storage a Cloud Function will be triggered and use Vertex AI Foundation Model LLM to extract the title and summarize the paper. We'll store this data in BigQuery and use an LLM directly from BigQuery to classify the papers into distinct categories and then implement semantic search using text embeddings and finally we'll use Vector Search as a scalable solution.
+  > We will build a system to catalog scientific papers. Whenever new papers are uploaded to Cloud Storage a Cloud Function will be triggered and use an LLM (Gemini) to extract the title and summarize the paper. We'll store this data in BigQuery and use the same LLM directly from BigQuery to classify the papers into distinct categories and then implement semantic search using text embeddings and finally we'll use Vector Search as a scalable solution.
 - [MLOps on GCP](./hacks/mlops-on-gcp/README.md)
   > We will be implementing the full lifecycle of an ML project. We'll provide you with a sample code base and you'll work on automating continuous integration (CI), continuous delivery (CD), and continuous training (CT) for a machine learning (ML) system.
 - [Crash Course in AI: Formula E Edition](./hacks/genai-fe/README.md)
@@ -52,10 +52,6 @@ Teams are not left on their own to solve the challenges. Coaches work with each 
   > Learn Docker and GKE with a web application that you can play! You will compose your own Dockerfile to containerize an existing web application and get practice in creating a cluster, creating node pools, and running deployments and services.
 - [Ready, Steady, Cloud Run!](./hacks/cloud-run/README.md)
   > We'll be using Cloud Run to quickly configure, deploy and troubleshoot a web service. During the process we'll introduce different ways to store data for the web service and learn about how to discover and fix issues.
-- [GenAI App Development with Genkit](./hacks/genai-genkit/README.md)
-  > Learn how to create and deploy a GenAI application with Google Cloud and Firebase Genkit.
-- [Monitor GenAI apps with Firebase Genkit](./hacks/genai-monitoring/README.md)
-  > We will be mastering operating Large Language Model applications using Firebase Genkit, and Genkit Monitoring by stepping into the role of Site Reliability Engineers for a fictional GenAI app. We will dive into troubleshooting live issues, fixing issues, and optimizing performance to ensure our GenAI app runs flawlessly.
 - [Practical SRE](./hacks/practical-sre/README.md)
   > In this gHack, you'll step into the role of SREs and Product Owners for a cutting-edge app. Your mission is to ensure that this app delivers a smooth, reliable, and responsive experience for its users.
 
