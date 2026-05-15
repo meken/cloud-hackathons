@@ -76,14 +76,14 @@ As depicted in the overview diagram, the first step of any ML project is data an
 
 ### Description
 
-Create a *Workbench Instance*. Pick a region close to you and choose the **single user only** option.
+Create a *Workbench Instance*. Pick a region close to you and choose the **single user only** option for *IAM and security*.
 
 It's a good practice to have isolated virtual environments for experiments, so create a new virtual environment and install that as a kernel. See this [gist](https://gist.github.com/meken/e6c7430997de9b3f2cf7721f8ecffc04) for the instructions.
 
 > [!WARNING]  
 > Not using a dedicated and isolated environment/kernel might cause dependency conflicts as Workbench Instances come pre-installed with some versions of the required libraries.
 
-We've prepared a [sample project on Github](https://github.com/meken/gcp-mlops-demo/archive/refs/heads/main.zip), navigate there and download the project as a **zip** file and extract the contents of the zip file onto your Notebook instance. Open the notebook `01-tip-toe-vertex-ai.ipynb`, make sure that you've selected the newly created kernel. You should now be able to run the first notebook and get familiar with some of the Agent Platform concepts.
+We've prepared a [sample project on Github](https://github.com/meken/gcp-mlops-demo/archive/refs/heads/main.zip), navigate there and download the project as a **zip** file and extract the contents of the zip file onto your Notebook instance. Open the notebook `01-getting-started.ipynb`, make sure that you've selected the newly created kernel. You should now be able to run the first notebook and get familiar with some of the Agent Platform concepts.
 
 > [!NOTE]  
 > As we're installing packages in the first cell of the sample notebook and restarting the kernel in one of the following cells, *Run All* will not work. Run the cells one-by-one also to understand what's going on in every cell.
@@ -91,10 +91,10 @@ We've prepared a [sample project on Github](https://github.com/meken/gcp-mlops-d
 ### Success Criteria
 
 1. There's a new single-user Workbench Instance.
-2. The sample notebook `01-tip-toe-vertex-ai.ipynb` is successfully run (using the newly generated kernel) and a model file is generated/stored in Google Cloud Storage.
+2. The sample notebook `01-getting-started.ipynb` is successfully run (using the newly generated kernel) and a model file is generated/stored in Google Cloud Storage.
 3. No code was modified.
 
-### Tips  
+### Tips
 
 - Some of the required settings can be found in the *Advanced Settings* section when you're creating a new Workbench Instance.
 - If there's nothing mentioned in the instructions about a parameter, stick to the defaults (this applies to all of the challenges).
@@ -147,7 +147,7 @@ This task is all about automating things using Cloud Build. When multiple people
 
 ### Description
 
-Once things look fine locally, set up a *Cloud Build Trigger* that's run when code is *pushed* to the repository. The code base already includes a build configuration (`cloudbuild.yaml`), have a look at it to understand what it does. Make sure that the trigger uses that build configuration and the `Compute Engine Default Service Account` as the service account. Name the trigger `CI` (or `continuous-integration`).
+Once things look fine locally, set up a *Cloud Build Trigger* that's run when code is *pushed* to the repository. The code base already includes a build configuration (`cloudbuild.yaml`), have a look at it to understand what it does. Make sure that the trigger uses that build configuration and the `sa-mlops-build` (MLOps Build Service Account) as the service account. Name the trigger `CI` (or `continuous-integration`).
 
 > [!IMPORTANT]  
 > The qwiklabs environment only has quota in the *global* region, make sure that you pick that when you're creating the trigger.
@@ -177,7 +177,7 @@ The previous challenge introduced the concept of build pipelines. But there are 
 
 If you've successfully completed the previous challenge, your training code has been packaged and can be run from a Agent Platform Pipeline.
 
-The provided project has a `pipeline.py` file that can generate a pipeline definition. Run that to generate a pipeline definition file in `YML` format. Use the generated pipeline definition file to create a new *Pipeline Run* through the GCP Console. Fill in the required pipeline parameters in the next step (you can look up the Python package location). Do not set/override the `endpoint` and `monitoring_job` parameters (keep the default values).
+The provided project has a `pipeline.py` file that can generate a pipeline definition. Run that to generate a pipeline definition file in `YML` format. Use the generated pipeline definition file to create a new *Pipeline Run* through the GCP Console. Make sure to use the service account `sa-mlops-kfp` (Kubeflow Pipelines Service Account). In the *Runtime configuration* step fill in the required pipeline parameters. Do not set/override the `endpoint` and `monitoring_job` parameters (keep the default values).
 
 > [!NOTE]  
 > Once the pipeline is triggered, it will take ~10 minutes to complete.
@@ -192,6 +192,7 @@ The provided project has a `pipeline.py` file that can generate a pipeline defin
 - Read the `pipeline.py` to understand what it does.
 - Note that the `pipeline.py` can generate `JSON` and `YML` pipeline definition files based on the extension of the output file name.
 - You can either upload the pipeline definition from a local machine, or put it on GCS and refer to its location.
+- The service account can be configured in the *Run details* phase when you expand the *Advanced options*.
 - You have already created a bucket, you can use that as the pipeline root (optionally add `pipelines` folder in it).
 - For the parameter *location* look up the *region* of the storage bucket created in the first challenge.
 - And for the *python_pkg* parameter check the Cloud Build pipeline to find out where the created Python package is stored and browse to that location to get the name of the package.
@@ -221,9 +222,9 @@ From this challenge onwards you'll have the option to either do online inferenci
 
 ### Description
 
-So, you've chosen for online inferencing. In order to use the model to serve predictions in an online fashion it has to be deployed to an endpoint. Luckily Agent Platform provides exactly what we need, a managed service for serving predictions, called Online Prediction.
+So, you've chosen for online inferencing. In order to use the model to serve predictions in an online fashion it has to be deployed to an endpoint. Luckily Agent Platform provides exactly what we need, a managed service for serving predictions, called *Endpoints*.
 
-Create a new Agent Platform Endpoint and deploy the freshly trained model. Use the smallest machine type but make sure that it can scale to more than 1 node by configuring *autoscaling*.
+Create a new Agent Platform Endpoint and deploy the freshly trained model. Use the smallest machine type but make sure that it can scale to more than 1 node by configuring *autoscaling*. Stick to the defaults for everything else.
 
 > [!NOTE]  
 > The deployment of the model will take ~10 minutes to complete.
@@ -239,6 +240,7 @@ Create a new Agent Platform Endpoint and deploy the freshly trained model. Use t
 
 ### Tips
 
+- Read the requirements for *Autoscaling* before you complete your configuration.
 - Verify first that you're getting predictions from the endpoint before generating load (for example using cURL)
 - In order to generate load you can use any tool you want, but we recommend [oha](https://github.com/hatoo/oha) on Cloud Shell or your notebook environment. You can download the latest version from [here](https://github.com/hatoo/oha/releases) (you'll need the `oha-linux-amd64` version for Cloud Shell or your notebook environment).
 
@@ -251,7 +253,7 @@ Create a new Agent Platform Endpoint and deploy the freshly trained model. Use t
 
 ### Description
 
-So, you've chosen for the batch inferencing path. We're going to use Agent Platform Batch Predictions to get predictions for data in a BigQuery table. First, go ahead and create a new table with at most 10K rows that's going to be used for generating the predictions. Once the table is created, create a new Batch Prediction job with that table as the input and another BigQuery table as the output, using the previously created model. Choose a small machine type and 2 compute nodes. Don't turn on Model Monitoring yet as that's for the next challenge.
+So, you've chosen for the batch inferencing path. We're going to use Agent Platform Batch Inference to get predictions for data in a BigQuery table. First, go ahead and create a new table with at most 10K rows that's going to be used for generating the predictions. Once the table is created, create a new Batch Inference job with that table as the input and a new BigQuery table as the output, using the previously created model. Choose a small machine type and 2 compute nodes. Don't turn on Model Monitoring yet as that's for the next challenge.
 
 > [!NOTE]  
 > The batch inferencing will take roughly ~10 minutes, most of that is the overhead of starting the cluster, so increasing the number of instances won't help with the small table we're using.
@@ -259,13 +261,14 @@ So, you've chosen for the batch inferencing path. We're going to use Agent Platf
 ### Success Criteria
 
 1. There's a properly structured input table in BigQuery with 10K rows.
-2. There's a succesful Batch Prediction job.
+2. There's a succesful Batch Inference job.
 3. There are predictions in a new BigQuery table.
 4. No code was modified.
 
 ### Tips
 
 - The pipeline that we've used in the previous challenge contains a task to prepare the data using BigQuery, have a look at that for inspiration.
+- As output you can also choose a BigQuery dataset, in which case a new output table with the right schema will be created for you automatically.
 - Make sure that the input table has the exact same number of input columns as required by the model. Remember, for training extra data is needed which is not an input for the model at inferencing time ;)
 
 ### Learning Resources
@@ -282,7 +285,7 @@ So, you've chosen for the batch inferencing path. We're going to use Agent Platf
 There are times when the training data becomes not representative anymore because of changing demographics, trends etc. To catch any skew or drift in feature distributions or even in predictions, it is necessary to monitor your model performance continuously.
 
 > [!NOTE]  
-> We'll be using **Model Monitoring v1** for this challenge, which is configured during *Online Prediction Endpoint configuration* for online models, and *Batch Prediction Run configuration* for batch execution.
+> We'll be using **Model Monitoring v1** for this challenge, which is configured during *Endpoint configuration* for online models, and *Batch Inference configuration* for batch execution.
 
 If you've chosen the online inferencing path, continue with [Online Monitoring](#online-monitoring), otherwise please skip to the [Batch Monitoring](#batch-monitoring) section.
 
@@ -353,6 +356,9 @@ Just like the previous challenges, if you've chosen the online inferencing path,
 
 Use the provided build pipeline (`clouddeploy.yaml`) to create a new build configuration. Configure it to be triggered in response to the messages received in the Pub/Sub topic that's used to configure the Model Monitoring notifications. Also provide the necessary variables, such as the model training code version, endpoint name etc. Name this trigger `CT-CD` (or `continuous-training-and-delivery`).
 
+> [!NOTE]  
+> Keep in mind that you need to choose the correct service accounts for Cloud Build and for the Agent Platform Pipelines.
+
 ### Success Criteria
 
 1. There's a correctly configured build pipeline that can be triggered through Pub/Sub messages, named `CT-CD` (or `continuous-training-and-delivery`).
@@ -363,6 +369,7 @@ Use the provided build pipeline (`clouddeploy.yaml`) to create a new build confi
 ### Tips
 
 - If you create the topic before you create the notification channel you can copy its fully qualified name and paste when configuring the notification channel.
+- Read the `clouddeploy.yaml` file to understand how variables are used and what you need to provide.
 
 ### Learning Resources
 
@@ -376,6 +383,9 @@ Typically Batch Predictions are asynchronous and are scheduled to run periodical
 
 Running the batch predictions periodically will only get us half way. We need to monitor any Model Monitoring alerts and act on that. There's another Cloud Build pipeline definition provided by `clouddeploy.yaml` that's responsible for retraining. Configure that in a new Cloud Build trigger, call it `CT` (or `continuous-training`) set the required variables (remember to set *ENDPOINT* to `[none]`, the others should be familiar, when in doubt have a look at the yaml file). Use Pub/Sub messages as the trigger event and pick the topic that's configured for Model Monitoring Pub/Sub notification channel.
 
+> [!NOTE]  
+> Keep in mind that you need to choose the correct service accounts for Cloud Build and for the Agent Platform Pipelines.
+
 ### Success Criteria
 
 1. There's a correctly configured build pipeline for *batch predictions* that can be triggered with webhooks, called `CD` (or `continuous-delivery`).
@@ -387,6 +397,7 @@ Running the batch predictions periodically will only get us half way. We need to
 ### Tips
 
 - If you create the topic before you create the notification channel you can copy its name and paste when configuring the notification channel.
+- Read the `batchdeploy.yaml` file to understand how variables are used and what you need to provide.
 - The webhook URL configuration in Cloud Scheduler requires the header `Content-Type` to be set to `application/json` otherwise the things won't work.
 - You can *force run* a Cloud Scheduler job, no need to wait until Sunday :).
 
