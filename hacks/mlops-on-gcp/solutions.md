@@ -20,7 +20,7 @@ We'll be assuming that all necessary services have been enabled and the (default
 
 ### Notes & Guidance
 
-The Workbench Instance can run anywhere, but a region close to the participants is preferred. And the *Permissions*&rarr;*Single user only* option must be chosen, which requires to enter the Advanced Setting section for Workbench Instance.
+The Workbench Instance can run anywhere, but a region close to the participants is preferred. And the *IAM and security*&rarr;*Single user only* option must be chosen, which requires to enter the Advanced Setting section for Workbench Instance.
 
 Creating a virtual environment is essential otherwise things might break due to dependency conflicts. The instructions point to a gist that works with `pip` and Workbench Instances have that installed. However, `conda` virtual environments would work fine too. Make sure to run these from a *Terminal* in Jupyter (not from a *Notebook*)!
 
@@ -249,11 +249,12 @@ Setting this up through the UI should be trivial, the training sample data uri s
 
 The *retraining* (`clouddeploy.yaml`) build pipeline requires the following variables to be set.
 
-| Variable      | Value                       |
-| ---           | ---                         |
-| `_PYTHON_PKG` | `gcp_mlops_demo-0.8.0.dev0` |
-| `_ENDPOINT`   | `ep-taxi-tips`              |
-| `_LOCATION`   | `us-central1`               |
+| Variable               | Value                       |
+| ---                    | ---                         |
+| `_PYTHON_PKG`          | `gcp_mlops_demo-0.8.0.dev0` |
+| `_ENDPOINT`            | `ep-taxi-tips`              |
+| `_LOCATION`            | `us-central1`               |
+| `_KFP_SERVICE_ACCOUNT` | `sa-mlops-kfp`              |
 
 The *retraining* pipeline must respond to a *Pub/Sub message* using the topic created for the notification channel.
 
@@ -268,6 +269,7 @@ The main challenge is to configure the build pipelines properly. You'll need the
 | `_SOURCE_TABLE_URI`     | `bq://{PROJECT_ID}.{DATASET}.{TABLE}`      |
 | `_TRAINING_SAMPLE_URI`  | `gs://{PROJECT_ID}/data/sample/sample.csv` |
 | `_LOCATION`             | `us-central1`                              |
+| `_KFP_SERVICE_ACCOUNT`  | `sa-mlops-kfp`                             |
 
 The Cloud Scheduler cron job configuration should be: `30 3 * * 7` with HTTP target type and webhook URL from the previous build configuration, using the POST method (see the note around the webhook URL in [Online Loop](#online-loop) section if you get 404s). One thing to remember is to set the *Content-Type* header to *application/json* otherwise the execution will fail.
 
@@ -275,10 +277,11 @@ You can verify the Cloud Scheduler job by a *Force run*.
 
 Similarly the *retraining* (`clouddeploy.yaml`) build pipeline requires the following variables to be set.
 
-| Variable       | Value                       |
-| ---            | ---                         |
-| `_PYTHON_PKG`  | `gcp_mlops_demo-0.8.0.dev0` |
-| `_ENDPOINT`    | `[none]`                    |
-| `_LOCATION`    | `us-central1`               |
+| Variable                | Value                       |
+| ---                     | ---                         |
+| `_PYTHON_PKG`           | `gcp_mlops_demo-0.8.0.dev0` |
+| `_ENDPOINT`             | `[none]`                    |
+| `_LOCATION`             | `us-central1`               |
+| `_KFP_SERVICE_ACCOUNT`  | `sa-mlops-kfp`              |
 
 The *retraining* pipeline must respond to a *Pub/Sub message* using the topic created for the notification channel.

@@ -19,13 +19,11 @@ from itertools import islice
 from typing import Iterator
 
 import functions_framework
-import vertexai
 
+from google import genai
 from google.cloud import bigquery
 from google.cloud import storage
 from google.cloud import vision
-
-from vertexai.generative_models import GenerativeModel
 
 
 PROJECT_ID=os.getenv("GCP_PROJECT_ID")
@@ -35,9 +33,9 @@ STAGING_BUCKET=f"{PROJECT_ID}-staging"
 BQ_DATASET="articles"
 BQ_TABLE="summaries"
 
-MODEL_NAME="gemini-2.0-flash"
+MODEL_NAME="gemini-2.5-flash"
 
-vertexai.init(project=PROJECT_ID, location=REGION)
+genai_client = genai.Client(vertexai=True, project=PROJECT_ID, location=REGION)
 
 
 def extract_text_from_document(src_bucket: str, file_name: str, dst_bucket: str) -> str:
@@ -137,17 +135,16 @@ def extract_title_from_text(text: str) -> str:
     Returns:
         title of the PDF document
     """
-    model = GenerativeModel(MODEL_NAME)
     prompt_template = get_prompt_for_title_extraction()
     prompt = prompt_template.format() # TODO Challenge 2, set placeholder values in format
 
     if not prompt:
         return ""  # return empty title for empty prompt
     
-    if model.count_tokens(prompt).total_tokens > 2500:
+    if genai_client.models.count_tokens(model=MODEL_NAME, contents=prompt).total_tokens > 2500:
         raise ValueError("Too many tokens used")
 
-    response = model.generate_content(prompt)
+    response = genai_client.models.generate_content(model=MODEL_NAME, contents=prompt)
     return response.text
 
 
@@ -192,7 +189,6 @@ def extract_summary_from_text(text: str) -> str:
     Returns:
         summary of the PDF document
     """
-    model = GenerativeModel(MODEL_NAME)
     rolling_prompt_template = get_prompt_for_page_summary_with_context()
 
     if not rolling_prompt_template:
@@ -201,7 +197,7 @@ def extract_summary_from_text(text: str) -> str:
     summary = ""
     for page in pages(text, 16000):
         prompt = rolling_prompt_template.format()  # TODO Challenge 3, set placeholder values in format
-        summary = model.generate_content(prompt).text
+        summary = genai_client.models.generate_content(model=MODEL_NAME, contents=prompt).text
     
     return summary
 
